@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rhizome-okf"
+version = "0.1.0"
+description = "Repository scanner that publishes code knowledge as an Open Knowledge Format (OKF) bundle"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Venkat Malviya" }]
+license = { text = "Proprietary - all rights reserved (see NOTICE)" }
+dependencies = ["networkx>=3.0", "igraph>=0.11", "leidenalg>=0.10", "PyYAML>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+rhizome = "rhizome.cli:main"
+
+[tool.setuptools]
+packages = ["rhizome"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

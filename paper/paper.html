@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rhizome: Repository Knowledge as Open Knowledge Format Bundles</title>
+<style>
+@page { size: A4; margin: 22mm 21mm 22mm 21mm;
+  @bottom-center { content: counter(page); font-family: Lora; font-size: 8.5pt; color: #666; }
+  @bottom-left { content: "© 2026 Venkat Malviya. All rights reserved."; font-family: Lora; font-size: 7.5pt; color: #999; } }
+@page :first { @bottom-center { content: none; } }
+html { font-family: Lora, serif; font-size: 10.2pt; line-height: 1.5; color: #111; }
+body { margin: 0; }
+h1 { font-family: Lora; font-weight: 700; font-size: 18.5pt; line-height: 1.22; text-align: center; margin: 0 0 8pt; }
+.subtitle { text-align: center; font-style: italic; font-size: 11pt; color: #333; margin: 0 0 12pt; }
+.authors { text-align: center; margin: 0 0 2pt; font-size: 11pt; }
+.affil { text-align: center; font-size: 9pt; color: #444; margin: 0 0 14pt; }
+.abstract { margin: 0 8mm 14pt; font-size: 9.4pt; text-align: justify; }
+.abstract b { font-variant: small-caps; letter-spacing: .03em; }
+.keywords { margin: -6pt 8mm 16pt; font-size: 8.8pt; color: #333; }
+h2 { font-family: Lora; font-size: 12.2pt; margin: 16pt 0 5pt; page-break-after: avoid; }
+h3 { font-family: Lora; font-size: 10.6pt; font-style: italic; font-weight: 600; margin: 11pt 0 4pt; page-break-after: avoid; }
+p { margin: 0 0 6pt; text-align: justify; hyphens: auto; }
+ul, ol { margin: 0 0 7pt; padding-left: 16pt; }
+li { margin-bottom: 2.5pt; text-align: justify; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.2pt; hyphens: none; }
+pre { font-family: "DejaVu Sans Mono", monospace; font-size: 7.6pt; line-height: 1.38; background: #f7f7f8;
+      border: 1px solid #e3e3e6; padding: 7pt 9pt; margin: 4pt 0 6pt; white-space: pre-wrap; page-break-inside: avoid; }
+figure { margin: 8pt 0 10pt; page-break-inside: avoid; }
+figcaption, .tcap { font-size: 8.7pt; color: #222; margin-top: 4pt; text-align: justify; }
+figcaption b, .tcap b { font-weight: 700; }
+svg { width: 100%; height: auto; display: block; }
+table { border-collapse: collapse; width: 100%; font-size: 8.5pt; margin: 3pt 0 3pt; page-break-inside: avoid; }
+th, td { padding: 2.6pt 5pt; text-align: right; white-space: nowrap; hyphens: none; }
+td:first-child { white-space: normal; }
+th:first-child, td:first-child { text-align: left; }
+thead th { border-top: 1.2px solid #000; border-bottom: .8px solid #000; font-weight: 600; }
+tbody tr:last-child td { border-bottom: 1.2px solid #000; }
+tr.mean td { border-top: .6px solid #000; font-weight: 600; }
+.best { font-weight: 700; }
+.tbl { margin: 8pt 0 10pt; page-break-inside: avoid; }
+.eq { text-align: center; margin: 5pt 0 7pt; font-style: italic; }
+.refs { font-size: 8.6pt; }
+.refs li { margin-bottom: 3pt; text-align: left; }
+.box { border-left: 2.5px solid #1a5fb4; background: #f3f6fb; padding: 6pt 9pt; margin: 6pt 0 8pt; font-size: 9.4pt; page-break-inside: avoid; }
+.notice { font-size: 8pt; color: #555; border-top: .6px solid #bbb; padding-top: 6pt; margin-top: 14pt; }
+</style>
+</head>
+<body>
+
+<h1>Rhizome: Publishing Repository Knowledge as<br>Open Knowledge Format Bundles for Coding Agents</h1>
+<p class="subtitle">Parser-built dependency graphs, Leiden subsystems, and reviewable context that co-evolves with the code</p>
+<p class="authors">Venkat Malviya</p>
+<p class="affil">Independent researcher, Bengaluru, India · September 2026</p>
+
+<div class="abstract"><p><b>Abstract.</b> Coding agents depend on context about the repository they change, and most systems supply it by chunking source files into a vector index and retrieving the chunks most similar to the task. This discards the structure that matters for software change (who depends on whom, which files form a subsystem, which callers are exposed to a vulnerable function) and stores the result in a private, opaque index that drifts from the code. We present <i>Rhizome</i>, a repository scanner that publishes code knowledge as an <i>Open Knowledge Format</i> (OKF) bundle: a directory of markdown concepts with YAML frontmatter, committed next to the code. Rhizome (i) builds an exact, weighted import graph with a deterministic parser rather than LLM extraction; (ii) discovers subsystems with the Leiden algorithm, whose communities are guaranteed to be connected, and materialises them as the bundle's navigation hierarchy; (iii) defines an <i>OKF code profile</i> that types markdown links by section so that dependency semantics survive in a vendor-neutral format; (iv) makes knowledge content-addressed and incrementally updated, so that a pull request carries its knowledge diff and CI can reject stale knowledge; and (v) retrieves context with category-aware graph traversals for feature, bug, security and refactor tasks. We evaluate a proof-of-concept on six open-source Python repositories of 37 to 2,931 files. Scans are deterministic, take 0.3–14 s, and a one-file change rewrites two documents. Leiden produced no disconnected communities in 60 runs while Louvain produced one, and Leiden matched or exceeded Louvain's modularity on every repository. In a co-change benchmark built from 927 real future commits, the import graph is a far better relatedness signal than directory layout (mean recall@5 0.460 vs 0.293). Lexical similarity is the strongest single signal (0.513), and the graph is complementary to it: rank fusion reaches 0.520, and the union of both top-10 lists recovers 2–10 points of recall that lexical retrieval alone misses. We argue that the main value of the graph is structural and explanatory — typed, reviewable reasons for why a file is in context — rather than raw recall, and we release the design as a profile that any producer or consumer can implement.</p></div>
+<p class="keywords"><b>Keywords:</b> coding agents, retrieval-augmented generation, knowledge graphs, community detection, Leiden algorithm, Open Knowledge Format, software architecture recovery</p>
+
+<h2>1&nbsp;&nbsp;Introduction</h2>
+<p>Large language models can write and modify code, but they know nothing about a particular private repository: what a module is for, which files a change will affect, where authentication is enforced, or which requirement a function implements. That knowledge has to be supplied as context at the moment the agent acts. The dominant way of doing so is retrieval-augmented generation (RAG) [5]: split files into chunks, embed them, store them in a vector index, and return the top-<i>k</i> chunks most similar to the task description.</p>
+<p>Similarity search works when the relevant code <i>looks like</i> the request. Software change often does not. A refactor must reach every transitive caller of the function being changed; a security fix must consider every path by which untrusted input reaches a vulnerable call; a new feature must follow the conventions of the subsystem it joins. These are structural questions about relationships, and GraphRAG [4] has shown for prose corpora that making relationships explicit, and summarising groups of related entities, helps answer questions that top-<i>k</i> similarity cannot.</p>
+<p>Three further problems are specific to code-context systems as they are commonly built:</p>
+<ol>
+<li><b>Opacity.</b> The knowledge lives in a private index (vectors, a database, a vendor's graph schema). Humans cannot read or review it, and other tools cannot consume it.</li>
+<li><b>Drift.</b> Code changes on every commit. Re-indexing is typically periodic and all-or-nothing, and nothing ties a code change to the corresponding knowledge change.</li>
+<li><b>Misplaced LLM effort.</b> For prose, an LLM must read text to find entities and relations. For code, the relations (imports, calls, definitions) can be extracted exactly and cheaply by a parser. Spending LLM tokens to approximate them adds cost and error.</li>
+</ol>
+<p>The Open Knowledge Format (OKF), published by Google Cloud in June 2026 [6], formalises the "LLM wiki" pattern [7] as a vendor-neutral format: a bundle is a directory of markdown files with YAML frontmatter, each file a concept, linked by ordinary markdown links. OKF deliberately requires only a <code>type</code> field and leaves the content model to producers. It has been demonstrated on data catalogues (tables, datasets, metrics). As far as we are aware, it has not been applied to source code.</p>
+<p>This paper applies it to source code. Our contributions are:</p>
+<ol>
+<li>A <b>design for publishing repository knowledge as an OKF bundle</b>, in which structure is extracted deterministically and LLMs are used, optionally, only for natural-language descriptions (Section 4).</li>
+<li>The <b>OKF code profile</b>: concept types, required fields, a path-based identity rule, and <i>section-typed links</i> that preserve dependency semantics in plain markdown (Section 4.5).</li>
+<li><b>Leiden communities materialised as navigation</b>: a two-level, deterministic, identity-stable community hierarchy over the import graph that becomes the bundle's progressive-disclosure structure (Section 4.4).</li>
+<li>A <b>co-evolution protocol</b>: content-addressed concepts, content-change timestamps, an append-only change log, and a CI check that fails a pull request whose code and knowledge disagree (Section 4.6).</li>
+<li><b>Category-aware retrieval</b> over the published bundle, with a different graph walk for feature, bug, security and refactor tasks, and requirement documents linked into the same graph (Sections 4.7–4.8).</li>
+<li>A <b>proof-of-concept implementation</b> and an <b>evaluation</b> on six repositories, including a co-change benchmark with no train/test leakage (Sections 5–6).</li>
+</ol>
+<p>Individually, several ingredients exist: parser-built code graphs exposed to agents [8, 9], community detection on code graphs [9, 8], and software clustering for architecture recovery [15, 16]. The contribution here is the combination, and in particular publishing the result in an open, reviewable format that co-evolves with the code through ordinary code review.</p>
+
+<h2>2&nbsp;&nbsp;Background</h2>
+<h3>2.1&nbsp;&nbsp;Retrieval-augmented generation and its limits</h3>
+<p>Baseline RAG retrieves by semantic or lexical similarity between a query and chunks of text [5]. It struggles with <i>multi-hop</i> questions, whose answer requires following a chain of relationships across passages that do not individually resemble the query, and with <i>global</i> questions about a whole corpus, whose answer is not contained in any single chunk [4]. Both kinds are common in software change. "What breaks if I change this signature?" is multi-hop. "How is authentication structured?" is global.</p>
+<h3>2.2&nbsp;&nbsp;GraphRAG</h3>
+<p>GraphRAG [4, 12] indexes a text corpus in four stages. It segments the corpus into text units, uses an LLM to extract entities, relationships and claims, clusters the resulting graph hierarchically with the Leiden algorithm, and generates bottom-up summaries for each community. At query time, <i>global search</i> map-reduces over community summaries, and <i>local search</i> uses vector similarity to find entry entities and then expands along the graph. The index is stored as tables (entities, relationships, communities, reports, text units), by default as parquet files, with embeddings in a separate vector store. GraphRAG targets unstructured prose. Its extraction is probabilistic and costly, and its outputs are machine-oriented.</p>
+<h3>2.3&nbsp;&nbsp;Community detection: Louvain and Leiden</h3>
+<p>A community is a set of nodes more densely connected to each other than to the rest of the graph. Modularity [3] scores a partition by comparing each community's internal edge weight with the weight expected under a degree-preserving random graph, with a resolution parameter γ controlling granularity. Louvain [2] optimises modularity by repeatedly moving single nodes to the neighbouring community that most improves the score, and then aggregating communities into super-nodes. Traag et al. [1] showed that Louvain can yield arbitrarily badly connected, even internally disconnected, communities. A node that bridges two parts of its community can be moved out, leaving the rest locally optimal but disconnected, and aggregation then freezes the defect. On real networks they found up to 25% of Louvain communities badly connected and up to 16% disconnected. The Leiden algorithm adds a refinement phase between local moving and aggregation, which splits each community into well-connected sub-communities before aggregating, and uses a fast local-move queue. It guarantees that communities are connected after every iteration and, when iterated, converges to partitions in which all subsets of communities are locally optimally assigned. It is also faster than Louvain on large graphs.</p>
+<p>For a code-knowledge system this guarantee is not cosmetic. A community is summarised and presented as a subsystem. A disconnected "subsystem" would be summarised as one unit while actually being two unrelated groups of files, and the summary would mislead both humans and agents.</p>
+<h3>2.4&nbsp;&nbsp;Open Knowledge Format</h3>
+<p>An OKF v0.1 bundle [6] is a directory of markdown documents with YAML frontmatter. Each document is a concept whose file path is its identity. The only required field is <code>type</code>. The recommended fields are <code>title</code>, <code>description</code>, <code>resource</code> (pointer to the real artefact), <code>tags</code> and <code>timestamp</code>. Concepts link to each other with markdown links, which turns the directory into a graph. Optional <code>index.md</code> files support progressive disclosure, and <code>log.md</code> files record history. OKF's stated principles are minimal opinionation, producer/consumer independence, and being a format rather than a platform.</p>
+
+<h2>3&nbsp;&nbsp;Related Work</h2>
+<p><b>Code graphs for agents.</b> Codebase-Memory [8] builds a tree-sitter knowledge graph over 66 languages, stores it in SQLite, partitions call graphs into communities with Louvain, and exposes 14 query tools over the Model Context Protocol. In its evaluation, agents using the graph answered with somewhat lower quality than agents reading files directly (83% vs 92%) but used roughly ten times fewer tokens. Repowise [9] builds a tree-sitter dependency graph, applies Leiden and PageRank to find subsystems and hotspots, regenerates documentation on every commit, and serves graph queries to agents over MCP. Rhizome shares the parser-first stance of both. It differs in publishing an open, human-reviewable format rather than a tool-specific store, in using community structure as the navigation hierarchy of that format, in tying knowledge updates to code review, in linking requirements into the same graph, and in category-specific retrieval.</p>
+<p><b>GraphRAG and LLM wikis.</b> GraphRAG [4] contributes the community-summary idea and the local-search pattern (vector entry, then graph expansion), both of which Rhizome adopts. Rhizome replaces LLM extraction with parsing, because code relations are explicit. LLM wikis and convention files such as <code>AGENTS.md</code> give agents curated markdown to read before working [7]. OKF standardises that pattern [6], and Rhizome generates such a wiki for code automatically.</p>
+<p><b>Software clustering and architecture recovery.</b> Clustering module dependency graphs to recover subsystems has a long history, e.g. Bunch [15], which searches for modularisation-quality-maximising partitions, and ACDC [16], which uses comprehension-driven patterns. Community detection has also been applied to decompose monoliths into microservices. Rhizome uses clustering for a different end: as the organising structure of machine- and human-readable context, with connectivity guarantees and stable identities across versions.</p>
+<p><b>Co-change.</b> Mining version histories for files that change together [11] is an established signal for guiding changes. We use it as <i>ground truth</i> for evaluating context retrieval, not as a feature.</p>
+
+<h2>4&nbsp;&nbsp;Design</h2>
+<h3>4.1&nbsp;&nbsp;Principles</h3>
+<ol>
+<li><b>Deterministic structure, LLM for prose.</b> Everything a parser can know exactly (files, symbols, imports, reference counts, security-relevant call patterns) is extracted without an LLM. LLMs, if used, write only descriptions, and results are cached by content hash.</li>
+<li><b>Format, not platform.</b> The published artefact is an OKF bundle. Indexes (vector, lexical, graph databases) are derived, disposable views.</li>
+<li><b>Identity follows the code, not the analysis.</b> A file's concept path derives from its repository path, never from its community, because communities change as code evolves.</li>
+<li><b>Freshness is content-addressed.</b> A concept is stale if and only if its content hash differs from the file. Git metadata, which changes when the bundle itself is committed, is not used as a freshness signal.</li>
+<li><b>Knowledge changes are reviewed like code.</b> The bundle lives in the repository, and a change and its knowledge update travel in the same pull request.</li>
+</ol>
+
+<figure>
+<svg viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg" font-family="Poppins" font-size="9.5">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#333"/></marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#1e7a45"/></marker></defs>
+  <rect x="8" y="8" width="222" height="262" rx="7" fill="#f7f8fa" stroke="#9aa0a6"/>
+  <text x="119" y="26" text-anchor="middle" font-weight="700" font-size="10.5">Producer · rhizome scan</text>
+  <g fill="#fff" stroke="#9aa0a6">
+    <rect x="20" y="36" width="198" height="30" rx="4"/><rect x="20" y="80" width="198" height="36" rx="4"/>
+    <rect x="20" y="130" width="198" height="30" rx="4"/><rect x="20" y="174" width="198" height="36" rx="4" stroke="#1a5fb4"/>
+    <rect x="20" y="224" width="198" height="36" rx="4"/></g>
+  <text x="119" y="55" text-anchor="middle">Repository: source + requirement docs</text>
+  <text x="119" y="95" text-anchor="middle">① Parse (Python ast): symbols, imports,</text><text x="119" y="108" text-anchor="middle">references, security patterns</text>
+  <text x="119" y="149" text-anchor="middle">② Weighted import graph (exact, no LLM)</text>
+  <text x="119" y="189" text-anchor="middle" fill="#1a5fb4" font-weight="600">③ Hierarchical Leiden → subsystems,</text><text x="119" y="202" text-anchor="middle" fill="#1a5fb4" font-weight="600">components (stable, deterministic)</text>
+  <text x="119" y="239" text-anchor="middle">④ Render OKF concepts; descriptions</text><text x="119" y="252" text-anchor="middle">heuristic or LLM (cached by hash)</text>
+  <g stroke="#333" marker-end="url(#ar)"><line x1="119" y1="66" x2="119" y2="79"/><line x1="119" y1="116" x2="119" y2="129"/><line x1="119" y1="160" x2="119" y2="173"/><line x1="119" y1="210" x2="119" y2="223"/></g>
+
+  <rect x="262" y="8" width="176" height="262" rx="7" fill="#eef3fa" stroke="#1a5fb4" stroke-width="1.6"/>
+  <text x="350" y="26" text-anchor="middle" font-weight="700" font-size="10.5" fill="#1a5fb4">OKF bundle</text>
+  <text x="350" y="40" text-anchor="middle" font-size="7.8" fill="#555">.knowledge/ · committed with code</text>
+  <g font-family="DejaVu Sans Mono" font-size="8.6">
+    <text x="276" y="64">index.md</text><text x="276" y="80">log.md</text>
+    <text x="276" y="96">subsystems/index.md</text><text x="276" y="112">subsystems/&lt;s&gt;.md</text><text x="276" y="128">subsystems/&lt;s&gt;/&lt;c&gt;.md</text>
+    <text x="276" y="144">files/&lt;repo path&gt;.md</text><text x="276" y="160">files/**/index.md</text>
+    <text x="276" y="176">requirements/&lt;r&gt;.md</text><text x="276" y="192">.rhizome/state.json</text></g>
+  <text x="350" y="216" text-anchor="middle" font-size="8.6">typed links by section:</text>
+  <text x="350" y="229" text-anchor="middle" font-size="8.6">Depends on · Used by · Members</text>
+  <text x="350" y="242" text-anchor="middle" font-size="8.6">content_hash · subsystem · tags</text>
+  <text x="350" y="258" text-anchor="middle" font-size="8.6" fill="#555">profile: okf-code/0.1</text>
+  <line x1="230" y1="140" x2="261" y2="140" stroke="#333" marker-end="url(#ar)"/>
+
+  <rect x="470" y="8" width="222" height="262" rx="7" fill="#f7f8fa" stroke="#9aa0a6"/>
+  <text x="581" y="26" text-anchor="middle" font-weight="700" font-size="10.5">Consumers (read only the bundle)</text>
+  <g fill="#fff" stroke="#9aa0a6"><rect x="482" y="36" width="198" height="46" rx="4" stroke="#1a5fb4"/><rect x="482" y="92" width="198" height="30" rx="4"/>
+  <rect x="482" y="132" width="198" height="30" rx="4"/><rect x="482" y="172" width="198" height="30" rx="4"/><rect x="482" y="212" width="198" height="46" rx="4"/></g>
+  <text x="581" y="52" text-anchor="middle" font-weight="600" fill="#1a5fb4">rhizome context</text>
+  <text x="581" y="65" text-anchor="middle" font-size="8.6">lexical entry → category-aware walk</text><text x="581" y="76" text-anchor="middle" font-size="8.6">feature · bug · security · refactor</text>
+  <text x="581" y="111" text-anchor="middle">Coding agent (CLI / MCP wrapper)</text>
+  <text x="581" y="151" text-anchor="middle">Human reviewers (GitHub diff view)</text>
+  <text x="581" y="191" text-anchor="middle">Any OKF viewer or catalogue</text>
+  <text x="581" y="231" text-anchor="middle">Derived indexes (optional):</text><text x="581" y="244" text-anchor="middle" font-size="8.6">vector store, graph DB, search</text>
+  <line x1="438" y1="140" x2="469" y2="140" stroke="#333" marker-end="url(#ar)"/>
+
+  <rect x="150" y="296" width="400" height="44" rx="6" fill="#eaf6ee" stroke="#1e7a45"/>
+  <text x="350" y="314" text-anchor="middle" font-weight="600" fill="#1e7a45">Pull request = code change + knowledge diff (rhizome scan)</text>
+  <text x="350" y="328" text-anchor="middle" font-size="8.8" fill="#1e7a45">CI runs rhizome check · log.md records added / modified / moved files</text>
+  <path d="M581 270 V318 H551" fill="none" stroke="#1e7a45" stroke-dasharray="4 3" marker-end="url(#ag)"/>
+  <path d="M150 318 H119 V271" fill="none" stroke="#1e7a45" stroke-dasharray="4 3" marker-end="url(#ag)"/>
+</svg>
+<figcaption><b>Figure 1.</b> Rhizome architecture. The producer extracts structure deterministically, detects subsystems with Leiden and publishes an OKF bundle into the repository. Consumers read only the bundle. Code changes and knowledge changes travel together in a pull request, and CI rejects stale knowledge.</figcaption>
+</figure>
+
+<h3>4.2&nbsp;&nbsp;Parsing</h3>
+<p>Each source file is parsed with the language's own parser (the proof of concept uses Python's <code>ast</code>). The parser records the module's canonical dotted name and aliases (e.g. with and without a <code>src/</code> prefix), top-level classes and functions with docstrings and line numbers, all imports with relative imports resolved against the package, a count of every referenced name, and security-relevant patterns: dynamic code execution, shell execution, unsafe deserialisation, YAML loading without a safe loader, weak hashes, disabled TLS verification, SQL built by string formatting, and string literals assigned to secret-like names. Files that fail to parse are kept as nodes with the error recorded.</p>
+
+<h3>4.3&nbsp;&nbsp;Weighted import graph</h3>
+<p>Imports are resolved to repository files by trying submodule names first (<code>from pkg import mod</code>) and then the longest module prefix. Unresolved imports are recorded as external dependencies. The graph <i>G</i> has an edge <i>a</i>→<i>b</i> when file <i>a</i> imports file <i>b</i>, labelled with the imported names <i>N</i><sub>ab</sub> and weighted by use:</p>
+<p class="eq">w(a, b) = 1 + min(50, Σ<sub>n ∈ N<sub>ab</sub></sub> refs<sub>a</sub>(n))</p>
+<p>where refs<sub>a</sub>(n) counts name and attribute references to <i>n</i> in <i>a</i>. The cap stops one heavily used utility from dominating. Community detection uses the undirected graph <i>U</i> with w(a,b)+w(b,a) on each edge.</p>
+
+<h3>4.4&nbsp;&nbsp;Hierarchical Leiden with stable identities</h3>
+<p>Subsystems are found by running Leiden [1] with the modularity quality function (RBConfiguration, γ = 1) on the subgraph of files that have at least one internal dependency edge, iterated until a stable iteration so that its connectivity guarantees hold. Files with no internal edges (scripts, examples, empty package initialisers) would otherwise each form a singleton community. They are instead grouped by top-level directory into explicitly labelled <i>unlinked</i> groups, recorded with <code>grouping: directory</code> so that no consumer mistakes them for detected structure. Any subsystem larger than a size threshold (default 15 files) is partitioned again with Leiden on its induced subgraph to form <i>components</i>, and singleton components are merged into the component they are most strongly connected to. Each community records its hub (highest weighted PageRank [14]), its members ranked by centrality, its cohesion (internal weight divided by internal plus boundary weight), and whether it is connected.</p>
+<p>Two engineering details turned out to be essential. <b>Stable identity.</b> Community slugs are derived from the common directory and hub file, and on re-scan each new community is matched to a previous one when their member sets have Jaccard similarity ≥ 0.5, reusing its slug. A small code change therefore does not rename subsystems or rewrite their concepts. <b>Determinism.</b> Community detection is sensitive to node order, and graph libraries commonly iterate node <i>sets</i> whose order depends on a per-process hash seed. Without canonical ordering, our first implementation produced different partitions in different processes of the same repository, which would make any CI freshness check fail spuriously. Rhizome canonicalises node and edge order before detection and breaks every centrality tie by path. We verified byte-identical bundles (excluding timestamps) across hash seeds on Celery.</p>
+
+<h3>4.5&nbsp;&nbsp;The OKF code profile</h3>
+<p>OKF deliberately does not define a content model. The profile <code>okf-code/0.1</code> defines one for code (Table 1), and a bundle declares it in its root <code>index.md</code>.</p>
+<div class="tbl"><table>
+<thead><tr><th>type</th><th style="text-align:left">one per</th><th style="text-align:left">profile fields beyond OKF's recommended set</th></tr></thead>
+<tbody>
+<tr><td>Source File</td><td style="text-align:left">source file</td><td style="text-align:left"><code>language, content_hash, subsystem</code>; optional <code>component, loc, fan_in, fan_out, centrality</code></td></tr>
+<tr><td>Subsystem</td><td style="text-align:left">level-1 community</td><td style="text-align:left"><code>level, size, hub, grouping, cohesion, connected</code></td></tr>
+<tr><td>Component</td><td style="text-align:left">level-2 community</td><td style="text-align:left">as Subsystem, plus <code>parent</code></td></tr>
+<tr><td>Requirement</td><td style="text-align:left">requirement document</td><td style="text-align:left">—</td></tr>
+<tr><td>Index / Log</td><td style="text-align:left">directory / bundle</td><td style="text-align:left">—</td></tr>
+</tbody></table>
+<p class="tcap"><b>Table 1.</b> Concept types of the OKF code profile. Tags include the language, <code>subsystem:&lt;slug&gt;</code>, and optionally <code>test</code>, <code>area:&lt;name&gt;</code> and one <code>security:&lt;rule&gt;</code> per non-informational finding.</p></div>
+<p><b>Section-typed links.</b> Markdown links carry no relation type, but dependency semantics are the point of a code graph. The profile therefore types a link by the heading of the section it appears in. In a Source File, links under <i># Depends on</i> mean "imports", links under <i># Used by</i> mean "is imported by", and each line lists the imported names. In a Subsystem, <i># Members</i> lists files by centrality, and <i># Depends on subsystems</i> aggregates cross-community edges. A consumer can reconstruct the typed graph from any conformant bundle without the producer's internal state. The result is still ordinary markdown that renders on any code host. An abbreviated concept:</p>
+<pre>---
+type: Source File
+title: shop/auth.py
+description: Password hashing and session tokens.
+resource: https://github.com/acme/shop/blob/HEAD/shop/auth.py
+tags: [python, 'subsystem:api', 'area:auth', 'security:hardcoded-secret', 'security:weak-hash']
+timestamp: '2026-09-25T20:26:57+00:00'
+language: python
+content_hash: sha256:fcd9a5eb8f1562e4
+subsystem: api
+fan_in: 1
+fan_out: 1
+---
+# Subsystem
+Part of [shop/api.py cluster](/subsystems/api.md).
+# Depends on
+- [shop/db.py](/files/shop/db.py.md): uses `find_user`
+# Used by
+- [shop/api.py](/files/shop/api.py.md): uses `login`
+# Security notes
+- L5 · **high** · hardcoded-secret: string literal assigned to `SECRET_KEY`
+- L8 · **medium** · weak-hash: `hashlib.md5()`</pre>
+<p><b>Progressive disclosure.</b> The root <code>index.md</code> gives an overview, the subsystem list with one-line summaries, and security hotspots. <code>subsystems/index.md</code> and per-subsystem component indexes form the next levels, and <code>files/**/index.md</code> mirrors the directory tree. An agent can therefore descend from architecture to file in three or four reads without loading the whole bundle. Because the hierarchy comes from Leiden on the import graph rather than from folders, it reflects actual coupling.</p>
+
+<h3>4.6&nbsp;&nbsp;Co-evolution protocol</h3>
+<p>Every Source File concept carries <code>content_hash</code>, a truncated SHA-256 of the file bytes. A scan re-parses the repository, recomputes the graph and communities (cheap and deterministic), renders every concept, and writes only those whose bytes changed. The <code>timestamp</code> of a concept is the time its <i>content</i> last changed. It is carried forward from producer state when the rendered content is unchanged, so an unrelated commit produces no diff in untouched concepts. The <code>resource</code> field uses a branch-stable URL rather than a commit SHA, for the same reason. Each scan that changes the bundle appends an entry to <code>log.md</code> listing added, modified and removed files, files that moved between subsystems, and new or dissolved communities. Expensive LLM descriptions are cached by content hash and member-hash keys and regenerated only for changed files and communities.</p>
+<div class="box"><b>Protocol.</b> (1) A change that edits source files updates the affected concepts in the same pull request by running <code>rhizome scan</code>. (2) CI runs <code>rhizome check</code>, a dry-run scan that exits non-zero if any concept would change. (3) Reviewers see the knowledge diff next to the code diff. Scan options are recorded in the bundle, so the check reproduces the producer exactly.</div>
+<p>This turns knowledge maintenance, the step that causes human wikis to decay [7], into a mechanical, reviewable by-product of normal development.</p>
+
+<h3>4.7&nbsp;&nbsp;Requirement linking</h3>
+<p>Requirement documents (markdown) become Requirement concepts. They are linked to code by exact mentions of repository paths or dotted module names, public symbol names of at least four characters, and distinctive file stems (generic stems such as <code>utils</code> or <code>core</code> are excluded). Links are bidirectional: <i># Implemented by</i> in the requirement, and <i># Requirements</i> in each file and aggregated in its subsystem. The planner therefore sees <i>why</i> code exists in the same graph as <i>how</i> it is connected. The matching is deliberately conservative and explainable. Each link records what matched.</p>
+
+<h3>4.8&nbsp;&nbsp;Category-aware retrieval</h3>
+<p>The consumer reads only the published bundle. It builds a BM25 [13] index over the title, description, tags and symbols of Source File and Requirement concepts, selects up to four <i>entry points</i> (a matched requirement contributes its implementing files; test files are excluded except for bug tasks), and then expands along section-typed links with a walk chosen by task category (Table 2). Every item in the resulting context pack carries a human-readable reason ("caller at distance 1 (exposure path)", "blast radius: depends on the change at distance 2"), and the pack is cut to a character budget in rank order.</p>
+<div class="tbl"><table>
+<thead><tr><th>Category</th><th style="text-align:left">Graph walk after entry points</th></tr></thead>
+<tbody>
+<tr><td>feature</td><td style="text-align:left">dominant subsystem among entry points → its most central members; direct dependencies of entry points</td></tr>
+<tr><td>bug</td><td style="text-align:left">dependencies up to distance 2; tests that import the entry points</td></tr>
+<tr><td>security</td><td style="text-align:left">entry scores boosted by <code>security:*</code> and <code>area:auth</code> tags; callers up to distance 2 (exposure paths); flagged files in the same subsystem; flagged dependencies</td></tr>
+<tr><td>refactor</td><td style="text-align:left">transitive reverse dependencies up to distance 3 (blast radius)</td></tr>
+</tbody></table>
+<p class="tcap"><b>Table 2.</b> Retrieval strategies. Categories are supplied by the caller, typically from an agent's own task classification.</p></div>
+<p>On Celery, for example, the security query "unsafe pickle deserialization of task messages" ranks <code>celery/backends/database/__init__.py</code> first. It is the one non-test module the scanner flagged for <code>pickle.loads</code>. The walk then adds its callers with exposure-path reasons. The refactor query "change the retry backoff in task retry" enters at <code>celery/app/autoretry.py</code> and returns its reverse dependencies with distances.</p>
+
+<h2>5&nbsp;&nbsp;Implementation</h2>
+<p>The proof of concept is about 1,600 lines of Python. It depends on networkx, python-igraph with leidenalg (the reference Leiden implementation), and PyYAML, and it needs no network access or API key. It provides five commands: <code>scan</code> (produce or update a bundle; <code>--docs</code> links requirements; <code>--llm</code> uses a hosted model for descriptions, cached by hash), <code>check</code> (CI freshness gate), <code>validate</code> (OKF conformance: every document has a <code>type</code> and every link resolves), <code>context</code> (category-aware context pack as markdown or JSON), and <code>stats</code> (Leiden vs Louvain connectivity). A test suite covers import resolution, security rules, graph construction, community coverage and connectivity, conformance, incremental updates, timestamp stability, retrieval behaviour per category, deletions, and determinism across hash seeds. The parser is isolated behind a small interface so that further languages can be added, for example with tree-sitter.</p>
+
+<h2>6&nbsp;&nbsp;Evaluation</h2>
+<p>We ask four questions. <b>RQ1</b>: Is scanning cheap enough to run on every change, and are bundles conformant? <b>RQ2</b>: Are updates incremental, idempotent and deterministic? <b>RQ3</b>: Does Leiden's connectivity guarantee matter on real import graphs? <b>RQ4</b>: How useful is graph structure, compared with lexical similarity and directory layout, for selecting the files a change actually touches?</p>
+<p><b>Subjects.</b> Six open-source Python projects at their current heads: Flask, Requests, HTTPX, Rich, Celery and Django. Django was used for scale only, as a shallow clone. All runs used a single CPU core of a cloud Linux container, with default options and no LLM.</p>
+
+<h3>6.1&nbsp;&nbsp;RQ1–RQ2: cost, conformance, incrementality, determinism</h3>
+<div class="tbl"><table>
+<thead><tr><th>Repository</th><th>files</th><th>import edges</th><th>subsystems</th><th>components</th><th>documents</th><th>bundle</th><th>full scan</th><th>security findings</th></tr></thead>
+<tbody>
+<tr><td>Requests</td><td>37</td><td>106</td><td>8</td><td>0</td><td>55</td><td>110 KB</td><td>0.28 s</td><td>14</td></tr>
+<tr><td>HTTPX</td><td>60</td><td>122</td><td>4</td><td>7</td><td>82</td><td>193 KB</td><td>0.38 s</td><td>10</td></tr>
+<tr><td>Flask</td><td>83</td><td>179</td><td>11</td><td>3</td><td>129</td><td>242 KB</td><td>0.87 s</td><td>4</td></tr>
+<tr><td>Rich</td><td>213</td><td>730</td><td>16</td><td>29</td><td>277</td><td>564 KB</td><td>1.07 s</td><td>7</td></tr>
+<tr><td>Celery</td><td>432</td><td>1,289</td><td>22</td><td>61</td><td>596</td><td>1.3 MB</td><td>2.69 s</td><td>46</td></tr>
+<tr><td>Django</td><td>2,931</td><td>9,089</td><td>32</td><td>176</td><td>3,840</td><td>8.3 MB</td><td>14.0 s</td><td>266</td></tr>
+</tbody></table>
+<p class="tcap"><b>Table 3.</b> Scan statistics at repository heads. Subsystem counts include unlinked directory groups (1–6 per repository). "Security findings" counts non-informational pattern matches, including in tests. Six Django test files did not parse under the Python 3.11 interpreter used (mostly newer syntax, one an intentional syntax-error fixture); they were kept as nodes with the error recorded.</p></div>
+<p>Every bundle validated as conformant: all documents typed and all links resolving. A full scan of Django (2,931 files) took 14 s, of which 8 s was parsing. On every repository we then appended one function to a mid-ranked non-test file and re-scanned. <b>Exactly two documents</b> changed each time: that file's concept, and the root index, whose <code>source_digest</code> changed. No subsystem was renamed, no unrelated concept was rewritten, and a subsequent <code>check</code> reported the bundle fresh. Re-scan time, however, equalled full-scan time (0.26–14.6 s), because the proof of concept re-parses every file. Caching parse results by content hash is a straightforward optimisation that we have not yet implemented. Finally, scanning Celery in three processes with different hash seeds produced identical bundles apart from timestamps, and a <code>check</code> in a fourth process passed.</p>
+
+<h3>6.2&nbsp;&nbsp;RQ3: Leiden vs Louvain on import graphs</h3>
+<div class="tbl"><table>
+<thead><tr><th>Repository</th><th>nodes / edges</th><th>Leiden comm.</th><th>Louvain comm.</th><th>Leiden Q</th><th>Louvain Q</th><th>Leiden disc.</th><th>Louvain disc.</th></tr></thead>
+<tbody>
+<tr><td>Requests</td><td>34 / 98</td><td>5.0</td><td>5.0</td><td>0.3160</td><td>0.3160</td><td>0</td><td>0</td></tr>
+<tr><td>HTTPX</td><td>57 / 117</td><td>3.0</td><td>3.0</td><td>0.4805</td><td>0.4805</td><td>0</td><td>0</td></tr>
+<tr><td>Flask</td><td>79 / 167</td><td>9.0</td><td>8.9</td><td>0.4771</td><td>0.4767</td><td>0</td><td>0</td></tr>
+<tr><td>Rich</td><td>207 / 698</td><td>11.6</td><td>11.0</td><td>0.4331</td><td>0.4300</td><td>0</td><td>0</td></tr>
+<tr><td>Celery</td><td>371 / 1,282</td><td>16.3</td><td>13.0</td><td>0.5870</td><td>0.5852</td><td>0</td><td class="best">1</td></tr>
+<tr><td>Django</td><td>2,191 / 9,015</td><td>29.8</td><td>23.2</td><td>0.5869</td><td>0.5815</td><td>0</td><td>0</td></tr>
+</tbody></table>
+<p class="tcap"><b>Table 4.</b> Ten seeds per algorithm on the linked part of each undirected import graph (γ = 1). Columns give mean number of communities, mean modularity Q, and total disconnected multi-node communities across the ten runs. Leiden via leidenalg (iterated to stability), Louvain via networkx.</p></div>
+<p>Import graphs are sparse and fairly modular (Q ≈ 0.32–0.59), so badly connected partitions are rarer here than in the dense social and citation networks studied in [1]. Louvain nonetheless produced a disconnected community on Celery in one of ten runs. Leiden produced none in sixty runs, as its guarantee requires. Leiden also matched or exceeded Louvain's modularity on every repository and found finer partitions on the larger ones (Celery +25%, Django +28% communities). The margins are small. The argument for Leiden in this setting is the guarantee: a subsystem concept is summarised and navigated as a unit, and the guarantee rules out a class of silently misleading summaries at no extra cost.</p>
+
+<h3>6.3&nbsp;&nbsp;RQ4: co-change retrieval</h3>
+<p><b>Method.</b> For each history-bearing repository, we walk back from the head through non-merge commits until we have collected 300 that touch between 2 and 10 Python files, and take the parent of the oldest as snapshot <i>T</i>. We build every representation at <i>T</i> only. For each later commit, restricted to files that existed at <i>T</i> (at least two), we treat each touched file as the <i>seed</i> of a task. The ground truth is the set of other files that the real commit touched. This mirrors the question an agent faces when starting from one relevant file ("what else will this change touch?"), and because the ground truth lies in the future relative to <i>T</i>, there is no leakage. Co-change is a well-established proxy for change coupling [11]. We score seven rankings of all other files at <i>T</i>, using recall@<i>k</i> (fraction of ground truth in the top <i>k</i>) for <i>k</i> ∈ {5, 10}:</p>
+<ul>
+<li><b>Random</b>.</li>
+<li><b>Lexical</b>: cosine similarity of TF-IDF vectors over identifier-split tokens of whole files. This is our stand-in for similarity retrieval; we did not evaluate neural embeddings.</li>
+<li><b>Same directory</b>: same-directory files first, each group ordered lexically. This is the folder-layout baseline.</li>
+<li><b>Leiden community</b>: same component, then same subsystem, then the rest, each ordered lexically.</li>
+<li><b>Graph</b>: undirected import distance up to 3, ties broken by edge weight and then lexically, followed by community members and the rest.</li>
+<li><b>Interleaved</b>: alternating graph and lexical ranks.</li>
+<li><b>Fusion</b>: reciprocal rank fusion of lexical and graph rankings [10].</li>
+</ul>
+<div class="tbl"><table style="font-size:7.9pt">
+<thead><tr><th rowspan="2">Repository (snapshot)</th><th rowspan="2">files · commits · seeds</th><th colspan="2">Random</th><th colspan="2">Directory</th><th colspan="2">Community</th><th colspan="2">Graph</th><th colspan="2">Lexical</th><th colspan="2">Fusion</th></tr>
+<tr><th>@5</th><th>@10</th><th>@5</th><th>@10</th><th>@5</th><th>@10</th><th>@5</th><th>@10</th><th>@5</th><th>@10</th><th>@5</th><th>@10</th></tr></thead>
+<tbody>
+<tr><td>Flask (2018-01)</td><td>77 · 110 · 269</td><td>.065</td><td>.139</td><td>.326</td><td>.459</td><td>.341</td><td>.417</td><td>.423</td><td>.621</td><td class="best">.573</td><td class="best">.715</td><td>.527</td><td>.651</td></tr>
+<tr><td>Requests (2013-10)</td><td>75 · 156 · 426</td><td>.064</td><td>.144</td><td>.584</td><td>.752</td><td>.389</td><td class="best">.879</td><td>.526</td><td>.785</td><td class="best">.609</td><td>.780</td><td>.602</td><td>.835</td></tr>
+<tr><td>HTTPX (2020-01)</td><td>62 · 109 · 302</td><td>.090</td><td>.172</td><td>.283</td><td>.427</td><td>.365</td><td>.509</td><td>.364</td><td>.530</td><td>.372</td><td class="best">.550</td><td class="best">.381</td><td class="best">.550</td></tr>
+<tr><td>Rich (2021-11)</td><td>176 · 271 · 701</td><td>.024</td><td>.038</td><td>.153</td><td>.216</td><td>.434</td><td>.536</td><td>.513</td><td>.626</td><td>.462</td><td class="best">.637</td><td class="best">.546</td><td>.635</td></tr>
+<tr><td>Celery (2024-01)</td><td>376 · 281 · 826</td><td>.014</td><td>.026</td><td>.120</td><td>.230</td><td>.473</td><td>.502</td><td>.476</td><td>.566</td><td class="best">.551</td><td>.635</td><td>.546</td><td class="best">.639</td></tr>
+<tr class="mean"><td>Mean</td><td>927 commits · 2,524 seeds</td><td>.051</td><td>.104</td><td>.293</td><td>.417</td><td>.400</td><td>.568</td><td>.460</td><td>.626</td><td>.513</td><td class="best">.663</td><td class="best">.520</td><td>.662</td></tr>
+</tbody></table>
+<p class="tcap"><b>Table 5.</b> Co-change recall@5 and @10. Bold marks the best of the columns shown. The interleaved variant (mean&nbsp;.494&nbsp;/&nbsp;.662) is omitted for width but shown in Figure 2; it is slightly higher than the bold value for HTTPX @5 and Rich @10. Snapshots differ in age because repositories accumulate qualifying commits at different rates.</p></div>
+<figure>{{FIG_RECALL}}
+<figcaption><b>Figure 2.</b> Mean co-change recall over five repositories. Graph structure clearly beats folder layout. Lexical similarity is the strongest single signal, and fusing it with the graph is on par with or slightly above lexical alone.</figcaption></figure>
+<div class="tbl"><table>
+<thead><tr><th>Repository</th><th>found only by graph@10</th><th>found only by lexical@10</th><th>lexical@10</th><th>either (union)</th><th>gain from graph</th></tr></thead>
+<tbody>
+<tr><td>Flask</td><td>.022</td><td>.116</td><td>.715</td><td>.737</td><td>+2.2</td></tr>
+<tr><td>Requests</td><td>.104</td><td>.099</td><td>.780</td><td>.884</td><td>+10.4</td></tr>
+<tr><td>HTTPX</td><td>.047</td><td>.066</td><td>.550</td><td>.596</td><td>+4.6</td></tr>
+<tr><td>Rich</td><td>.059</td><td>.070</td><td>.637</td><td>.696</td><td>+5.9</td></tr>
+<tr><td>Celery</td><td>.040</td><td>.109</td><td>.635</td><td>.675</td><td>+4.0</td></tr>
+</tbody></table>
+<p class="tcap"><b>Table 6.</b> Complementarity: mean fraction of ground truth that only one method's top 10 contains, and recall of the union of both top-10 lists (up to 20 files) in points over lexical@10.</p></div>
+<p><b>Findings.</b></p>
+<ol>
+<li><b>The import graph encodes coupling that folder layout does not.</b> Graph ranking beats same-directory ranking on all five repositories at recall@10 and on four of five at recall@5 (mean recall@5 .460 vs .293; on Celery .476 vs .120). The exception is Requests at @5, a small, flat package. This supports organising navigation by detected subsystems rather than by folders.</li>
+<li><b>Lexical similarity is the strongest single signal for co-change.</b> Compared with graph ranking, it wins at recall@5 on four of five repositories. Graph ranking wins on Rich (.513 vs .462), plausibly because its many small modules share less vocabulary with the files they change alongside.</li>
+<li><b>The two signals are complementary, but fusion gains are modest.</b> Each finds ground truth the other misses. The union of their top-10 lists recovers 2.2–10.4 points of recall beyond lexical@10. Rank fusion yields the best mean recall@5 (.520 vs .513) and ties at @10 (.662 vs .663), improving markedly on Requests (@10: .835 vs .780) and Rich (@5: .546 vs .462) and losing on Flask. We therefore do not claim that the graph improves raw recall on its own.</li>
+<li><b>Communities are a coarse signal.</b> Ranking community members first helps when communities are small (Requests @10: .879) but hurts at small <i>k</i> in large subsystems. This motivates using communities for orientation and summaries rather than as a ranking feature.</li>
+</ol>
+<p>These results shaped the retrieval design in Section 4.8: lexical search selects entry points, and the graph supplies the <i>expansion and the reasons</i> (callers, blast radius, subsystem context), which similarity cannot provide and which a reviewer or agent can verify.</p>
+
+<h2>7&nbsp;&nbsp;Discussion and Limitations</h2>
+<p><b>What the graph is for.</b> Our strongest evidence for the graph is not recall but properties that similarity lacks: every context item has a typed, checkable reason; structure-dependent tasks (all callers of a function, all importers of a module) are answered exactly rather than approximately; and the discovered architecture gives agents and humans a map. The co-change benchmark measures one property, predicting what else will change, where content similarity is known to be strong, partly because tests and their subjects share vocabulary.</p>
+<p><b>Threats to validity.</b> (i) Co-change ground truth includes tangled commits and misses files that should have changed but did not. (ii) TF-IDF stands in for neural embeddings, which may perform differently. (iii) The subjects are five Python projects plus Django for scale. Results may differ for other languages, monorepos, or codebases built on dynamic dispatch and dependency injection, where imports under-approximate runtime coupling. (iv) Fixed-size commit windows put some snapshots years in the past (Requests, 2013). (v) We evaluated heuristic descriptions only, not LLM-written ones. (vi) The security rules are syntactic pattern matches, useful for tagging and routing but not a vulnerability scanner, and they report findings in tests.</p>
+<p><b>Limitations of the proof of concept.</b> It supports Python only, re-parses all files on every scan, resolves imports but not calls, and uses import-level rather than symbol-level edges. Requirement linking is lexical. We have not yet measured end-to-end effects on agent task success.</p>
+
+<h2>8&nbsp;&nbsp;Future Work</h2>
+<ul>
+<li><b>Languages and edges.</b> A tree-sitter front end, call-level and symbol-level concepts, and typed edges for inheritance, data access and configuration.</li>
+<li><b>Parse caching.</b> Cache per-file analysis by content hash, so that re-scan cost scales with the change rather than the repository.</li>
+<li><b>Agent-in-the-loop evaluation.</b> Measure task success, tokens and reviewer effort for agents given category-aware context packs, versus top-<i>k</i> chunks and versus direct file exploration, in the spirit of [8].</li>
+<li><b>Learned fusion.</b> Learn per-category weights for lexical, embedding, graph-distance and community signals from co-change history.</li>
+<li><b>Global questions.</b> LLM-written subsystem summaries, and a GraphRAG-style map-reduce over them for architecture-level questions [4].</li>
+<li><b>Serving.</b> An MCP server that exposes the bundle's navigation and context packs as tools, while keeping the bundle as the source of truth.</li>
+<li><b>Profile governance.</b> Stabilise <code>okf-code</code> with more producers and consumers, including cross-repository links for multi-service systems.</li>
+</ul>
+
+<h2>9&nbsp;&nbsp;Conclusion</h2>
+<p>Coding agents need context that is structural, current, and trustworthy. Rhizome publishes that context as an Open Knowledge Format bundle that lives with the code. Structure comes from a parser. Subsystems come from the Leiden algorithm, with its connectivity guarantee. An OKF code profile preserves dependency semantics in plain markdown. A co-evolution protocol makes knowledge updates part of ordinary code review. On six real repositories, scans are fast, deterministic and incremental, Leiden avoided the disconnected subsystems that Louvain occasionally produced, and the import graph proved a much better relatedness signal than folder layout and complementary to lexical similarity. The resulting knowledge is readable by people, navigable by agents, and portable across tools, and it stays correct because every change that alters the code also updates it.</p>
+
+<h2>References</h2>
+<ol class="refs">
+<li>V. A. Traag, L. Waltman, N. J. van Eck. From Louvain to Leiden: guaranteeing well-connected communities. <i>Scientific Reports</i> 9, 5233 (2019). arXiv:1810.08473.</li>
+<li>V. D. Blondel, J.-L. Guillaume, R. Lambiotte, E. Lefebvre. Fast unfolding of communities in large networks. <i>J. Stat. Mech.</i> P10008 (2008).</li>
+<li>M. E. J. Newman, M. Girvan. Finding and evaluating community structure in networks. <i>Phys. Rev. E</i> 69, 026113 (2004).</li>
+<li>D. Edge, H. Trinh, N. Cheng, J. Bradley, A. Chao, A. Mody, S. Truitt, J. Larson. From Local to Global: A Graph RAG Approach to Query-Focused Summarization. arXiv:2404.16130 (2024).</li>
+<li>P. Lewis et al. Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. <i>NeurIPS</i> (2020).</li>
+<li>S. McVeety, A. Hormati. Introducing the Open Knowledge Format. Google Cloud Blog, June 12, 2026. Specification: github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf.</li>
+<li>A. Karpathy. LLM Wiki. GitHub gist, gist.github.com/karpathy/442a6bf555914893e9891c11519de94f (n.d.).</li>
+<li>M. Vogel, F. Meyer-Eschenbach, S. Kohler, E. Grünewald, F. Balzer. Codebase-Memory: Tree-Sitter-Based Knowledge Graphs for LLM Code Exploration via MCP. arXiv:2603.27277 (2026).</li>
+<li>Repowise. Leiden communities vs PageRank for code hotspots. repowise.dev/blog/concepts/leiden-communities-vs-pagerank-for-code-hotspots (accessed September 2026).</li>
+<li>G. V. Cormack, C. L. A. Clarke, S. Büttcher. Reciprocal rank fusion outperforms Condorcet and individual rank learning methods. <i>SIGIR</i> (2009).</li>
+<li>T. Zimmermann, P. Weißgerber, S. Diehl, A. Zeller. Mining version histories to guide software changes. <i>ICSE</i> (2004).</li>
+<li>Microsoft. GraphRAG documentation. microsoft.github.io/graphrag (accessed September 2026).</li>
+<li>S. Robertson, H. Zaragoza. The Probabilistic Relevance Framework: BM25 and Beyond. <i>Foundations and Trends in Information Retrieval</i> 3(4) (2009).</li>
+<li>L. Page, S. Brin, R. Motwani, T. Winograd. The PageRank Citation Ranking: Bringing Order to the Web. Stanford InfoLab Technical Report (1999).</li>
+<li>S. Mancoridis, B. S. Mitchell, Y. Chen, E. R. Gansner. Bunch: A clustering tool for the recovery and maintenance of software system structures. <i>ICSM</i> (1999).</li>
+<li>V. Tzerpos, R. C. Holt. ACDC: An algorithm for comprehension-driven clustering. <i>WCRE</i> (2000).</li>
+</ol>
+
+<p class="notice">© 2026 Venkat Malviya. All rights reserved. This paper, the OKF code profile and the Rhizome software are the author's original work. Reproduction or use of the design or implementation, in whole or in part, requires the author's prior written permission. Evaluation artefacts: <code>eval/run_eval.py</code>, <code>eval/results.json</code>, <code>eval/results_scale.json</code>.</p>
+
+</body>
+</html>

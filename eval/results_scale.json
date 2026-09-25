@@ -1,0 +1,171 @@
+{
+ "django": {
+  "head": "a013c82",
+  "scan": {
+   "files": 2931,
+   "parse_errors": 6,
+   "edges": 9089,
+   "subsystems": 32,
+   "components": 176,
+   "unlinked_groups": 4,
+   "disconnected_communities": 0,
+   "documents": 3840,
+   "changed_documents": 3839,
+   "llm_calls": 0,
+   "requirements": 0,
+   "security_findings": 266,
+   "seconds_parse": 7.97,
+   "seconds_graph": 1.656,
+   "seconds_total": 14.02,
+   "validate_ok": true,
+   "documents_on_disk": 3840,
+   "bundle_kb": 8489.9,
+   "incremental_target": "django/utils/copy.py",
+   "incremental_changed_docs": 2,
+   "incremental_seconds": 14.62,
+   "idempotent_after_update": true
+  },
+  "connectivity": {
+   "nodes": 2191,
+   "edges": 9015,
+   "leiden": [
+    {
+     "communities": 29,
+     "multi": 29,
+     "disconnected": 0,
+     "modularity": 0.5867
+    },
+    {
+     "communities": 30,
+     "multi": 30,
+     "disconnected": 0,
+     "modularity": 0.5856
+    },
+    {
+     "communities": 32,
+     "multi": 32,
+     "disconnected": 0,
+     "modularity": 0.5887
+    },
+    {
+     "communities": 32,
+     "multi": 32,
+     "disconnected": 0,
+     "modularity": 0.5864
+    },
+    {
+     "communities": 28,
+     "multi": 28,
+     "disconnected": 0,
+     "modularity": 0.5866
+    },
+    {
+     "communities": 29,
+     "multi": 29,
+     "disconnected": 0,
+     "modularity": 0.5853
+    },
+    {
+     "communities": 30,
+     "multi": 30,
+     "disconnected": 0,
+     "modularity": 0.5892
+    },
+    {
+     "communities": 29,
+     "multi": 29,
+     "disconnected": 0,
+     "modularity": 0.5852
+    },
+    {
+     "communities": 29,
+     "multi": 29,
+     "disconnected": 0,
+     "modularity": 0.5867
+    },
+    {
+     "communities": 30,
+     "multi": 30,
+     "disconnected": 0,
+     "modularity": 0.589
+    }
+   ],
+   "louvain": [
+    {
+     "communities": 22,
+     "multi": 22,
+     "disconnected": 0,
+     "modularity": 0.5815
+    },
+    {
+     "communities": 22,
+     "multi": 22,
+     "disconnected": 0,
+     "modularity": 0.5812
+    },
+    {
+     "communities": 24,
+     "multi": 24,
+     "disconnected": 0,
+     "modularity": 0.5806
+    },
+    {
+     "communities": 23,
+     "multi": 23,
+     "disconnected": 0,
+     "modularity": 0.5834
+    },
+    {
+     "communities": 23,
+     "multi": 23,
+     "disconnected": 0,
+     "modularity": 0.5821
+    },
+    {
+     "communities": 24,
+     "multi": 24,
+     "disconnected": 0,
+     "modularity": 0.5842
+    },
+    {
+     "communities": 27,
+     "multi": 27,
+     "disconnected": 0,
+     "modularity": 0.5808
+    },
+    {
+     "communities": 22,
+     "multi": 22,
+     "disconnected": 0,
+     "modularity": 0.5813
+    },
+    {
+     "communities": 22,
+     "multi": 22,
+     "disconnected": 0,
+     "modularity": 0.578
+    },
+    {
+     "communities": 23,
+     "multi": 23,
+     "disconnected": 0,
+     "modularity": 0.5816
+    }
+   ],
+   "leiden_summary": {
+    "mean_communities": 29.8,
+    "mean_modularity": 0.5869,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 298
+   },
+   "louvain_summary": {
+    "mean_communities": 23.2,
+    "mean_modularity": 0.5815,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 232
+   }
+  }
+ }
+}

@@ -1,0 +1,1212 @@
+{
+ "flask": {
+  "head": "d73fa1cd",
+  "scan": {
+   "files": 83,
+   "parse_errors": 0,
+   "edges": 179,
+   "subsystems": 11,
+   "components": 3,
+   "unlinked_groups": 2,
+   "disconnected_communities": 0,
+   "documents": 129,
+   "changed_documents": 128,
+   "llm_calls": 0,
+   "requirements": 0,
+   "security_findings": 4,
+   "seconds_parse": 0.206,
+   "seconds_graph": 0.544,
+   "seconds_total": 0.874,
+   "validate_ok": true,
+   "documents_on_disk": 129,
+   "bundle_kb": 241.5,
+   "incremental_target": "src/flask/typing.py",
+   "incremental_changed_docs": 2,
+   "incremental_seconds": 0.36,
+   "idempotent_after_update": true
+  },
+  "connectivity": {
+   "nodes": 79,
+   "edges": 167,
+   "leiden": [
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    }
+   ],
+   "louvain": [
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4764
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4771
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4764
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4764
+    },
+    {
+     "communities": 8,
+     "multi": 8,
+     "disconnected": 0,
+     "modularity": 0.4762
+    },
+    {
+     "communities": 9,
+     "multi": 9,
+     "disconnected": 0,
+     "modularity": 0.4764
+    }
+   ],
+   "leiden_summary": {
+    "mean_communities": 9.0,
+    "mean_modularity": 0.4771,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 90
+   },
+   "louvain_summary": {
+    "mean_communities": 8.9,
+    "mean_modularity": 0.4767,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 89
+   }
+  },
+  "cochange": {
+   "snapshot": "2bec58fd6e",
+   "snapshot_date": "2018-01-03",
+   "files_at_snapshot": 77,
+   "edges": 130,
+   "commits_used": 110,
+   "seed_pairs": 269,
+   "recall": {
+    "random": {
+     "5": 0.0653,
+     "10": 0.1392
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.5732,
+     "10": 0.7151
+    },
+    "same directory + lexical": {
+     "5": 0.3263,
+     "10": 0.4587
+    },
+    "Leiden community + lexical": {
+     "5": 0.3406,
+     "10": 0.4166
+    },
+    "graph (import distance)": {
+     "5": 0.4229,
+     "10": 0.6208
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.4484,
+     "10": 0.6642
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.5265,
+     "10": 0.6513
+    }
+   },
+   "hit": {
+    "random": {
+     "5": 0.1152,
+     "10": 0.2342
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.7249,
+     "10": 0.8401
+    },
+    "same directory + lexical": {
+     "5": 0.4572,
+     "10": 0.5613
+    },
+    "Leiden community + lexical": {
+     "5": 0.461,
+     "10": 0.5316
+    },
+    "graph (import distance)": {
+     "5": 0.5688,
+     "10": 0.7435
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.5874,
+     "10": 0.7881
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.6691,
+     "10": 0.7695
+    }
+   },
+   "complementarity_at10": {
+    "found_only_by_graph": 0.022,
+    "found_only_by_lexical": 0.1163,
+    "found_by_either": 0.7371
+   }
+  }
+ },
+ "requests": {
+  "head": "611c6162",
+  "scan": {
+   "files": 37,
+   "parse_errors": 0,
+   "edges": 106,
+   "subsystems": 8,
+   "components": 0,
+   "unlinked_groups": 3,
+   "disconnected_communities": 0,
+   "documents": 55,
+   "changed_documents": 54,
+   "llm_calls": 0,
+   "requirements": 0,
+   "security_findings": 14,
+   "seconds_parse": 0.208,
+   "seconds_graph": 0.007,
+   "seconds_total": 0.28,
+   "validate_ok": true,
+   "documents_on_disk": 55,
+   "bundle_kb": 110.3,
+   "incremental_target": "src/requests/hooks.py",
+   "incremental_changed_docs": 2,
+   "incremental_seconds": 0.26,
+   "idempotent_after_update": true
+  },
+  "connectivity": {
+   "nodes": 34,
+   "edges": 98,
+   "leiden": [
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    }
+   ],
+   "louvain": [
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    },
+    {
+     "communities": 5,
+     "multi": 5,
+     "disconnected": 0,
+     "modularity": 0.316
+    }
+   ],
+   "leiden_summary": {
+    "mean_communities": 5.0,
+    "mean_modularity": 0.316,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 50
+   },
+   "louvain_summary": {
+    "mean_communities": 5.0,
+    "mean_modularity": 0.316,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 50
+   }
+  },
+  "cochange": {
+   "snapshot": "a8300c0ae6",
+   "snapshot_date": "2013-10-30",
+   "files_at_snapshot": 75,
+   "edges": 184,
+   "commits_used": 156,
+   "seed_pairs": 426,
+   "recall": {
+    "random": {
+     "5": 0.0642,
+     "10": 0.1439
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.6092,
+     "10": 0.78
+    },
+    "same directory + lexical": {
+     "5": 0.5839,
+     "10": 0.7524
+    },
+    "Leiden community + lexical": {
+     "5": 0.3893,
+     "10": 0.879
+    },
+    "graph (import distance)": {
+     "5": 0.5257,
+     "10": 0.7849
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.5595,
+     "10": 0.8253
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.6017,
+     "10": 0.8346
+    }
+   },
+   "hit": {
+    "random": {
+     "5": 0.1408,
+     "10": 0.284
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.8075,
+     "10": 0.9296
+    },
+    "same directory + lexical": {
+     "5": 0.7746,
+     "10": 0.8427
+    },
+    "Leiden community + lexical": {
+     "5": 0.5986,
+     "10": 0.9695
+    },
+    "graph (import distance)": {
+     "5": 0.7207,
+     "10": 0.9061
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.7723,
+     "10": 0.9484
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.8005,
+     "10": 0.9624
+    }
+   },
+   "complementarity_at10": {
+    "found_only_by_graph": 0.1035,
+    "found_only_by_lexical": 0.0986,
+    "found_by_either": 0.8835
+   }
+  }
+ },
+ "httpx": {
+  "head": "b5addb6",
+  "scan": {
+   "files": 60,
+   "parse_errors": 0,
+   "edges": 122,
+   "subsystems": 4,
+   "components": 7,
+   "unlinked_groups": 1,
+   "disconnected_communities": 0,
+   "documents": 82,
+   "changed_documents": 81,
+   "llm_calls": 0,
+   "requirements": 0,
+   "security_findings": 10,
+   "seconds_parse": 0.261,
+   "seconds_graph": 0.013,
+   "seconds_total": 0.382,
+   "validate_ok": true,
+   "documents_on_disk": 82,
+   "bundle_kb": 193.1,
+   "incremental_target": "httpx/__version__.py",
+   "incremental_changed_docs": 2,
+   "incremental_seconds": 0.42,
+   "idempotent_after_update": true
+  },
+  "connectivity": {
+   "nodes": 57,
+   "edges": 117,
+   "leiden": [
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    }
+   ],
+   "louvain": [
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    },
+    {
+     "communities": 3,
+     "multi": 3,
+     "disconnected": 0,
+     "modularity": 0.4805
+    }
+   ],
+   "leiden_summary": {
+    "mean_communities": 3.0,
+    "mean_modularity": 0.4805,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 30
+   },
+   "louvain_summary": {
+    "mean_communities": 3.0,
+    "mean_modularity": 0.4805,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 30
+   }
+  },
+  "cochange": {
+   "snapshot": "2b92a78c41",
+   "snapshot_date": "2020-01-07",
+   "files_at_snapshot": 62,
+   "edges": 165,
+   "commits_used": 109,
+   "seed_pairs": 302,
+   "recall": {
+    "random": {
+     "5": 0.0904,
+     "10": 0.1722
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.3719,
+     "10": 0.55
+    },
+    "same directory + lexical": {
+     "5": 0.2829,
+     "10": 0.4273
+    },
+    "Leiden community + lexical": {
+     "5": 0.3648,
+     "10": 0.5088
+    },
+    "graph (import distance)": {
+     "5": 0.3637,
+     "10": 0.5303
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.3917,
+     "10": 0.5506
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.3811,
+     "10": 0.55
+    }
+   },
+   "hit": {
+    "random": {
+     "5": 0.1921,
+     "10": 0.3212
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.5728,
+     "10": 0.7649
+    },
+    "same directory + lexical": {
+     "5": 0.4437,
+     "10": 0.5861
+    },
+    "Leiden community + lexical": {
+     "5": 0.5662,
+     "10": 0.7053
+    },
+    "graph (import distance)": {
+     "5": 0.5596,
+     "10": 0.7417
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.6026,
+     "10": 0.7616
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.5828,
+     "10": 0.7616
+    }
+   },
+   "complementarity_at10": {
+    "found_only_by_graph": 0.0465,
+    "found_only_by_lexical": 0.0662,
+    "found_by_either": 0.5964
+   }
+  }
+ },
+ "rich": {
+  "head": "9d8f9a37",
+  "scan": {
+   "files": 213,
+   "parse_errors": 0,
+   "edges": 730,
+   "subsystems": 16,
+   "components": 29,
+   "unlinked_groups": 5,
+   "disconnected_communities": 0,
+   "documents": 277,
+   "changed_documents": 276,
+   "llm_calls": 0,
+   "requirements": 0,
+   "security_findings": 7,
+   "seconds_parse": 0.689,
+   "seconds_graph": 0.046,
+   "seconds_total": 1.069,
+   "validate_ok": true,
+   "documents_on_disk": 277,
+   "bundle_kb": 564.0,
+   "incremental_target": "rich/_windows.py",
+   "incremental_changed_docs": 2,
+   "incremental_seconds": 1.08,
+   "idempotent_after_update": true
+  },
+  "connectivity": {
+   "nodes": 207,
+   "edges": 698,
+   "leiden": [
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4329
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.4333
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.4335
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4327
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.4335
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.4332
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.433
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.4334
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4318
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.4334
+    }
+   ],
+   "louvain": [
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.43
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4315
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4301
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.4299
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4295
+    },
+    {
+     "communities": 10,
+     "multi": 10,
+     "disconnected": 0,
+     "modularity": 0.4266
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.43
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4303
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4315
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.4309
+    }
+   ],
+   "leiden_summary": {
+    "mean_communities": 11.6,
+    "mean_modularity": 0.4331,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 116
+   },
+   "louvain_summary": {
+    "mean_communities": 11.0,
+    "mean_modularity": 0.43,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 110
+   }
+  },
+  "cochange": {
+   "snapshot": "4f53dec2fb",
+   "snapshot_date": "2021-11-07",
+   "files_at_snapshot": 176,
+   "edges": 645,
+   "commits_used": 271,
+   "seed_pairs": 701,
+   "recall": {
+    "random": {
+     "5": 0.0236,
+     "10": 0.0375
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.462,
+     "10": 0.6365
+    },
+    "same directory + lexical": {
+     "5": 0.1532,
+     "10": 0.216
+    },
+    "Leiden community + lexical": {
+     "5": 0.4336,
+     "10": 0.5361
+    },
+    "graph (import distance)": {
+     "5": 0.5125,
+     "10": 0.626
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.5396,
+     "10": 0.6542
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.5457,
+     "10": 0.6353
+    }
+   },
+   "hit": {
+    "random": {
+     "5": 0.0556,
+     "10": 0.087
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.6305,
+     "10": 0.8046
+    },
+    "same directory + lexical": {
+     "5": 0.291,
+     "10": 0.368
+    },
+    "Leiden community + lexical": {
+     "5": 0.5635,
+     "10": 0.7019
+    },
+    "graph (import distance)": {
+     "5": 0.6976,
+     "10": 0.8146
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.719,
+     "10": 0.8431
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.7261,
+     "10": 0.8217
+    }
+   },
+   "complementarity_at10": {
+    "found_only_by_graph": 0.0591,
+    "found_only_by_lexical": 0.0696,
+    "found_by_either": 0.6956
+   }
+  }
+ },
+ "celery": {
+  "head": "eb3dfa384",
+  "scan": {
+   "files": 432,
+   "parse_errors": 0,
+   "edges": 1289,
+   "subsystems": 22,
+   "components": 61,
+   "unlinked_groups": 6,
+   "disconnected_communities": 0,
+   "documents": 596,
+   "changed_documents": 595,
+   "llm_calls": 0,
+   "requirements": 0,
+   "security_findings": 46,
+   "seconds_parse": 1.925,
+   "seconds_graph": 0.123,
+   "seconds_total": 2.694,
+   "validate_ok": true,
+   "documents_on_disk": 596,
+   "bundle_kb": 1340.7,
+   "incremental_target": "celery/backends/dynamodb.py",
+   "incremental_changed_docs": 2,
+   "incremental_seconds": 2.78,
+   "idempotent_after_update": true
+  },
+  "connectivity": {
+   "nodes": 371,
+   "edges": 1282,
+   "leiden": [
+    {
+     "communities": 18,
+     "multi": 18,
+     "disconnected": 0,
+     "modularity": 0.5889
+    },
+    {
+     "communities": 16,
+     "multi": 16,
+     "disconnected": 0,
+     "modularity": 0.586
+    },
+    {
+     "communities": 15,
+     "multi": 15,
+     "disconnected": 0,
+     "modularity": 0.5869
+    },
+    {
+     "communities": 15,
+     "multi": 15,
+     "disconnected": 0,
+     "modularity": 0.5856
+    },
+    {
+     "communities": 18,
+     "multi": 18,
+     "disconnected": 0,
+     "modularity": 0.5879
+    },
+    {
+     "communities": 14,
+     "multi": 14,
+     "disconnected": 0,
+     "modularity": 0.5853
+    },
+    {
+     "communities": 15,
+     "multi": 15,
+     "disconnected": 0,
+     "modularity": 0.5852
+    },
+    {
+     "communities": 17,
+     "multi": 17,
+     "disconnected": 0,
+     "modularity": 0.588
+    },
+    {
+     "communities": 17,
+     "multi": 17,
+     "disconnected": 0,
+     "modularity": 0.5883
+    },
+    {
+     "communities": 18,
+     "multi": 18,
+     "disconnected": 0,
+     "modularity": 0.588
+    }
+   ],
+   "louvain": [
+    {
+     "communities": 13,
+     "multi": 13,
+     "disconnected": 1,
+     "modularity": 0.586
+    },
+    {
+     "communities": 11,
+     "multi": 11,
+     "disconnected": 0,
+     "modularity": 0.5826
+    },
+    {
+     "communities": 12,
+     "multi": 12,
+     "disconnected": 0,
+     "modularity": 0.5846
+    },
+    {
+     "communities": 15,
+     "multi": 15,
+     "disconnected": 0,
+     "modularity": 0.5862
+    },
+    {
+     "communities": 15,
+     "multi": 15,
+     "disconnected": 0,
+     "modularity": 0.5866
+    },
+    {
+     "communities": 13,
+     "multi": 13,
+     "disconnected": 0,
+     "modularity": 0.5859
+    },
+    {
+     "communities": 15,
+     "multi": 15,
+     "disconnected": 0,
+     "modularity": 0.5865
+    },
+    {
+     "communities": 10,
+     "multi": 10,
+     "disconnected": 0,
+     "modularity": 0.5817
+    },
+    {
+     "communities": 13,
+     "multi": 13,
+     "disconnected": 0,
+     "modularity": 0.5879
+    },
+    {
+     "communities": 13,
+     "multi": 13,
+     "disconnected": 0,
+     "modularity": 0.5844
+    }
+   ],
+   "leiden_summary": {
+    "mean_communities": 16.3,
+    "mean_modularity": 0.587,
+    "runs_with_disconnected": 0,
+    "total_disconnected": 0,
+    "total_multi": 163
+   },
+   "louvain_summary": {
+    "mean_communities": 13.0,
+    "mean_modularity": 0.5852,
+    "runs_with_disconnected": 1,
+    "total_disconnected": 1,
+    "total_multi": 130
+   }
+  },
+  "cochange": {
+   "snapshot": "5d97edc0ed",
+   "snapshot_date": "2024-01-17",
+   "files_at_snapshot": 376,
+   "edges": 1075,
+   "commits_used": 281,
+   "seed_pairs": 826,
+   "recall": {
+    "random": {
+     "5": 0.0138,
+     "10": 0.026
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.5506,
+     "10": 0.635
+    },
+    "same directory + lexical": {
+     "5": 0.1202,
+     "10": 0.2295
+    },
+    "Leiden community + lexical": {
+     "5": 0.4732,
+     "10": 0.5018
+    },
+    "graph (import distance)": {
+     "5": 0.4756,
+     "10": 0.5656
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.5329,
+     "10": 0.6142
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.5459,
+     "10": 0.6385
+    }
+   },
+   "hit": {
+    "random": {
+     "5": 0.0315,
+     "10": 0.0654
+    },
+    "lexical (TF-IDF)": {
+     "5": 0.7881,
+     "10": 0.8511
+    },
+    "same directory + lexical": {
+     "5": 0.2518,
+     "10": 0.4056
+    },
+    "Leiden community + lexical": {
+     "5": 0.707,
+     "10": 0.7312
+    },
+    "graph (import distance)": {
+     "5": 0.7143,
+     "10": 0.7966
+    },
+    "hybrid (graph \u2295 lexical)": {
+     "5": 0.7772,
+     "10": 0.8438
+    },
+    "fusion (RRF lexical+graph)": {
+     "5": 0.776,
+     "10": 0.8571
+    }
+   },
+   "complementarity_at10": {
+    "found_only_by_graph": 0.0398,
+    "found_only_by_lexical": 0.1092,
+    "found_by_either": 0.6748
+   }
+  }
+ }
+}
