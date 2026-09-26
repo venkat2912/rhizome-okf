@@ -8,16 +8,57 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import urllib.request
 
 from .parse_python import FileInfo
 
 
+# a reStructuredText title underline/overline: one repeated punctuation character, e.g. ~~~~ or ====
+_UNDERLINE = re.compile(r"^\s*([=~\-^*#+`'\".:_])\1{2,}\s*$")
+
+
+def _names_module(line: str, module: str, path: str) -> bool:
+    """True if ``line`` only restates the module's name (``requests.sessions``, ``sessions.py`` …)."""
+    s = line.strip().strip("`*:'\"").strip()
+    if not s:
+        return False
+    names = {module, module.split(".")[-1] if module else "", path, path.rsplit("/", 1)[-1],
+             path.rsplit("/", 1)[-1][:-3] if path.endswith(".py") else ""}
+    return s in {n for n in names if n}
+
+
+def clean_docstring(doc: str, module: str = "", path: str = "") -> str:
+    """First meaningful paragraph of a module docstring, as one line.
+
+    Drops title underline lines (``~~~``, ``===``, ``---``) and a leading line that only
+    repeats the module name, so Requests-style headers do not become the description.
+    """
+    lines = [ln for ln in (doc or "").strip().splitlines() if not _UNDERLINE.match(ln)]
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    if lines and _names_module(lines[0], module, path):
+        lines.pop(0)
+    para = []
+    for ln in lines:
+        if not ln.strip():
+            if para:
+                break
+            continue
+        para.append(ln.strip())
+    return " ".join(" ".join(para).split())[:240]
+
+
+def description_line(f: FileInfo) -> str:
+    return clean_docstring(f.doc_full, f.module, f.path) if f.doc_full else f.doc
+
+
 def heuristic_file_summary(f: FileInfo) -> str:
     if f.parse_error:
         return f"Could not be parsed: {f.parse_error}."
-    if f.doc:
-        s = f.doc.rstrip(".") + "."
+    doc = description_line(f)
+    if doc:
+        s = doc.rstrip(".") + "."
         return s[0].upper() + s[1:]
     classes = [s.name for s in f.symbols if s.kind == "class"]
     funcs = [s.name for s in f.symbols if s.kind == "function" and not s.name.startswith("_")]
@@ -39,8 +80,9 @@ def heuristic_community_summary(members: list[FileInfo], hub: FileInfo, n_childr
     top = [m.path for m in members[:3]]
     s = (f"{len(members)} file{'s' if len(members) != 1 else ''} centred on `{hub.path}`"
          f"{f' ({tests} test file' + ('s' if tests != 1 else '') + ')' if tests else ''}. Most central: " + ", ".join(f"`{p}`" for p in top) + ".")
-    if hub.doc:
-        s += f" Hub purpose: {hub.doc.rstrip('.')}."
+    hub_doc = description_line(hub)
+    if hub_doc:
+        s += f" Hub purpose: {hub_doc.rstrip('.')}."
     if n_children:
         s += f" Split into {n_children} components."
     return s

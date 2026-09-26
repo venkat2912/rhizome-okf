@@ -86,3 +86,34 @@ def test_bug_category_respects_include_tests(tmp_path):
     assert "tests/test_api.py" not in paths(include_tests=False)
     assert "tests/test_api.py" in paths(include_tests=True)
     assert "tests/test_api.py" in paths(include_tests=False, config=RetrievalConfig.v01())
+
+
+# ---------------------------------------------------------------- #10 description clean-up
+
+REQUESTS_DOC = '''
+requests.sessions
+~~~~~~~~~~~~~~~~~
+
+This module provides a Session object to manage and persist settings across
+requests (cookies, auth, proxies).
+'''
+
+
+def test_requests_style_docstring_is_cleaned():
+    from rhizome.summarize import clean_docstring
+    want = ("This module provides a Session object to manage and persist settings across "
+            "requests (cookies, auth, proxies).")
+    assert clean_docstring(REQUESTS_DOC, "requests.sessions", "requests/sessions.py") == want
+    assert clean_docstring("``sessions``\n==========\n\nSession handling.", "requests.sessions") == "Session handling."
+    assert clean_docstring("Title\n-----\n\nBody text.", "pkg.mod") == "Title"          # a real title is kept
+    assert clean_docstring("Database access helpers.", "shop.db") == "Database access helpers."
+
+
+def test_scan_description_uses_cleaned_docstring(tmp_path):
+    files = {"requests/__init__.py": "", "requests/sessions.py": f'"""{REQUESTS_DOC}"""\n\nclass Session:\n    pass\n',
+             "requests/models.py": '"""\nrequests.models\n~~~~~~~~~~~~~~~\n"""\n\ndef get():\n    pass\n'}
+    repo = write_repo(str(tmp_path / "r"), files)
+    scan(repo)
+    out = os.path.join(repo, ".knowledge")
+    assert _fm(out, "requests/sessions.py")["description"].startswith("This module provides a Session object")
+    assert _fm(out, "requests/models.py")["description"] == "Module defining 1 public function (get)."

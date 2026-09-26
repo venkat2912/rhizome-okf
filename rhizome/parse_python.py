@@ -65,6 +65,7 @@ class FileInfo:
     external_imports: list[str] = field(default_factory=list)
     parse_error: str | None = None
     parser: str = "ast"              # "ast" | "failed"
+    doc_full: str = ""               # whole module docstring (descriptions are cleaned from it)
 
 
 def iter_python_files(root: str, exclude: list[str] | None = None):
@@ -249,7 +250,8 @@ def parse_file(root: str, rel: str) -> FileInfo:
         info.parser = "failed"
         return info
 
-    info.doc = _first_line(ast.get_docstring(tree))
+    info.doc_full = ast.get_docstring(tree) or ""
+    info.doc = _first_line(info.doc_full)
     alias_map: dict[str, str] = {}
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
