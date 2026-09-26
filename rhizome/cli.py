@@ -58,6 +58,8 @@ def retrieval_config(a) -> RetrievalConfig:
         changes["bm25f"] = False
     if a.no_query_analysis:
         changes["query_analysis"] = False
+    if a.fixed_entries:
+        changes["adaptive_entries"] = False
     if a.legacy_bug_tests:
         changes["respect_include_tests"] = False
     return dataclasses.replace(cfg, **changes)
@@ -131,6 +133,7 @@ def main(argv=None) -> int:
     g.add_argument("--no-bm25f", action="store_true", help="#1 off: metadata-only BM25 (v0.1)")
     g.add_argument("--no-query-analysis", action="store_true",
                    help="#2 off: ignore tracebacks, paths, module and symbol names in the query")
+    g.add_argument("--fixed-entries", action="store_true", help="#3 off: always take the top 4 text hits")
     g.add_argument("--legacy-bug-tests", action="store_true",
                    help="#6 off: keep test files for `bug` even without --tests")
     sp.set_defaults(fn=_cmd_context)

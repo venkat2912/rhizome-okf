@@ -221,3 +221,23 @@ def test_resolution_rejects_ambiguous_names(tmp_path):
     assert b.resolve_path("util.py") == []                # 5 candidates
     assert len(b.resolve_path("x/y/pkg3/util.py")) == 1   # absolute path ending in a repository path
     assert len(b.resolve_module("pkg3.util.helper")) == 1
+
+
+# ---------------------------------------------------------------- #3 adaptive entry points
+
+def test_adaptive_entry_points(tmp_path):
+    from rhizome.retrieve import ENTRY_RATIO, RetrievalConfig, gather
+    b = _golden_bundle(tmp_path)
+    q = "hash_password md5 login"
+    hits = [(r, s) for r, s in b.search(q, k=8) if "test" not in b.concepts[r].fm["tags"]]  # gather drops tests
+    entries = gather(b, q, "bug")[0]
+    assert 1 <= len(entries) <= 4
+    strong = [r for r, s in hits if s >= ENTRY_RATIO * hits[0][1]]
+    assert entries == strong[:4]
+    assert len(gather(b, q, "bug", config=RetrievalConfig(adaptive_entries=False))[0]) == min(4, len(hits))
+
+
+def test_at_least_one_entry_point(tmp_path):
+    from rhizome.retrieve import gather
+    b = _golden_bundle(tmp_path)
+    assert len(gather(b, "refund", "bug")[0]) >= 1

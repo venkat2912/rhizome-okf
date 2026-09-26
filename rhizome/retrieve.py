@@ -37,12 +37,15 @@ class RetrievalConfig:
     bm25f: bool = True
     # #2: traceback frames, paths, module names, exception names, quoted strings -> exact entry points.
     query_analysis: bool = True
+    # #3: entry points are the text hits scoring at least ENTRY_RATIO of the best one (max 4, min 1);
+    # v0.1 always took the top 4.
+    adaptive_entries: bool = True
     # #6: v0.1 kept test files for the `bug` category even when include_tests was False.
     respect_include_tests: bool = True
 
     @classmethod
     def v01(cls) -> "RetrievalConfig":
-        return cls(bm25f=False, query_analysis=False, respect_include_tests=False)
+        return cls(bm25f=False, query_analysis=False, adaptive_entries=False, respect_include_tests=False)
 
 
 # BM25F (Robertson & Zaragoza, 2009). k1 and b are the textbook defaults, not tuned.
@@ -51,6 +54,8 @@ BM25_K1, BM25_B = 1.2, 0.75
 # (descriptions, docstrings, tags) says what it is for but is looser (2); the full body has the most text and
 # the most incidental matches (1). Chosen from these priorities, not fitted to any benchmark.
 FIELD_WEIGHTS = {"name": 3.0, "doc": 2.0, "body": 1.0}
+# #3: half the top score. A hit at half the best score matches clearly fewer or rarer query terms.
+ENTRY_RATIO = 0.5
 # A name, path or message found in more than three files does not point at a location; ignore it.
 MAX_DEFINERS = 3
 SYMBOL_NAME = re.compile(r"`(?:class |def )?([A-Za-z_][A-Za-z0-9_]*)(?:\(\))?`")
@@ -359,8 +364,13 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
         for i, (rel, why) in enumerate(exact[:k_entry]):
             entries.append(rel)
             add(rel, 200 - i, why)
+    top = hits[0][1] if hits else 0.0
     for rel, s in hits:
         if len(entries) >= k_entry:
+            break
+        # #3: a hit under half the best score shares only part of the query; seeding the walk from it
+        # spreads context into unrelated code. Always keep at least one entry point.
+        if cfg.adaptive_entries and entries and s < ENTRY_RATIO * top:
             break
         c = bundle.concepts[rel]
         if c.type == "Requirement":
