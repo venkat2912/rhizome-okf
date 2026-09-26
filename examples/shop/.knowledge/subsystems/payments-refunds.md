@@ -3,7 +3,7 @@ type: Subsystem
 title: shop/payments · refunds.py
 description: '2 files centred on `shop/payments/refunds.py`. Most central: `shop/payments/refunds.py`, `shop/payments/gateway.py`. Hub purpose: Refund workflow: validates the order then calls the gateway.'
 tags: [subsystem, 'security:tls-verify-disabled']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 level: 1
 size: 2
 hub: shop/payments/refunds.py

@@ -2,9 +2,9 @@
 type: Source File
 title: shop/db.py
 description: Database access helpers.
-resource: repo://shop/db.py
+resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/db.py
 tags: [python, 'subsystem:api', 'security:sql-string-building']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 language: python
 content_hash: sha256:630727b132f3e17b
 subsystem: api

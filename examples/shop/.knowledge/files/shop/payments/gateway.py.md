@@ -2,9 +2,9 @@
 type: Source File
 title: shop/payments/gateway.py
 description: Talks to the external payment provider.
-resource: repo://shop/payments/gateway.py
+resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/payments/gateway.py
 tags: [python, 'subsystem:payments-refunds', 'security:tls-verify-disabled']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 language: python
 content_hash: sha256:6e0e0bb7effa6391
 subsystem: payments-refunds

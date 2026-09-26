@@ -2,9 +2,9 @@
 type: Source File
 title: shop/payments/__init__.py
 description: Package initializer with no top-level definitions.
-resource: repo://shop/payments/__init__.py
+resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/payments/__init__.py
 tags: [python, 'subsystem:unlinked-shop']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 language: python
 content_hash: sha256:e3b0c44298fc1c14
 subsystem: unlinked-shop

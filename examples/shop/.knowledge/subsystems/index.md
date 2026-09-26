@@ -2,7 +2,7 @@
 type: Index
 title: Subsystems
 description: 4 subsystems found by Leiden community detection on the import graph.
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 ---
 
 # Subsystems

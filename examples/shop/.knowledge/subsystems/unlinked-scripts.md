@@ -3,7 +3,7 @@ type: Subsystem
 title: Unlinked files in scripts
 description: '1 file centred on `scripts/cleanup.py`. Most central: `scripts/cleanup.py`.'
 tags: [subsystem, unlinked, 'security:shell-exec']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 level: 1
 size: 1
 hub: scripts/cleanup.py

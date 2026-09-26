@@ -2,9 +2,9 @@
 type: Source File
 title: shop/auth.py
 description: Password hashing and session tokens.
-resource: repo://shop/auth.py
+resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/auth.py
 tags: [python, 'subsystem:api', 'area:auth', 'security:hardcoded-secret', 'security:weak-hash']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 language: python
 content_hash: sha256:fcd9a5eb8f1562e4
 subsystem: api

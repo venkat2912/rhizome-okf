@@ -2,9 +2,9 @@
 type: Source File
 title: shop/payments/refunds.py
 description: 'Refund workflow: validates the order then calls the gateway.'
-resource: repo://shop/payments/refunds.py
+resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/payments/refunds.py
 tags: [python, 'subsystem:payments-refunds']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 language: python
 content_hash: sha256:bc3f967a70e15816
 subsystem: payments-refunds

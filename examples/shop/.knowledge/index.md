@@ -1,16 +1,16 @@
 ---
 type: Index
-title: shop
-description: 'Code knowledge bundle for shop: subsystems, files, dependencies, security notes.'
-resource: repo://shop
-timestamp: '2026-09-25T20:35:11+00:00'
+title: Rizhome
+description: 'Code knowledge bundle for Rizhome: subsystems, files, dependencies, security notes.'
+resource: https://github.com/venkat2912/Rizhome
+timestamp: '2026-09-26T10:23:34+00:00'
 source_digest: 0fd647343992eac2
 profile: okf-code/0.1
 ---
 
 # Overview
 
-`shop`: 9 Python files, 7 internal import edges, 4 subsystems (0 components). Subsystems are communities found by the Leiden algorithm on the weighted import graph, so they reflect how code is actually coupled rather than how folders are laid out.
+`Rizhome`: 9 Python files, 7 internal import edges, 4 subsystems (0 components). Subsystems are communities found by the Leiden algorithm on the weighted import graph, so they reflect how code is actually coupled rather than how folders are laid out.
 
 # How to navigate
 

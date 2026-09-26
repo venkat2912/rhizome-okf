@@ -3,7 +3,7 @@ type: Subsystem
 title: shop/api.py cluster
 description: '4 files centred on `shop/api.py` (1 test file). Most central: `shop/api.py`, `shop/db.py`, `shop/auth.py`. Hub purpose: HTTP handlers.'
 tags: [subsystem, 'security:hardcoded-secret', 'security:sql-string-building', 'security:weak-hash']
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 level: 1
 size: 4
 hub: shop/api.py

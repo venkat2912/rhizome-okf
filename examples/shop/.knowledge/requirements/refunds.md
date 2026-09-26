@@ -2,9 +2,9 @@
 type: Requirement
 title: Partial refunds
 description: Customers must be able to request a partial refund. Extend `refund_order` and the RefundPolicy so that only part of the amount is returned through the gateway.
-resource: repo://docs/requirements/refunds.md
+resource: https://github.com/venkat2912/Rizhome/blob/HEAD/docs/requirements/refunds.md
 tags: [requirement]
-timestamp: '2026-09-25T20:35:11+00:00'
+timestamp: '2026-09-26T10:23:34+00:00'
 ---
 
 # Implemented by
