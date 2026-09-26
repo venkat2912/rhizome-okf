@@ -241,3 +241,20 @@ def test_at_least_one_entry_point(tmp_path):
     from rhizome.retrieve import gather
     b = _golden_bundle(tmp_path)
     assert len(gather(b, "refund", "bug")[0]) >= 1
+
+
+# ---------------------------------------------------------------- #4 never demote a strong text match
+
+def test_strong_text_matches_stay_above_expanded_files(tmp_path):
+    from rhizome.retrieve import ENTRY_RATIO, gather
+    b = _golden_bundle(tmp_path)
+    q = "save order refund gateway"
+    for cat in ("bug", "refactor", "security", "feature"):
+        entries, items, _ = gather(b, q, cat)
+        hits = [(r, s) for r, s in b.search(q, k=50) if r in b.files and "test" not in b.concepts[r].fm["tags"]]
+        strong = {r for r, s in hits if s >= ENTRY_RATIO * hits[0][1]}
+        order = [i.rel for i in items]
+        expanded = [r for r in order if r not in strong and r not in entries]
+        for r in strong:
+            assert r in order
+            assert all(order.index(r) < order.index(e) for e in expanded), (cat, r)

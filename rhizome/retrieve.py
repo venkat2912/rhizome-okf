@@ -40,12 +40,15 @@ class RetrievalConfig:
     # #3: entry points are the text hits scoring at least ENTRY_RATIO of the best one (max 4, min 1);
     # v0.1 always took the top 4.
     adaptive_entries: bool = True
+    # #4: strong text matches (>= ENTRY_RATIO of the top score) are never ranked below graph-expanded files.
+    never_demote: bool = True
     # #6: v0.1 kept test files for the `bug` category even when include_tests was False.
     respect_include_tests: bool = True
 
     @classmethod
     def v01(cls) -> "RetrievalConfig":
-        return cls(bm25f=False, query_analysis=False, adaptive_entries=False, respect_include_tests=False)
+        return cls(bm25f=False, query_analysis=False, adaptive_entries=False, never_demote=False,
+                   respect_include_tests=False)
 
 
 # BM25F (Robertson & Zaragoza, 2009). k1 and b are the textbook defaults, not tuned.
@@ -356,7 +359,9 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
     if drop_tests:
         base = boost or (lambda c: 1.0)
         boost = lambda c, _b=base: 0.0 if _is_test(c) else _b(c)
-    hits = bundle.search(query, k=k_entry * 2, boost=boost, config=cfg)
+    # never-demote needs every strong text match, not just the first 2 * k_entry
+    hits = bundle.search(query, k=len(bundle.searchable) if cfg.never_demote else k_entry * 2,
+                         boost=boost, config=cfg)
     entries: list[str] = []
     if cfg.query_analysis:
         exact = [(r, why) for r, why in exact_matches(bundle, analyze(query))
@@ -424,6 +429,14 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
         for r, d in dist.items():
             if d:
                 add(r, 80 - 10 * d, f"blast radius: depends on the change at distance {d}")
+    if cfg.never_demote and top > 0:
+        # #4: text order is kept for every strong match. Entry points score >= 100 and graph-expanded files
+        # < 90, so a strong match (placed in [90, 91]) can never be moved below an expanded file.
+        for rel, s in hits:
+            if s < ENTRY_RATIO * top:
+                break
+            if rel in bundle.files and rel not in entries:
+                add(rel, 90 + s / top, f"strong text match (lexical score {s:.1f})")
     subs = []
     for e in entries:
         s = bundle.subsystem_of(e)
