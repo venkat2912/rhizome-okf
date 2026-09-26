@@ -8,6 +8,8 @@ depends on the task category -> ranked, budgeted context pack.
 """
 from __future__ import annotations
 
+import gzip
+import json
 import logging
 import math
 import os
@@ -114,21 +116,98 @@ class Concept:
         return str(self.fm.get("type", ""))
 
 
-class Bundle:
-    """A loaded OKF code bundle. ``repo`` (the repository root) enables full-text search over file bodies."""
+INDEX_REL = ".rhizome/index.json.gz"     # #12: persisted search index written by the scanner
+INDEX_VERSION = 1
 
-    def __init__(self, path: str, repo: str | None = None):
+
+def parse_concept(rel: str, text: str) -> Concept:
+    fm, body = okf.split(text)
+    secs = okf.sections(body)
+    links = {name: [t for _, t in okf.LINK.findall(content)] for name, content in secs.items()}
+    return Concept(rel, fm, body, secs, links)
+
+
+def _json_safe(v):
+    return str(v)          # e.g. a YAML timestamp parsed as datetime; not used by retrieval
+
+
+def build_index(bundle_dir: str, repo: str | None = None) -> dict:
+    """The persisted index: every concept as parsed, plus body term counts per file (keyed by content hash)."""
+    concepts = {rel: parse_concept(rel, text) for rel, text in okf.iter_concepts(bundle_dir)}
+    root = concepts.get("/index.md")
+    body_tf = {}
+    if repo:
+        for rel, c in concepts.items():
+            if c.type == "Source File":
+                try:
+                    with open(os.path.join(repo, *str(c.fm.get("title", "")).split("/")),
+                              encoding="utf-8", errors="replace") as fh:
+                        body_tf[rel] = {"hash": c.fm.get("content_hash"), "tf": dict(Counter(tokens(fh.read())))}
+                except OSError:
+                    pass
+    return {"version": INDEX_VERSION, "source_digest": root.fm.get("source_digest") if root else None,
+            "documents": len(concepts),
+            "concepts": {rel: {"fm": c.fm, "body": c.body} for rel, c in concepts.items()},
+            "body_tf": body_tf}
+
+
+def write_index(bundle_dir: str, index: dict):
+    os.makedirs(os.path.join(bundle_dir, ".rhizome"), exist_ok=True)
+    tmp = os.path.join(bundle_dir, INDEX_REL + ".tmp")
+    with gzip.open(tmp, "wt", encoding="utf-8") as fh:
+        json.dump(index, fh, separators=(",", ":"), default=_json_safe)
+    os.replace(tmp, os.path.join(bundle_dir, INDEX_REL))
+
+
+def _count_documents(bundle_dir: str) -> int:
+    n = 0
+    for dirpath, dirnames, filenames in os.walk(bundle_dir):
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+        n += sum(1 for f in filenames if f.endswith(".md"))
+    return n
+
+
+def load_index(bundle_dir: str) -> dict | None:
+    """The persisted index if present and up to date (same root source_digest and document count)."""
+    try:
+        with gzip.open(os.path.join(bundle_dir, INDEX_REL), "rt", encoding="utf-8") as fh:
+            idx = json.load(fh)
+        with open(os.path.join(bundle_dir, "index.md"), encoding="utf-8") as fh:
+            root_fm, _ = okf.split(fh.read())
+    except (OSError, ValueError):
+        return None
+    if (idx.get("version") != INDEX_VERSION or idx.get("source_digest") != root_fm.get("source_digest")
+            or idx.get("documents") != _count_documents(bundle_dir)):
+        return None
+    return idx
+
+
+class Bundle:
+    """A loaded OKF code bundle. ``repo`` (the repository root) enables full-text search over file bodies.
+
+    When the scanner's persisted index (#12) is present and up to date it is loaded instead of reading
+    every markdown file; ``use_index=False`` forces reading the markdown.
+    """
+
+    def __init__(self, path: str, repo: str | None = None, use_index: bool = True):
         self.path = path
         self.repo = repo
         self.concepts: dict[str, Concept] = {}
-        for rel, text in okf.iter_concepts(path):
-            fm, body = okf.split(text)
-            secs = okf.sections(body)
-            links = {name: [t for _, t in okf.LINK.findall(content)] for name, content in secs.items()}
-            self.concepts[rel] = Concept(rel, fm, body, secs, links)
+        idx = load_index(path) if use_index else None
+        self.from_index = idx is not None
+        self._index_tf = (idx or {}).get("body_tf", {})
+        if idx:
+            for rel, d in idx["concepts"].items():
+                secs = okf.sections(d["body"])
+                links = {name: [t for _, t in okf.LINK.findall(content)] for name, content in secs.items()}
+                self.concepts[rel] = Concept(rel, d["fm"], d["body"], secs, links)
+        else:
+            for rel, text in okf.iter_concepts(path):
+                self.concepts[rel] = parse_concept(rel, text)
         self.files = {r: c for r, c in self.concepts.items() if c.type == "Source File"}
         self._build_index()
         self._bm25f = None          # built lazily on first full-text search
+        self._texts: dict[str, str] = {}
         self._warned = False
 
     # ---- lexical index (BM25) over file and requirement concepts
@@ -157,31 +236,37 @@ class Bundle:
         name = " ".join([str(c.fm.get("title", ""))] + SYMBOL_NAME.findall(sym))
         doc = " ".join([str(c.fm.get("description", "")), " ".join(map(str, c.fm.get("tags", []) or []))]
                        + SYMBOL_DOC.findall(sym))
-        return {"name": name, "doc": doc, "body": self._source(c)}
+        return {"name": name, "doc": doc}
 
     def _source(self, c: Concept) -> str:
-        if getattr(self, "_texts", None) and c.rel in self._texts:
-            return self._texts[c.rel]
-        try:
-            with open(os.path.join(self.repo, *str(c.fm.get("title", "")).split("/")),
-                      encoding="utf-8", errors="replace") as fh:
-                return fh.read()
-        except OSError:
-            return ""
+        """Source text of a file concept from ``repo`` (read once and kept)."""
+        if c.rel not in self._texts:
+            try:
+                with open(os.path.join(self.repo, *str(c.fm.get("title", "")).split("/")),
+                          encoding="utf-8", errors="replace") as fh:
+                    self._texts[c.rel] = fh.read()
+            except (OSError, TypeError):
+                self._texts[c.rel] = ""
+        return self._texts[c.rel]
 
     def texts(self) -> dict[str, str]:
-        """Source text of every Source File concept (needs ``repo``); read once and kept."""
-        if getattr(self, "_texts", None) is None:
-            self._texts = {r: self._source(c) for r, c in self.files.items()} if self.repo else {}
-        return self._texts
+        """Source text of every Source File concept (needs ``repo``)."""
+        return {r: self._source(c) for r, c in self.files.items()} if self.repo else {}
+
+    def _body_tf(self, c: Concept) -> Counter:
+        if c.type == "Requirement":
+            return Counter(tokens(c.sections.get("Text", "")))
+        cached = self._index_tf.get(c.rel)
+        if cached and cached.get("hash") == c.fm.get("content_hash"):
+            return Counter(cached["tf"])
+        return Counter(tokens(self._source(c)))
 
     def _build_bm25f(self):
         field_tf = {}
         for r in self.searchable:
-            f = self._fields(self.concepts[r])
-            if r in self.files:
-                self.texts()[r] = f["body"]
-            field_tf[r] = {name: Counter(tokens(s)) for name, s in f.items()}
+            c = self.concepts[r]
+            field_tf[r] = {name: Counter(tokens(s)) for name, s in self._fields(c).items()}
+            field_tf[r]["body"] = self._body_tf(c)
         avg = {f: (sum(sum(d[f].values()) for d in field_tf.values()) / len(field_tf)) or 1.0 if field_tf else 1.0
                for f in FIELD_WEIGHTS}
         post: dict[str, dict[str, float]] = defaultdict(dict)   # term -> {doc: length-normalised weighted tf}

@@ -423,3 +423,47 @@ def test_cached_scan_produces_identical_bundle(tmp_path):
     after = {r: t for r, t in okf.iter_concepts(out) if r != "/log.md"}
     strip = lambda d: {r: "\n".join(l for l in t.splitlines() if not l.startswith("timestamp:")) for r, t in d.items()}
     assert strip(before) == strip(after)
+
+
+# ---------------------------------------------------------------- #12 persisted search index
+
+def _rankings(b, queries):
+    from rhizome.retrieve import CATEGORIES, gather
+    out = {}
+    for q in queries:
+        out[("search", q)] = [(r, round(s, 9)) for r, s in b.search(q, k=50)]
+        for cat in CATEGORIES:
+            e, items, subs = gather(b, q, cat)
+            out[(cat, q)] = (e, [(i.rel, round(i.score, 9), i.reason) for i in items], subs)
+    return out
+
+
+def test_persisted_index_gives_identical_rankings(tmp_path):
+    from rhizome.retrieve import Bundle
+    repo = write_repo(str(tmp_path / "repo"))
+    scan(repo, docs="docs/requirements")
+    out = os.path.join(repo, ".knowledge")
+    assert os.path.exists(os.path.join(out, ".rhizome", "index.json.gz"))
+    queries = ["partial refund", "password hashing login", "database save_order", "sql injection"]
+    for kw in ({}, {"repo": repo}):
+        with_idx, without = Bundle(out, **kw), Bundle(out, use_index=False, **kw)
+        assert with_idx.from_index and not without.from_index
+        assert _rankings(with_idx, queries) == _rankings(without, queries)
+
+
+def test_index_is_used_instead_of_markdown(tmp_path, monkeypatch):
+    from rhizome import retrieve
+    repo = write_repo(str(tmp_path / "repo"))
+    scan(repo)
+    monkeypatch.setattr(retrieve.okf, "iter_concepts", lambda *a: (_ for _ in ()).throw(AssertionError("read md")))
+    assert len(retrieve.Bundle(os.path.join(repo, ".knowledge")).files) == 9
+
+
+def test_stale_index_is_ignored(tmp_path):
+    from rhizome.retrieve import Bundle
+    repo = write_repo(str(tmp_path / "repo"))
+    scan(repo)
+    out = os.path.join(repo, ".knowledge")
+    with open(os.path.join(out, "files", "extra.md"), "w", encoding="utf-8") as fh:   # a document added by hand
+        fh.write("---\ntype: Note\n---\n\nhello\n")
+    assert not Bundle(out).from_index

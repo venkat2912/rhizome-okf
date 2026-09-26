@@ -13,6 +13,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 
 from . import okf
+from .retrieve import build_index, load_index, write_index
 from .graph import Community, build_graph, hierarchy, membership, pagerank, undirected
 from .parse_python import FileInfo, area_tags, cached_parse_file, iter_python_files
 from .summarize import LLMSummarizer, heuristic_community_summary, heuristic_file_summary
@@ -525,6 +526,10 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
                                   "timestamp": now}, old_body.rstrip() + "\n\n" + result.log_entry)
             with open(log_path, "w", encoding="utf-8") as fh:
                 fh.write(log_doc)
+
+    # #12: persisted search index, rebuilt whenever a document changed or it is missing / out of date
+    if not dry_run and (result.changed or result.deleted or load_index(out) is None):
+        write_index(out, build_index(out, repo))
 
     t_end = time.time()
     result.stats = {
