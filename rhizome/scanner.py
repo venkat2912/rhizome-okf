@@ -152,7 +152,8 @@ def _load_requirements(repo: str, docs_dir: str | None, files: dict[str, FileInf
 
 def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool = False,
          max_size: int | None = None, seed: int | None = None, exclude: list[str] | None = None,
-         dry_run: bool = False, parser_fallback: bool | None = None) -> ScanResult:
+         dry_run: bool = False, parser_fallback: bool | None = None,
+         resolve_reexports: bool | None = None) -> ScanResult:
     t0 = time.time()
     repo = os.path.abspath(repo)
     out = os.path.abspath(out or os.path.join(repo, ".knowledge"))
@@ -165,6 +166,8 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     exclude = exclude if exclude else opts.get("exclude", [])
     # #7: tree-sitter for files that ast cannot parse (needs the `treesitter` extra)
     parser_fallback = parser_fallback if parser_fallback is not None else opts.get("parser_fallback", True)
+    # #8: link names imported from a package __init__ to the submodule that defines them
+    resolve_reexports = resolve_reexports if resolve_reexports is not None else opts.get("resolve_reexports", True)
     prev_files = state.get("files", {})
     remote = _remote_base(repo)
     repo_name = remote.rstrip("/").split("/")[-1] if remote else os.path.basename(repo)
@@ -176,7 +179,7 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
         excl.append(rel_out)
     files = {p: safe_parse_file(repo, p, parser_fallback) for p in iter_python_files(repo, excl)}
     t_parse = time.time()
-    G = build_graph(files)
+    G = build_graph(files, reexports=resolve_reexports)
     comms = hierarchy(G, max_size=max_size, seed=seed, previous=state.get("communities"))
     t_graph = time.time()
     member_of = membership(comms)
@@ -261,12 +264,14 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
         deps = sorted(G.successors(p), key=lambda t: -G[p][t]["weight"])
         b.append("# Depends on\n\n" + ("\n".join(
             f"- {okf.link(t, okf.concept_path_for_file(t))}: uses "
-            + ", ".join(f"`{n}`" for n in G[p][t]["names"][:8]) + f" (weight {G[p][t]['weight']:.0f})"
+            + (", ".join(f"`{n}`" for n in G[p][t]["names"][:8]) or "re-exported names only")
+            + f" (weight {G[p][t]['weight']:.0f})"
             for t in deps) or "None."))
         users = sorted(G.predecessors(p), key=lambda s: -G[s][p]["weight"])
         b.append("# Used by\n\n" + ("\n".join(
             f"- {okf.link(s, okf.concept_path_for_file(s))}: uses "
-            + ", ".join(f"`{n}`" for n in G[s][p]["names"][:8]) + f" (weight {G[s][p]['weight']:.0f})"
+            + (", ".join(f"`{n}`" for n in G[s][p]["names"][:8]) or "re-exported names only")
+            + f" (weight {G[s][p]['weight']:.0f})"
             for s in users) or "None."))
         if f.external_imports:
             b.append("# External dependencies\n\n" + ", ".join(f"`{e}`" for e in f.external_imports))
@@ -514,7 +519,7 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
         new_state = {
             "version": 1, "scanned_at": now, "source_digest": digest,
             "options": {"docs": docs, "max_size": max_size, "seed": seed, "exclude": list(exclude or []),
-                        "parser_fallback": parser_fallback},
+                        "parser_fallback": parser_fallback, "resolve_reexports": resolve_reexports},
             "files": {p: {"hash": files[p].sha, "summary": summaries[p][0], "summary_source": summaries[p][1]}
                       for p in files},
             "communities": {s: {"level": c.level, "parent": c.parent, "members": c.members,

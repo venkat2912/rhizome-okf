@@ -325,3 +325,28 @@ def test_parser_fallback_can_be_switched_off(tmp_path):
     scan(repo, parser_fallback=False)
     fm = _fm(os.path.join(repo, ".knowledge"), "legacy/old.py")
     assert fm["parser"] == "failed" and fm["fan_out"] == 0
+
+
+# ---------------------------------------------------------------- #8 re-export resolution
+
+REEXPORT_FILES = {
+    "pkg/__init__.py": "from .core import Engine\nfrom . import extra\nThing = extra.Thing\n\ndef local():\n    pass\n",
+    "pkg/core.py": "class Engine:\n    pass\n",
+    "pkg/extra.py": "class Thing:\n    pass\n",
+    "app.py": "from pkg import Engine, Thing\n\nEngine()\nThing()\nEngine()\n",
+    "other.py": "from pkg import Engine, local\n\nlocal()\n",
+}
+
+
+def test_reexported_names_link_to_the_defining_submodule(tmp_path):
+    from rhizome.graph import build_graph
+    from rhizome.parse_python import iter_python_files
+    repo = write_repo(str(tmp_path / "r"), REEXPORT_FILES)
+    files = {p: parse_file(repo, p) for p in iter_python_files(repo)}
+    G = build_graph(files)
+    assert G.has_edge("app.py", "pkg/core.py") and G.has_edge("app.py", "pkg/extra.py")   # from .sub import / X = sub.X
+    assert G["app.py"]["pkg/core.py"]["weight"] == 3          # 1 + two references to Engine
+    assert G["app.py"]["pkg/__init__.py"]["weight"] == 1      # __init__ edge kept, low weight
+    assert G["other.py"]["pkg/__init__.py"]["names"] == ["local"]   # a name the package defines itself
+    G0 = build_graph(files, reexports=False)
+    assert not G0.has_edge("app.py", "pkg/core.py") and G0["app.py"]["pkg/__init__.py"]["weight"] > 1

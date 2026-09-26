@@ -34,10 +34,42 @@ def _longest_prefix(mod: str, idx: dict[str, str]) -> str | None:
     return None
 
 
-def build_graph(files: dict[str, FileInfo]) -> nx.DiGraph:
+# #8: follow a re-export at most this many packages deep (pkg -> pkg.sub -> pkg.sub.mod); real chains are short.
+REEXPORT_DEPTH = 3
+
+
+def reexport_source(files: dict[str, FileInfo], idx: dict[str, str], path: str, name: str,
+                    depth: int = REEXPORT_DEPTH) -> str | None:
+    """File that really defines ``name`` when package ``path`` only re-exports it, else None.
+
+    Handles ``from .sub import X`` and ``X = sub.X`` in a package ``__init__.py``.
+    """
+    f = files.get(path)
+    if f is None or not f.is_package or depth <= 0 or any(s.name == name for s in f.symbols):
+        return None
+    target = None
+    for imp in f.imports:
+        if name in imp.names:
+            sub = f"{imp.module}.{name}"
+            if sub in idx:                   # the name is itself a submodule
+                return idx[sub]
+            if imp.module in idx:
+                target = idx[imp.module]
+                break
+    if target is None and name in f.assigns:
+        p = _longest_prefix(f.assigns[name], idx)
+        target = idx[p] if p else None
+    if target is None or target == path:
+        return None
+    return reexport_source(files, idx, target, name, depth - 1) or target
+
+
+def build_graph(files: dict[str, FileInfo], reexports: bool = True) -> nx.DiGraph:
     """Directed graph: edge A -> B means file A imports (depends on) file B.
 
-    Edge attributes: ``weight`` (1 + references to imported names) and ``names``.
+    Edge attributes: ``weight`` (1 + references to imported names) and ``names``. With ``reexports``
+    (#8), a name imported from a package that only re-exports it also links to the defining file; the
+    edge to the package ``__init__`` is kept with the minimum weight 1.
     """
     idx = module_index(files)
     G = nx.DiGraph()
@@ -45,6 +77,7 @@ def build_graph(files: dict[str, FileInfo]) -> nx.DiGraph:
         G.add_node(f.path)
     for f in files.values():
         targets: dict[str, set[str]] = defaultdict(set)
+        low: set[str] = set()                # package __init__ edges kept only for re-exported names
         external: set[str] = set()
         for imp in f.imports:
             resolved_any = False
@@ -55,7 +88,16 @@ def build_graph(files: dict[str, FileInfo]) -> nx.DiGraph:
                         targets[idx[sub]].add(n)
                         resolved_any = True
                     elif imp.module in idx:
-                        targets[idx[imp.module]].add(n)
+                        pkg = idx[imp.module]
+                        src = reexport_source(files, idx, pkg, n) if reexports and n != "*" else None
+                        if src and src != f.path:
+                            targets[src].add(n)
+                            if pkg not in targets:
+                                low.add(pkg)
+                            targets.setdefault(pkg, set())
+                        else:
+                            targets[pkg].add(n)
+                            low.discard(pkg)
                         resolved_any = True
             else:
                 p = _longest_prefix(imp.module, idx)
@@ -70,6 +112,9 @@ def build_graph(files: dict[str, FileInfo]) -> nx.DiGraph:
         f.external_imports = sorted(external)
         for tgt, names in targets.items():
             if tgt == f.path:
+                continue
+            if tgt in low and not names:
+                G.add_edge(f.path, tgt, weight=1.0, names=[])
                 continue
             refs = sum(f.name_refs.get(n, 0) for n in names if n != "*")
             G.add_edge(f.path, tgt, weight=1.0 + min(refs, 50), names=sorted(names))

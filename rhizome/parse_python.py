@@ -67,6 +67,7 @@ class FileInfo:
     parse_error: str | None = None
     parser: str = "ast"              # "ast" | "tree-sitter" | "failed"
     doc_full: str = ""               # whole module docstring (descriptions are cleaned from it)
+    assigns: dict = field(default_factory=dict)   # top-level `X = sub.X`: name -> absolute dotted source
 
 
 def iter_python_files(root: str, exclude: list[str] | None = None):
@@ -359,6 +360,12 @@ def parse_file(root: str, rel: str, fallback: bool = True) -> FileInfo:
                     alias_map[a.asname or a.name] = f"{target}.{a.name}"
 
     for node in tree.body:
+        if (isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name)
+                and isinstance(node.value, ast.Attribute)):
+            src = _dotted(node.value)
+            if src:
+                head, _, rest = src.partition(".")
+                info.assigns[node.targets[0].id] = f"{alias_map.get(head, head)}.{rest}" if rest else src
         if isinstance(node, ast.ClassDef):
             methods = [n.name for n in node.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
                        and not (n.name.startswith("__") and n.name != "__init__")]
