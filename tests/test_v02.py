@@ -380,3 +380,46 @@ def test_hub_downweighting_lowers_high_fan_in_files(tmp_path):
     hub, leaf = "/files/app/utils.py.md", "/files/app/pricing.py.md"
     assert fan(hub) == 13 and fan(leaf) == 1
     assert damped[hub] / damped[leaf] < plain[hub] / plain[leaf]
+
+
+# ---------------------------------------------------------------- #11 parse cache
+
+def test_parse_cache_only_reparses_changed_files(tmp_path, monkeypatch):
+    import rhizome.parse_python as pp
+    repo = write_repo(str(tmp_path / "repo"))
+    calls = []
+    real = pp.parse_file
+
+    def counting(root, rel, *args):
+        calls.append(rel)
+        return real(root, rel, *args)
+
+    monkeypatch.setattr(pp, "parse_file", counting)
+    first = scan(repo)
+    assert len(calls) == 9 and first.stats["parse_cache_hits"] == 0
+    calls.clear()
+    with open(os.path.join(repo, "shop/payments/gateway.py"), "a") as fh:
+        fh.write("\n\ndef void(charge_id):\n    return charge_id\n")
+    second = scan(repo)
+    assert calls == ["shop/payments/gateway.py"] and second.stats["parse_cache_hits"] == 8
+    assert "/files/shop/payments/gateway.py.md" in second.changed
+
+
+def test_parse_cache_round_trip_is_exact(tmp_path):
+    from rhizome.parse_python import file_info_from_dict, file_info_to_dict
+    repo = write_repo(str(tmp_path / "repo"))
+    for rel in ("shop/auth.py", "shop/api.py", "shop/payments/refunds.py"):
+        info = parse_file(repo, rel)
+        assert file_info_from_dict(file_info_to_dict(info)) == info
+
+
+def test_cached_scan_produces_identical_bundle(tmp_path):
+    repo = write_repo(str(tmp_path / "repo"))
+    scan(repo)
+    out = os.path.join(repo, ".knowledge")
+    before = {r: t for r, t in okf.iter_concepts(out) if r != "/log.md"}
+    os.remove(os.path.join(out, ".rhizome", "state.json"))   # forces a full rewrite, but parse cache stays
+    scan(repo)
+    after = {r: t for r, t in okf.iter_concepts(out) if r != "/log.md"}
+    strip = lambda d: {r: "\n".join(l for l in t.splitlines() if not l.startswith("timestamp:")) for r, t in d.items()}
+    assert strip(before) == strip(after)

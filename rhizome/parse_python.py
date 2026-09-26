@@ -12,7 +12,7 @@ import logging
 import os
 import re
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 
 SKIP_DIRS = {
     ".git", ".hg", ".svn", "node_modules", "venv", ".venv", "env", ".env", "build",
@@ -402,6 +402,50 @@ def safe_parse_file(root: str, rel: str, fallback: bool = True) -> FileInfo:
         return parse_file(root, rel, fallback)
     except Exception as exc:
         return failed_file(root, rel, exc)
+
+
+# ------------------------------------------------------------------ #11 parse cache
+
+# Bump when parse output changes, so caches written by older code are ignored.
+PARSE_VERSION = "0.2.0-1"
+
+
+def file_info_to_dict(f: FileInfo) -> dict:
+    d = asdict(f)
+    d["name_refs"] = dict(f.name_refs)
+    d["external_imports"] = []           # filled in later by build_graph
+    return d
+
+
+def file_info_from_dict(d: dict) -> FileInfo:
+    d = dict(d)
+    d["symbols"] = [Symbol(**s) for s in d["symbols"]]
+    d["imports"] = [ImportRef(**i) for i in d["imports"]]
+    d["security"] = [SecurityFinding(**s) for s in d["security"]]
+    d["name_refs"] = Counter(d["name_refs"])
+    return FileInfo(**d)
+
+
+def cache_key(root: str, rel: str, fallback: bool) -> str:
+    """Everything a file's analysis depends on: its bytes, its module identity and the parser options."""
+    with open(os.path.join(root, rel), "rb") as fh:
+        sha = hashlib.sha256(fh.read()).hexdigest()
+    module, _, is_pkg = module_names(root, rel)
+    return f"{PARSE_VERSION}|{sha}|{module}|{int(is_pkg)}|{int(fallback)}"
+
+
+def cached_parse_file(root: str, rel: str, cache: dict, fallback: bool = True) -> tuple[FileInfo, bool]:
+    """``safe_parse_file`` through ``cache`` ({path: {"key", "info"}}). Returns (info, cache hit)."""
+    try:
+        key = cache_key(root, rel, fallback)
+    except OSError as exc:
+        return failed_file(root, rel, exc), False
+    entry = cache.get(rel)
+    if entry and entry.get("key") == key:
+        return file_info_from_dict(entry["info"]), True
+    info = safe_parse_file(root, rel, fallback)
+    cache[rel] = {"key": key, "info": file_info_to_dict(info)}
+    return info, False
 
 
 def area_tags(info: FileInfo) -> list[str]:

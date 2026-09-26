@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import gzip
 import hashlib
 import json
 import os
@@ -13,10 +14,11 @@ from dataclasses import dataclass, field
 
 from . import okf
 from .graph import Community, build_graph, hierarchy, membership, pagerank, undirected
-from .parse_python import FileInfo, area_tags, iter_python_files, safe_parse_file
+from .parse_python import FileInfo, area_tags, cached_parse_file, iter_python_files
 from .summarize import LLMSummarizer, heuristic_community_summary, heuristic_file_summary
 
 STATE_REL = ".rhizome/state.json"
+PARSE_CACHE_REL = ".rhizome/parse-cache.json.gz"   # #11: per-file parse results keyed by content hash
 GENERIC_STEMS = {"utils", "util", "base", "core", "main", "init", "test", "tests", "types", "common",
                  "helpers", "config", "settings", "models", "setup", "conftest", "compat", "constants"}
 
@@ -61,6 +63,22 @@ def _resource(remote: str | None, path: str) -> str:
 
 def _slug(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-") or "doc"
+
+
+def _read_parse_cache(out: str) -> dict:
+    try:
+        with gzip.open(os.path.join(out, PARSE_CACHE_REL), "rt", encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return {}
+
+
+def _write_parse_cache(out: str, cache: dict):
+    os.makedirs(os.path.join(out, ".rhizome"), exist_ok=True)
+    tmp = os.path.join(out, PARSE_CACHE_REL + ".tmp")
+    with gzip.open(tmp, "wt", encoding="utf-8") as fh:
+        json.dump(cache, fh, separators=(",", ":"), sort_keys=True)
+    os.replace(tmp, os.path.join(out, PARSE_CACHE_REL))
 
 
 def _read_state(out: str) -> dict:
@@ -177,7 +195,16 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     rel_out = os.path.relpath(out, repo).replace(os.sep, "/")
     if not rel_out.startswith(".."):
         excl.append(rel_out)
-    files = {p: safe_parse_file(repo, p, parser_fallback) for p in iter_python_files(repo, excl)}
+    old_cache = _read_parse_cache(out)
+    cache: dict = {}
+    files, cache_hits = {}, 0
+    for p in iter_python_files(repo, excl):
+        entry = {p: old_cache[p]} if p in old_cache else {}
+        files[p], hit = cached_parse_file(repo, p, entry, parser_fallback)
+        cache[p] = entry[p]
+        cache_hits += hit
+    if not dry_run and cache != old_cache:
+        _write_parse_cache(out, cache)       # only current files are kept
     t_parse = time.time()
     G = build_graph(files, reexports=resolve_reexports)
     comms = hierarchy(G, max_size=max_size, seed=seed, previous=state.get("communities"))
@@ -503,6 +530,7 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     result.stats = {
         "files": len(files), "parse_errors": sum(1 for f in files.values() if f.parse_error),
         "parser_fallbacks": sum(1 for f in files.values() if f.parser == "tree-sitter"),
+        "parse_cache_hits": cache_hits,
         "parse_failed": sum(1 for f in files.values() if f.parser == "failed"),
         "edges": G.number_of_edges(), "subsystems": len(level1),
         "components": sum(1 for c in comms.values() if c.level == 2),
