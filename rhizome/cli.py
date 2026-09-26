@@ -15,7 +15,7 @@ from .scanner import scan
 
 def _cmd_scan(a):
     res = scan(a.repo, out=a.out, docs=a.docs, llm=a.llm, max_size=a.max_community, seed=a.seed,
-               exclude=a.exclude)
+               exclude=a.exclude, parser_fallback=False if a.no_parser_fallback else None)
     s = res.stats
     print(f"Scanned {s['files']} files · {s['edges']} import edges · {s['subsystems']} subsystems "
           f"({s['components']} components) · {s['security_findings']} security findings")
@@ -28,7 +28,7 @@ def _cmd_scan(a):
 
 def _cmd_check(a):
     res = scan(a.repo, out=a.out, docs=a.docs, max_size=a.max_community, seed=a.seed,
-               exclude=a.exclude, dry_run=True)
+               exclude=a.exclude, dry_run=True, parser_fallback=False if a.no_parser_fallback else None)
     if res.changed or res.deleted:
         print("Knowledge bundle is STALE. Run `rhizome scan` and commit the bundle with your change.")
         for r in (res.changed + res.deleted)[:40]:
@@ -109,6 +109,8 @@ def main(argv=None) -> int:
                         help="split subsystems larger than this into components (default 15)")
         sp.add_argument("--seed", type=int, default=None)
         sp.add_argument("--exclude", action="append", default=[], help="path prefix to skip (repeatable)")
+        sp.add_argument("--no-parser-fallback", action="store_true",
+                        help="#7 off: do not use tree-sitter for files that ast cannot parse")
 
     sp = sub.add_parser("scan", help="scan a repo and write/update the OKF bundle")
     common(sp)

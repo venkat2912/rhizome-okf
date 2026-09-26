@@ -14,6 +14,7 @@ dependencies = ["networkx>=3.0", "igraph>=0.11", "leidenalg>=0.10", "PyYAML>=6.0
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]
+treesitter = ["tree-sitter>=0.23", "tree-sitter-python>=0.23"]
 
 [project.scripts]
 rhizome = "rhizome.cli:main"

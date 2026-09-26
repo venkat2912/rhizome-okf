@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import logging
 import os
 import re
 from collections import Counter
@@ -64,7 +65,7 @@ class FileInfo:
     security: list[SecurityFinding]
     external_imports: list[str] = field(default_factory=list)
     parse_error: str | None = None
-    parser: str = "ast"              # "ast" | "failed"
+    parser: str = "ast"              # "ast" | "tree-sitter" | "failed"
     doc_full: str = ""               # whole module docstring (descriptions are cleaned from it)
 
 
@@ -227,7 +228,94 @@ class _Visitor(ast.NodeVisitor):
         self.findings.append(SecurityFinding(line, rule, sev, detail))
 
 
-def parse_file(root: str, rel: str) -> FileInfo:
+# ------------------------------------------------------------------ #7 tree-sitter fallback
+
+log = logging.getLogger("rhizome")
+_TS_PARSER = None          # None: not tried yet; False: unavailable
+
+
+def treesitter_parser():
+    """The tree-sitter Python parser, or None if the optional extra is not installed (warned once)."""
+    global _TS_PARSER
+    if _TS_PARSER is None:
+        try:
+            import tree_sitter_python
+            from tree_sitter import Language, Parser
+            _TS_PARSER = Parser(Language(tree_sitter_python.language()))
+        except Exception as exc:   # ImportError, or a native library that cannot be loaded
+            log.warning("tree-sitter is not available (%s): files that ast cannot parse keep no imports or "
+                        "symbols; install with `pip install rhizome-okf[treesitter]`", exc)
+            _TS_PARSER = False
+    return _TS_PARSER or None
+
+
+def _ts_text(node) -> str:
+    return node.text.decode("utf-8", errors="replace") if node is not None else ""
+
+
+def parse_with_treesitter(info: "FileInfo", raw: bytes) -> bool:
+    """Fill imports, top-level definitions and name references from tree-sitter. Returns False if unavailable.
+
+    tree-sitter's grammar is error-tolerant, so this recovers structure from Python 2 files and from
+    files with local syntax errors. Security rules are not applied to these files.
+    """
+    parser = treesitter_parser()
+    if parser is None:
+        return False
+    root = parser.parse(raw).root_node
+    stack = [root]
+    while stack:                      # imports anywhere in the file, as with ast.walk
+        node = stack.pop()
+        line = node.start_point[0] + 1
+        if node.type == "import_statement":
+            for c in node.named_children:
+                if c.type == "dotted_name":
+                    info.imports.append(ImportRef(_ts_text(c), [], None, line))
+                elif c.type == "aliased_import":
+                    info.imports.append(ImportRef(_ts_text(c.child_by_field_name("name")), [],
+                                                  _ts_text(c.child_by_field_name("alias")), line))
+        elif node.type == "import_from_statement":
+            mod = node.child_by_field_name("module_name")
+            names = []
+            for c in node.named_children:
+                if c == mod:
+                    continue
+                if c.type == "dotted_name":
+                    names.append(_ts_text(c))
+                elif c.type == "aliased_import":
+                    names.append(_ts_text(c.child_by_field_name("name")))
+                elif c.type == "wildcard_import":
+                    names.append("*")
+            target = _ts_text(mod)
+            if mod is not None and mod.type == "relative_import":
+                dots = len(target) - len(target.lstrip("."))
+                target = _resolve_relative(info.module, info.is_package, dots, target.lstrip(".") or None)
+            if target:
+                info.imports.append(ImportRef(target, names, None, line))
+        elif node.type == "identifier":
+            info.name_refs[_ts_text(node)] += 1
+        stack.extend(reversed(node.children))
+    for node in root.named_children:  # top-level definitions
+        if node.type == "decorated_definition":
+            node = node.child_by_field_name("definition") or node
+        name = _ts_text(node.child_by_field_name("name"))
+        if node.type == "class_definition" and name:
+            body = node.child_by_field_name("body")
+            methods = []
+            for m in (body.named_children if body is not None else []):
+                if m.type == "decorated_definition":
+                    m = m.child_by_field_name("definition") or m
+                mname = _ts_text(m.child_by_field_name("name"))
+                if m.type == "function_definition" and not (mname.startswith("__") and mname != "__init__"):
+                    methods.append(mname)
+            info.symbols.append(Symbol("class", name, node.start_point[0] + 1, "", methods))
+        elif node.type == "function_definition" and name:
+            info.symbols.append(Symbol("function", name, node.start_point[0] + 1, ""))
+    info.parser = "tree-sitter"
+    return True
+
+
+def parse_file(root: str, rel: str, fallback: bool = True) -> FileInfo:
     full = os.path.join(root, rel)
     with open(full, "rb") as fh:
         raw = fh.read()
@@ -244,10 +332,12 @@ def parse_file(root: str, rel: str) -> FileInfo:
     except SyntaxError as exc:  # keep the file as a node even if it does not parse
         info.parse_error = f"{exc.msg} (line {exc.lineno})"
         info.parser = "failed"
-        return info
     except (RecursionError, MemoryError, ValueError) as exc:  # e.g. nesting beyond the parser's limits
         info.parse_error = f"{type(exc).__name__}: {exc}"
         info.parser = "failed"
+    if info.parser == "failed":
+        if fallback:
+            parse_with_treesitter(info, raw)
         return info
 
     info.doc_full = ast.get_docstring(tree) or ""
@@ -299,10 +389,10 @@ def failed_file(root: str, rel: str, exc: BaseException) -> FileInfo:
                     parse_error=f"{type(exc).__name__}: {exc}", parser="failed")
 
 
-def safe_parse_file(root: str, rel: str) -> FileInfo:
+def safe_parse_file(root: str, rel: str, fallback: bool = True) -> FileInfo:
     """``parse_file`` that never raises: any error in one file becomes a parse failure."""
     try:
-        return parse_file(root, rel)
+        return parse_file(root, rel, fallback)
     except Exception as exc:
         return failed_file(root, rel, exc)
 

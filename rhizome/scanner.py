@@ -152,7 +152,7 @@ def _load_requirements(repo: str, docs_dir: str | None, files: dict[str, FileInf
 
 def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool = False,
          max_size: int | None = None, seed: int | None = None, exclude: list[str] | None = None,
-         dry_run: bool = False) -> ScanResult:
+         dry_run: bool = False, parser_fallback: bool | None = None) -> ScanResult:
     t0 = time.time()
     repo = os.path.abspath(repo)
     out = os.path.abspath(out or os.path.join(repo, ".knowledge"))
@@ -163,6 +163,8 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     max_size = max_size if max_size is not None else opts.get("max_size", 15)
     seed = seed if seed is not None else opts.get("seed", 42)
     exclude = exclude if exclude else opts.get("exclude", [])
+    # #7: tree-sitter for files that ast cannot parse (needs the `treesitter` extra)
+    parser_fallback = parser_fallback if parser_fallback is not None else opts.get("parser_fallback", True)
     prev_files = state.get("files", {})
     remote = _remote_base(repo)
     repo_name = remote.rstrip("/").split("/")[-1] if remote else os.path.basename(repo)
@@ -172,7 +174,7 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     rel_out = os.path.relpath(out, repo).replace(os.sep, "/")
     if not rel_out.startswith(".."):
         excl.append(rel_out)
-    files = {p: safe_parse_file(repo, p) for p in iter_python_files(repo, excl)}
+    files = {p: safe_parse_file(repo, p, parser_fallback) for p in iter_python_files(repo, excl)}
     t_parse = time.time()
     G = build_graph(files)
     comms = hierarchy(G, max_size=max_size, seed=seed, previous=state.get("communities"))
@@ -408,6 +410,13 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
         "# Subsystems\n\n" + "\n".join(
             f"- {okf.link(_ctitle(c), _cpath(c))} ({_n(len(c.members))}): {csum[c.slug][0]}" for c in l1_sorted),
     ]
+    unparsed = sorted((f for f in files.values() if f.parse_error), key=lambda f: f.path)
+    if unparsed:
+        root_body.append("# Parse failures\n\nFiles the Python `ast` parser could not read. With `parser: "
+                         "tree-sitter`, imports and top-level definitions were recovered; with `parser: failed`, "
+                         "the file has no symbols or import edges.\n\n" + "\n".join(
+            f"- {okf.link(f.path, okf.concept_path_for_file(f.path))} · parser: {f.parser} · {f.parse_error}"
+            for f in unparsed))
     if hot:
         root_body.append("# Security hotspots\n\n" + "\n".join(
             f"- {okf.link(f.path, okf.concept_path_for_file(f.path))}: "
@@ -488,6 +497,8 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     t_end = time.time()
     result.stats = {
         "files": len(files), "parse_errors": sum(1 for f in files.values() if f.parse_error),
+        "parser_fallbacks": sum(1 for f in files.values() if f.parser == "tree-sitter"),
+        "parse_failed": sum(1 for f in files.values() if f.parser == "failed"),
         "edges": G.number_of_edges(), "subsystems": len(level1),
         "components": sum(1 for c in comms.values() if c.level == 2),
         "unlinked_groups": sum(1 for c in level1 if c.unlinked),
@@ -502,7 +513,8 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     if not dry_run:
         new_state = {
             "version": 1, "scanned_at": now, "source_digest": digest,
-            "options": {"docs": docs, "max_size": max_size, "seed": seed, "exclude": list(exclude or [])},
+            "options": {"docs": docs, "max_size": max_size, "seed": seed, "exclude": list(exclude or []),
+                        "parser_fallback": parser_fallback},
             "files": {p: {"hash": files[p].sha, "summary": summaries[p][0], "summary_source": summaries[p][1]}
                       for p in files},
             "communities": {s: {"level": c.level, "parent": c.parent, "members": c.members,

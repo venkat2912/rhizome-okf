@@ -54,7 +54,7 @@ def description_line(f: FileInfo) -> str:
 
 
 def heuristic_file_summary(f: FileInfo) -> str:
-    if f.parse_error:
+    if f.parse_error and f.parser == "failed":
         return f"Could not be parsed: {f.parse_error}."
     doc = description_line(f)
     if doc:

@@ -25,7 +25,7 @@ def test_deeply_nested_expression_parses(tmp_path):
 
 def test_nested_parentheses_become_parse_failure(tmp_path):
     (tmp_path / "parens.py").write_text("x = " + "(" * 5000 + "1" + ")" * 5000 + "\n")
-    info = parse_file(str(tmp_path), "parens.py")
+    info = parse_file(str(tmp_path), "parens.py", fallback=False)
     assert info.parser == "failed" and info.parse_error
 
 
@@ -34,10 +34,10 @@ def test_one_bad_file_does_not_stop_the_scan(tmp_path, monkeypatch):
     import rhizome.parse_python as pp
     real = pp.parse_file
 
-    def flaky(root, rel):
+    def flaky(root, rel, *args):
         if rel == "shop/db.py":
             raise RuntimeError("boom")
-        return real(root, rel)
+        return real(root, rel, *args)
 
     monkeypatch.setattr(pp, "parse_file", flaky)
     res = scan(repo)
@@ -291,3 +291,37 @@ def test_gather_uses_ppr_or_walk(tmp_path):
     assert any("PPR" in i.reason for i in ppr_items)
     assert not any("PPR" in i.reason for i in walk_items)
     assert all(i.score < 90 for i in ppr_items if "PPR" in i.reason)
+
+
+# ---------------------------------------------------------------- #7 tree-sitter fallback
+
+PY2_FILES = {
+    "legacy/__init__.py": "",
+    "legacy/core.py": '"""Core helpers."""\n\ndef compute(x):\n    return x\n',
+    "legacy/old.py": ('from legacy.core import compute\nimport os\n\nclass Report:\n    def render(self):\n'
+                      '        print "total", compute(1)\n\ndef main():\n    exec "x = 1"\n'),
+}
+
+
+def test_treesitter_recovers_python2_file(tmp_path):
+    import pytest
+    pytest.importorskip("tree_sitter_python")
+    repo = write_repo(str(tmp_path / "r"), PY2_FILES)
+    info = parse_file(repo, "legacy/old.py")
+    assert info.parser == "tree-sitter" and info.parse_error          # the ast error is kept for the record
+    assert {i.module for i in info.imports} == {"legacy.core", "os"}
+    assert [s.name for s in info.symbols] == ["Report", "main"] and info.symbols[0].methods == ["render"]
+    assert parse_file(repo, "legacy/old.py", fallback=False).parser == "failed"
+    scan(repo)
+    out = os.path.join(repo, ".knowledge")
+    fm = _fm(out, "legacy/old.py")
+    assert fm["parser"] == "tree-sitter" and fm["fan_out"] == 1          # the import edge is recovered
+    root = open(os.path.join(out, "index.md"), encoding="utf-8").read()
+    assert "# Parse failures" in root and "legacy/old.py" in root and "tree-sitter" in root
+
+
+def test_parser_fallback_can_be_switched_off(tmp_path):
+    repo = write_repo(str(tmp_path / "r"), PY2_FILES)
+    scan(repo, parser_fallback=False)
+    fm = _fm(os.path.join(repo, ".knowledge"), "legacy/old.py")
+    assert fm["parser"] == "failed" and fm["fan_out"] == 0
