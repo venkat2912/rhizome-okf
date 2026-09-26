@@ -56,6 +56,22 @@ KS_REC = (5, 10)
 BM25_K1, BM25_B, RRF_K, SEED = 1.2, 0.75, 60, 0
 PROTOCOL_VERSION = 1
 
+
+def _code_tag() -> str:
+    """Short hash of rhizome/*.py, so bundles built by different Rhizome code never share a cache entry."""
+    import hashlib
+    h = hashlib.sha256()
+    src = os.path.join(ROOT, "rhizome")
+    for fn in sorted(os.listdir(src)):
+        if fn.endswith(".py"):
+            with open(os.path.join(src, fn), "rb") as fh:
+                h.update(fn.encode() + fh.read())
+    return h.hexdigest()[:10]
+
+
+V01_CODE_TAG = "fc46dafc58"  # rhizome/ at c57a02f; its bundles were cached without a tag
+CODE_TAG = _code_tag()
+
 PUBLISHED = [  # LocAgent (Chen et al., ACL 2025, arXiv:2503.09089), file level, SWE-bench Lite, Acc@1/3/5
     ("BM25", 38.69, 51.82, 61.68),
     ("E5-base-v2", 49.64, 74.45, 80.29),
@@ -153,6 +169,8 @@ def bundle_for(repo: str, commit: str, snapshot: str, tmp: str) -> tuple[str, di
     """Return (bundle directory, info). Scans the snapshot, or unpacks a cached bundle."""
     os.makedirs(BUNDLES, exist_ok=True)
     key = f"{repo.replace('/', '__')}__{commit[:12]}"
+    if CODE_TAG != V01_CODE_TAG:
+        key += f"__{CODE_TAG}"
     zpath, mpath = os.path.join(BUNDLES, key + ".zip"), os.path.join(BUNDLES, key + ".json")
     bdir = os.path.join(tmp, "b")
     if os.path.exists(zpath) and os.path.exists(mpath):
@@ -893,6 +911,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--limit", type=int, default=None, help="first N instances in dataset order")
     ap.add_argument("--variants", nargs="+", default=["A", "B"], choices=["A", "B"])
+    ap.add_argument("--instance", action="append", default=[], help="only these instance ids (repeatable)")
     ap.add_argument("--out", default=None, help="run directory (default bench/runs/<timestamp>)")
     ap.add_argument("--report-only", action="store_true", help="rebuild summary.json and REPORT.md only")
     ap.add_argument("--rescore", action="store_true",
@@ -902,7 +921,8 @@ def main(argv=None):
     out_dir = args.out or os.path.join(HERE, "runs", dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     os.makedirs(out_dir, exist_ok=True)
     data = load_dataset()
-    todo = data[: args.limit] if args.limit else data
+    todo = [x for x in data if x["instance_id"] in set(args.instance)] if args.instance else data
+    todo = todo[: args.limit] if args.limit else todo
     variants = sorted(set(args.variants))
 
     ppath = os.path.join(out_dir, "protocol.json")
