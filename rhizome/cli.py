@@ -66,6 +66,8 @@ def retrieval_config(a) -> RetrievalConfig:
         changes["never_demote"] = False
     if a.expansion:
         changes["expansion"] = a.expansion
+    if a.no_hub_downweight:
+        changes["hub_downweight"] = False
     if a.legacy_bug_tests:
         changes["respect_include_tests"] = False
     return dataclasses.replace(cfg, **changes)
@@ -148,6 +150,8 @@ def main(argv=None) -> int:
                    help="#4 off: graph-expanded files may outrank strong text matches")
     g.add_argument("--expansion", choices=("ppr", "walk"),
                    help="#5: personalized PageRank (default) or the v0.1 distance walk")
+    g.add_argument("--no-hub-downweight", action="store_true",
+                   help="#9 off: do not damp high fan-in files during expansion")
     g.add_argument("--legacy-bug-tests", action="store_true",
                    help="#6 off: keep test files for `bug` even without --tests")
     sp.set_defaults(fn=_cmd_context)

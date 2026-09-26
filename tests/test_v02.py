@@ -350,3 +350,33 @@ def test_reexported_names_link_to_the_defining_submodule(tmp_path):
     assert G["other.py"]["pkg/__init__.py"]["names"] == ["local"]   # a name the package defines itself
     G0 = build_graph(files, reexports=False)
     assert not G0.has_edge("app.py", "pkg/core.py") and G0["app.py"]["pkg/__init__.py"]["weight"] > 1
+
+
+# ---------------------------------------------------------------- #9 hub down-weighting
+
+HUB_FILES = {
+    "app/__init__.py": "",
+    "app/utils.py": "def helper():\n    pass\n",
+    "app/orders.py": "from app.utils import helper\nfrom app.pricing import price\n\ndef order():\n    helper()\n    price()\n",
+    "app/pricing.py": "def price():\n    pass\n",
+}
+HUB_FILES.update({f"app/m{i}.py": "from app.utils import helper\n\ndef f():\n    helper()\n" for i in range(12)})
+
+
+def test_hub_weight_formula():
+    import math
+    from rhizome.retrieve import hub_weight
+    assert hub_weight(0) == 1 / math.log(2) and hub_weight(100) == 1 / math.log(102)
+    assert hub_weight(100) < hub_weight(10) < hub_weight(0)
+
+
+def test_hub_downweighting_lowers_high_fan_in_files(tmp_path):
+    from rhizome.retrieve import hub_weight
+    b, _ = _bundle(tmp_path, HUB_FILES)
+    seed = ["/files/app/orders.py.md"]
+    fan = lambda r: int(b.concepts[r].fm["fan_in"])
+    plain = b.ppr(seed, "bug")
+    damped = b.ppr(seed, "bug", target_weight=lambda r: hub_weight(fan(r)))
+    hub, leaf = "/files/app/utils.py.md", "/files/app/pricing.py.md"
+    assert fan(hub) == 13 and fan(leaf) == 1
+    assert damped[hub] / damped[leaf] < plain[hub] / plain[leaf]

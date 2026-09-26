@@ -44,13 +44,15 @@ class RetrievalConfig:
     never_demote: bool = True
     # #5: graph expansion by personalized PageRank ("ppr") or v0.1's flat distance walk ("walk").
     expansion: str = "ppr"
+    # #9: during PPR expansion scale each transition by 1 / log(2 + fan_in(target)).
+    hub_downweight: bool = True
     # #6: v0.1 kept test files for the `bug` category even when include_tests was False.
     respect_include_tests: bool = True
 
     @classmethod
     def v01(cls) -> "RetrievalConfig":
         return cls(bm25f=False, query_analysis=False, adaptive_entries=False, never_demote=False,
-                   expansion="walk", respect_include_tests=False)
+                   expansion="walk", hub_downweight=False, respect_include_tests=False)
 
 
 # BM25F (Robertson & Zaragoza, 2009). k1 and b are the textbook defaults, not tuned.
@@ -70,6 +72,13 @@ PPR_ITERATIONS, PPR_TOL = 100, 1e-9
 # reachable. bug: the cause is usually in code the failing entry point calls; security and refactor: what
 # matters is who calls the code (exposure paths, blast radius); feature: both directions equally.
 DIRECTION = {"bug": (1.0, 0.5), "feature": (1.0, 1.0), "security": (0.5, 1.0), "refactor": (0.5, 1.0)}
+# #9 hub down-weighting: w' = w / log(2 + fan_in(target)). Files imported by nearly everything (utils,
+# settings, base classes) otherwise soak up the walk's mass; the logarithm damps them gently (fan-in 0 -> x1.44,
+# 10 -> x0.40, 100 -> x0.22), so a hub is still reachable when it is the only link.
+def hub_weight(fan_in: int) -> float:
+    return 1.0 / math.log(2 + max(0, fan_in))
+
+
 # At most 25 expanded files: a 16,000-character context pack holds about 25 file blocks of ~600 characters.
 MAX_EXPANSION = 25
 EDGE_WEIGHT = re.compile(r"\]\((/[^)\s]+\.md)\).*?\(weight (\d+(?:\.\d+)?)\)\s*$")
@@ -463,7 +472,8 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
         # #5: rank neighbours by personalized PageRank from the entry points, times (1 + normalised text score)
         text = {r: s / top for r, s in hits} if top > 0 else {}
         keep = (lambda r: not _is_test(bundle.concepts[r])) if drop_tests else None
-        pr = bundle.ppr(entries, category, keep=keep)
+        tw = (lambda r: hub_weight(int(bundle.concepts[r].fm.get("fan_in") or 0))) if cfg.hub_downweight else None
+        pr = bundle.ppr(entries, category, keep=keep, target_weight=tw)
         cand = sorted(((p * (1 + text.get(r, 0.0)), r) for r, p in pr.items() if r not in entries and p > 0),
                       key=lambda x: (-x[0], x[1]))[:MAX_EXPANSION]
         if cand:
