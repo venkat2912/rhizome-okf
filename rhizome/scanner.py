@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 
 from . import okf
 from .graph import Community, build_graph, hierarchy, membership, pagerank, undirected
-from .parse_python import FileInfo, area_tags, iter_python_files, parse_file
+from .parse_python import FileInfo, area_tags, iter_python_files, safe_parse_file
 from .summarize import LLMSummarizer, heuristic_community_summary, heuristic_file_summary
 
 STATE_REL = ".rhizome/state.json"
@@ -172,7 +172,7 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
     rel_out = os.path.relpath(out, repo).replace(os.sep, "/")
     if not rel_out.startswith(".."):
         excl.append(rel_out)
-    files = {p: parse_file(repo, p) for p in iter_python_files(repo, excl)}
+    files = {p: safe_parse_file(repo, p) for p in iter_python_files(repo, excl)}
     t_parse = time.time()
     G = build_graph(files)
     comms = hierarchy(G, max_size=max_size, seed=seed, previous=state.get("communities"))
@@ -234,7 +234,9 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
             + [f"security:{r}" for r in sec_rules]
         fm = {"type": "Source File", "title": p, "description": summaries[p][0],
               "resource": _resource(remote, p), "tags": tags, "timestamp": None,
-              "language": "python", "content_hash": f.sha, "subsystem": l1}
+              "language": "python", "content_hash": f.sha, "subsystem": l1, "parser": f.parser}
+        if f.parse_error:
+            fm["parse_error"] = f.parse_error
         if l2:
             fm["component"] = l2
         fm.update({"loc": f.loc, "fan_in": G.in_degree(p), "fan_out": G.out_degree(p),

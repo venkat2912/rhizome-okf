@@ -64,6 +64,7 @@ class FileInfo:
     security: list[SecurityFinding]
     external_imports: list[str] = field(default_factory=list)
     parse_error: str | None = None
+    parser: str = "ast"              # "ast" | "failed"
 
 
 def iter_python_files(root: str, exclude: list[str] | None = None):
@@ -108,12 +109,14 @@ def module_names(root: str, rel: str) -> tuple[str, list[str], bool]:
 
 
 def _dotted(node) -> str | None:
+    # iterative: attribute chains can be arbitrarily long
+    attrs = []
+    while isinstance(node, ast.Attribute):
+        attrs.append(node.attr)
+        node = node.value
     if isinstance(node, ast.Name):
-        return node.id
-    if isinstance(node, ast.Attribute):
-        base = _dotted(node.value)
-        return f"{base}.{node.attr}" if base else node.attr
-    return None
+        return ".".join([node.id] + attrs[::-1])
+    return ".".join(attrs[::-1]) if attrs else None
 
 
 def _first_line(doc: str | None) -> str:
@@ -140,19 +143,38 @@ class _Visitor(ast.NodeVisitor):
         self.refs: Counter = Counter()
         self.findings: list[SecurityFinding] = []
 
+    def run(self, tree: ast.AST):
+        """Visit every node in the same pre-order as ``NodeVisitor.visit``, with an explicit stack.
+
+        The recursive visitor needs two Python frames per nesting level, so deeply nested
+        expressions (e.g. generated polynomial tables) exceed the recursion limit.
+        """
+        handlers = {ast.Name: self._on_name, ast.Attribute: self._on_attribute,
+                    ast.Assign: self._on_assign, ast.Call: self._on_call}
+        stack = [tree]
+        while stack:
+            node = stack.pop()
+            h = handlers.get(type(node))
+            if h:
+                h(node)
+            if type(node) is not ast.Name:   # visit_Name did not descend
+                stack.extend(reversed(list(ast.iter_child_nodes(node))))
+
+    def visit(self, node):  # kept for API compatibility; never recurses
+        self.run(node)
+
     def _canon(self, dotted: str) -> str:
         head, _, rest = dotted.partition(".")
         head = self.alias_map.get(head, head)
         return f"{head}.{rest}" if rest else head
 
-    def visit_Name(self, node):
+    def _on_name(self, node):
         self.refs[node.id] += 1
 
-    def visit_Attribute(self, node):
+    def _on_attribute(self, node):
         self.refs[node.attr] += 1
-        self.generic_visit(node)
 
-    def visit_Assign(self, node):
+    def _on_assign(self, node):
         if isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
             val = node.value.value
             for t in node.targets:
@@ -160,9 +182,8 @@ class _Visitor(ast.NodeVisitor):
                 if SECRET_NAME.search(name.split(".")[-1]) and len(val) >= 8 and " " not in val:
                     self._add(node.lineno, "hardcoded-secret", "high",
                               f"string literal assigned to `{name}`")
-        self.generic_visit(node)
 
-    def visit_Call(self, node):
+    def _on_call(self, node):
         name = _dotted(node.func)
         if name:
             full = self._canon(name)
@@ -200,7 +221,6 @@ class _Visitor(ast.NodeVisitor):
             v = kw.get("verify")
             if isinstance(v, ast.Constant) and v.value is False:
                 self._add(node.lineno, "tls-verify-disabled", "high", f"`{name}(..., verify=False)`")
-        self.generic_visit(node)
 
     def _add(self, line, rule, sev, detail):
         self.findings.append(SecurityFinding(line, rule, sev, detail))
@@ -222,6 +242,11 @@ def parse_file(root: str, rel: str) -> FileInfo:
         tree = ast.parse(text, filename=rel)
     except SyntaxError as exc:  # keep the file as a node even if it does not parse
         info.parse_error = f"{exc.msg} (line {exc.lineno})"
+        info.parser = "failed"
+        return info
+    except (RecursionError, MemoryError, ValueError) as exc:  # e.g. nesting beyond the parser's limits
+        info.parse_error = f"{type(exc).__name__}: {exc}"
+        info.parser = "failed"
         return info
 
     info.doc = _first_line(ast.get_docstring(tree))
@@ -252,10 +277,32 @@ def parse_file(root: str, rel: str) -> FileInfo:
                                        _first_line(ast.get_docstring(node))))
 
     v = _Visitor(alias_map)
-    v.visit(tree)
+    v.run(tree)
     info.name_refs = v.refs
     info.security = v.findings
     return info
+
+
+def failed_file(root: str, rel: str, exc: BaseException) -> FileInfo:
+    """A node for a file whose analysis raised; the scan records it and carries on."""
+    try:
+        with open(os.path.join(root, rel), "rb") as fh:
+            sha = "sha256:" + hashlib.sha256(fh.read()).hexdigest()[:16]
+    except OSError:
+        sha = "sha256:unreadable"
+    module, aliases, is_pkg = module_names(root, rel)
+    parts = rel.split("/")
+    is_test = any(p in ("tests", "test", "testing") for p in parts[:-1]) or parts[-1].startswith("test_")         or parts[-1].endswith("_test.py") or parts[-1] == "conftest.py"
+    return FileInfo(rel, module, aliases, is_pkg, is_test, 0, sha, "", [], [], Counter(), [],
+                    parse_error=f"{type(exc).__name__}: {exc}", parser="failed")
+
+
+def safe_parse_file(root: str, rel: str) -> FileInfo:
+    """``parse_file`` that never raises: any error in one file becomes a parse failure."""
+    try:
+        return parse_file(root, rel)
+    except Exception as exc:
+        return failed_file(root, rel, exc)
 
 
 def area_tags(info: FileInfo) -> list[str]:

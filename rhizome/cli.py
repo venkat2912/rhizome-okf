@@ -8,7 +8,7 @@ import sys
 
 from . import __version__, okf
 from .graph import build_graph, disconnected_count, leiden, louvain, undirected
-from .parse_python import iter_python_files, parse_file
+from .parse_python import iter_python_files, safe_parse_file
 from .retrieve import CATEGORIES, Bundle, context_json, context_pack
 from .scanner import scan
 
@@ -59,7 +59,7 @@ def _cmd_context(a):
 
 
 def _cmd_stats(a):
-    files = {p: parse_file(a.repo, p) for p in iter_python_files(a.repo, a.exclude)}
+    files = {p: safe_parse_file(a.repo, p) for p in iter_python_files(a.repo, a.exclude)}
     G = build_graph(files)
     U = undirected(G)
     linked = U.subgraph([n for n in U if U.degree(n)]).copy()
