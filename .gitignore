@@ -9,3 +9,5 @@ venv/
 paper/paper.built.html
 paper/*.png
 examples/shop/.knowledge/.rhizome/
+bench/.cache/
+bench/runs/
