@@ -4,10 +4,11 @@ title: shop/payments/__init__.py
 description: Package initializer with no top-level definitions.
 resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/payments/__init__.py
 tags: [python, 'subsystem:unlinked-shop']
-timestamp: '2026-09-26T10:23:34+00:00'
+timestamp: '2026-09-26T22:41:30+00:00'
 language: python
 content_hash: sha256:e3b0c44298fc1c14
 subsystem: unlinked-shop
+parser: ast
 loc: 0
 fan_in: 0
 fan_out: 0

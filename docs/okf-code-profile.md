@@ -26,8 +26,15 @@ A conforming bundle declares `profile: okf-code/0.1` in the frontmatter of its r
 ├── requirements/               optional
 │   ├── index.md                type: Index
 │   └── <slug>.md               type: Requirement
-└── .rhizome/state.json         producer state (hashes, cached summaries); not a concept
+└── .rhizome/                   producer state; not concepts
+    ├── state.json              hashes, cached summaries, scan options
+    ├── parse-cache.json.gz     per-file parse results keyed by content hash
+    └── index.json.gz           persisted search index (parsed concepts + body term counts)
 ```
+
+`.rhizome/index.json.gz` is an optimisation: a consumer may load it instead of reading every
+document when its `source_digest` and document count match the bundle, and must otherwise
+read the markdown.
 
 **Identity rule.** A source file's concept path is derived from its repository path
 (`/files/<path>.md`) and never from its community. Communities change as code evolves;
@@ -44,7 +51,8 @@ file identities must not.
 | `Index` | directory | `title`, `description`, `timestamp` |
 | `Log` | bundle | `title`, `description`, `timestamp` |
 
-Optional `Source File` fields: `component`, `loc`, `fan_in`, `fan_out`, `centrality`.
+Optional `Source File` fields: `component`, `loc`, `fan_in`, `fan_out`, `centrality`, `parser`,
+`parse_error`.
 
 ### Field semantics
 
@@ -61,6 +69,10 @@ Optional `Source File` fields: `component`, `loc`, `fan_in`, `fan_out`, `central
 - `cohesion` – internal edge weight / (internal + boundary edge weight), in [0, 1].
 - `connected` – `true` iff the community's induced import subgraph is connected. Producers
   using the Leiden algorithm iterated to a stable partition guarantee this.
+- `parser` – how the file was analysed: `ast` (the Python parser), `tree-sitter` (fallback for
+  files `ast` rejects, e.g. Python 2; imports and top-level definitions only, no security rules)
+  or `failed` (no symbols or import edges).
+- `parse_error` – present when `ast` could not parse the file: the parser's message.
 
 ## 3. Body sections (typed links)
 
@@ -82,6 +94,15 @@ under. Consumers must interpret links by section:
 
 Other sections (`# Summary`, `# Symbols`, `# External dependencies`, `# Security notes`,
 `# Text`) are informational. `Depends on` / `Used by` must be symmetric across the bundle.
+
+Each `Depends on` / `Used by` line may end with `(weight N)`: the edge weight, 1 plus the number
+of references to the imported names (capped at 50). Consumers treat a missing weight as 1. When a
+name is imported from a package that only re-exports it, the importer links to the defining
+submodule, and the edge to the package `__init__.py` is kept with weight 1 (listed as
+"re-exported names only").
+
+The root `index.md` has a `# Parse failures` section listing every file `ast` could not parse,
+with the parser used and the error.
 
 ## 4. Co-evolution protocol
 

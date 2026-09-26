@@ -13,7 +13,8 @@ Most code-context systems chunk source files into a vector store and retrieve th
 ## Install
 
 ```bash
-pip install -e .            # Python 3.10+; installs networkx, igraph, leidenalg, PyYAML
+pip install -e .                  # Python 3.10+; installs networkx, igraph, leidenalg, PyYAML
+pip install -e ".[treesitter]"    # optional: tree-sitter fallback for files ast cannot parse
 ```
 
 ## Use
@@ -27,6 +28,7 @@ rhizome check path/to/repo                     # exit 1 if the bundle is stale (
 
 rhizome context path/to/repo/.knowledge "sql injection in user lookup" --category security
 rhizome context path/to/repo/.knowledge "rename save_order" --category refactor --json
+rhizome context path/to/repo/.knowledge "$(cat issue.txt)" --category bug --repo path/to/repo   # full-text search
 
 rhizome stats path/to/repo                     # Leiden vs Louvain connectivity on the import graph
 ```
@@ -41,6 +43,41 @@ rhizome stats path/to/repo                     # Leiden vs Louvain connectivity 
 | `refactor` | Entry points → transitive reverse dependencies up to distance 3 (blast radius) |
 
 A requirement document matched by the query contributes its *Implemented by* files as entry points.
+
+### Retrieval in v0.2
+
+1. **Query analysis.** Traceback frames, file paths, dotted module paths, exception names, quoted error
+   messages and backticked identifiers in the task text are resolved against the bundle; exact matches
+   become the first entry points (a hint matching more than three files is ignored).
+2. **Field-weighted full-text search (BM25F).** With `--repo`, search covers path and symbol names
+   (weight 3), descriptions and docstrings (2) and the full file body (1). Without it, search falls back
+   to v0.1 metadata-only BM25 and warns.
+3. **Adaptive entry points.** Text hits scoring at least half the best hit (max 4, min 1).
+4. **Personalized PageRank expansion** from the entry points (restart 0.15) over the weighted import graph,
+   with the category's direction weighted twice the reverse one and high fan-in hubs damped by
+   `1 / log(2 + fan_in)`. Expansion score = PPR × (1 + normalised text score), top 25.
+5. **Never demote.** A strong text match is never ranked below a graph-expanded file.
+
+Every change can be switched off for ablation; `--v01` reproduces v0.1 rankings exactly:
+
+| Flag (`rhizome context`) | Turns off |
+|---|---|
+| `--v01` | all of the below (v0.1 behaviour) |
+| `--no-bm25f` | full-text BM25F (metadata-only BM25) |
+| `--no-query-analysis` | tracebacks, paths, module and symbol names as entry points |
+| `--fixed-entries` | adaptive entry points (always the top 4 hits) |
+| `--allow-demote` | never-demote rule |
+| `--expansion walk` | personalized PageRank (v0.1 distance walk) |
+| `--no-hub-downweight` | hub down-weighting |
+| `--legacy-bug-tests` | `include_tests` for `bug` (v0.1 kept tests) |
+
+In Python: `gather(bundle, query, category, config=RetrievalConfig(...))`, with `RetrievalConfig.v01()`
+for the v0.1 behaviour.
+
+Scanner options (`rhizome scan` / `check`): `--no-parser-fallback` (no tree-sitter for files `ast`
+cannot parse; install the fallback with `pip install -e ".[treesitter]"`) and `--no-reexports` (link
+imports from a package only to its `__init__.py`). Scans reuse a per-file parse cache and write a
+persisted search index under `.knowledge/.rhizome/`.
 
 ### CI
 

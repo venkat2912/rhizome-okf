@@ -4,10 +4,11 @@ title: scripts/cleanup.py
 description: Module defining 1 public function (run).
 resource: https://github.com/venkat2912/Rizhome/blob/HEAD/scripts/cleanup.py
 tags: [python, 'subsystem:unlinked-scripts', 'security:shell-exec']
-timestamp: '2026-09-26T10:23:34+00:00'
+timestamp: '2026-09-26T22:41:30+00:00'
 language: python
 content_hash: sha256:4e7f76e9a7dcf77a
 subsystem: unlinked-scripts
+parser: ast
 loc: 3
 fan_in: 0
 fan_out: 0

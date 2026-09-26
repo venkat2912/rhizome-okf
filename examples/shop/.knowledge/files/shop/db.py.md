@@ -4,10 +4,11 @@ title: shop/db.py
 description: Database access helpers.
 resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/db.py
 tags: [python, 'subsystem:api', 'security:sql-string-building']
-timestamp: '2026-09-26T10:23:34+00:00'
+timestamp: '2026-09-26T22:41:30+00:00'
 language: python
 content_hash: sha256:630727b132f3e17b
 subsystem: api
+parser: ast
 loc: 8
 fan_in: 3
 fan_out: 0
@@ -34,9 +35,9 @@ None.
 
 # Used by
 
-- [shop/api.py](/files/shop/api.py.md): uses `db`
-- [shop/auth.py](/files/shop/auth.py.md): uses `find_user`
-- [shop/payments/refunds.py](/files/shop/payments/refunds.py.md): uses `save_order`
+- [shop/api.py](/files/shop/api.py.md): uses `db` (weight 2)
+- [shop/auth.py](/files/shop/auth.py.md): uses `find_user` (weight 2)
+- [shop/payments/refunds.py](/files/shop/payments/refunds.py.md): uses `save_order` (weight 2)
 
 # External dependencies
 
