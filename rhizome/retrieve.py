@@ -22,6 +22,20 @@ code file files function method class module""".split())
 CATEGORIES = ("feature", "bug", "security", "refactor")
 
 
+@dataclass(frozen=True)
+class RetrievalConfig:
+    """Switches for every v0.2 retrieval change, so each can be ablated.
+
+    The defaults are the v0.2 behaviour; ``RetrievalConfig.v01()`` reproduces v0.1 rankings exactly.
+    """
+    # #6: v0.1 kept test files for the `bug` category even when include_tests was False.
+    respect_include_tests: bool = True
+
+    @classmethod
+    def v01(cls) -> "RetrievalConfig":
+        return cls(respect_include_tests=False)
+
+
 def tokens(text: str) -> list[str]:
     raw = re.findall(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|[A-Z]+|\d+", text)
     out = []
@@ -78,7 +92,7 @@ class Bundle:
         self.idf = {t: math.log(1 + (n - d + 0.5) / (d + 0.5)) for t, d in df.items()}
 
     def search(self, query: str, k: int = 5, types: tuple[str, ...] = ("Source File", "Requirement"),
-               boost=None) -> list[tuple[str, float]]:
+               boost=None, config: "RetrievalConfig | None" = None) -> list[tuple[str, float]]:
         q = tokens(query)
         scores = {}
         for r in self.searchable:
@@ -137,15 +151,19 @@ def _security_tags(c: Concept) -> list[str]:
     return [t for t in (c.fm.get("tags") or []) if str(t).startswith("security:")]
 
 
-def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_tests: bool = False):
+def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_tests: bool = False,
+           config: RetrievalConfig | None = None):
     """Return (entry points, ranked context items, subsystem concepts) for a task."""
     if category not in CATEGORIES:
         raise ValueError(f"category must be one of {CATEGORIES}")
+    cfg = config or RetrievalConfig()
     items: dict[str, Item] = {}
+    # v0.1 exempted `bug` from the test filter; v0.2 honours include_tests for every category
+    drop_tests = not include_tests and (cfg.respect_include_tests or category != "bug")
 
     def add(rel, score, reason):
         c = bundle.concepts.get(rel)
-        if c is None or (not include_tests and _is_test(c) and category != "bug"):
+        if c is None or (drop_tests and _is_test(c)):
             return
         if rel not in items or items[rel].score < score:
             items[rel] = Item(rel, score, reason)
@@ -153,8 +171,7 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
     boost = None
     if category == "security":
         boost = lambda c: 1.0 + 0.6 * bool(_security_tags(c)) + 0.4 * ("area:auth" in (c.fm.get("tags") or []))
-    skip_tests = not include_tests and category != "bug"
-    if skip_tests:
+    if drop_tests:
         base = boost or (lambda c: 1.0)
         boost = lambda c, _b=base: 0.0 if _is_test(c) else _b(c)
     hits = bundle.search(query, k=k_entry * 2, boost=boost)
@@ -222,8 +239,8 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
 
 
 def context_pack(bundle: Bundle, query: str, category: str, budget_chars: int = 16000,
-                 include_tests: bool = False) -> str:
-    entries, ranked, subs = gather(bundle, query, category, include_tests=include_tests)
+                 include_tests: bool = False, config: RetrievalConfig | None = None) -> str:
+    entries, ranked, subs = gather(bundle, query, category, include_tests=include_tests, config=config)
     root = bundle.concepts.get("/index.md")
     out = [f"# Context pack\n\n- Task category: **{category}**\n- Query: {query}\n"
            f"- Entry points: {len(entries)} · context items: {len(ranked)}\n"]
@@ -254,8 +271,9 @@ def context_pack(bundle: Bundle, query: str, category: str, budget_chars: int = 
     return "\n\n".join(out) + "\n"
 
 
-def context_json(bundle: Bundle, query: str, category: str, include_tests: bool = False) -> dict:
-    entries, ranked, subs = gather(bundle, query, category, include_tests=include_tests)
+def context_json(bundle: Bundle, query: str, category: str, include_tests: bool = False,
+                 config: RetrievalConfig | None = None) -> dict:
+    entries, ranked, subs = gather(bundle, query, category, include_tests=include_tests, config=config)
     return {"category": category, "query": query, "entry_points": entries, "subsystems": subs,
             "items": [{"concept": it.rel, "path": bundle.concepts[it.rel].fm.get("title"),
                        "score": round(it.score, 2), "reason": it.reason} for it in ranked]}

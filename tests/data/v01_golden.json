@@ -1,0 +1,2270 @@
+{
+ "search": {
+  "partial refund": [
+   [
+    "/requirements/refunds.md",
+    4.51384
+   ],
+   [
+    "/files/shop/payments/refunds.py.md",
+    1.532828
+   ],
+   [
+    "/files/shop/payments/gateway.py.md",
+    1.245683
+   ],
+   [
+    "/files/shop/api.py.md",
+    0.911576
+   ]
+  ],
+  "password hashing login": [
+   [
+    "/files/shop/auth.py.md",
+    5.598093
+   ],
+   [
+    "/files/tests/test_api.py.md",
+    1.640469
+   ],
+   [
+    "/files/shop/api.py.md",
+    1.167883
+   ]
+  ],
+  "database save_order": [
+   [
+    "/files/shop/db.py.md",
+    4.785455
+   ],
+   [
+    "/files/shop/payments/refunds.py.md",
+    1.336388
+   ],
+   [
+    "/requirements/refunds.md",
+    0.990273
+   ],
+   [
+    "/files/shop/api.py.md",
+    0.911576
+   ]
+  ],
+  "sql injection in user lookup": [
+   [
+    "/files/shop/db.py.md",
+    3.908717
+   ]
+  ],
+  "payment gateway charge fails with TLS error": [
+   [
+    "/files/shop/payments/gateway.py.md",
+    7.049958
+   ],
+   [
+    "/files/shop/payments/refunds.py.md",
+    2.519229
+   ],
+   [
+    "/files/shop/payments/__init__.py.md",
+    1.356541
+   ],
+   [
+    "/requirements/refunds.md",
+    1.268708
+   ]
+  ],
+  "Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": [
+   [
+    "/files/shop/api.py.md",
+    9.506919
+   ],
+   [
+    "/files/shop/payments/refunds.py.md",
+    9.372997
+   ],
+   [
+    "/requirements/refunds.md",
+    6.126073
+   ],
+   [
+    "/files/shop/db.py.md",
+    4.02643
+   ],
+   [
+    "/files/shop/payments/gateway.py.md",
+    3.031483
+   ],
+   [
+    "/files/tests/test_api.py.md",
+    1.436149
+   ],
+   [
+    "/files/shop/auth.py.md",
+    1.34482
+   ],
+   [
+    "/files/shop/__init__.py.md",
+    0.763477
+   ],
+   [
+    "/files/shop/payments/__init__.py.md",
+    0.763477
+   ],
+   [
+    "/files/scripts/cleanup.py.md",
+    0.166007
+   ]
+  ],
+  "HTTP handlers return wrong status for login": [
+   [
+    "/files/shop/api.py.md",
+    5.231913
+   ],
+   [
+    "/files/tests/test_api.py.md",
+    1.640469
+   ],
+   [
+    "/files/shop/auth.py.md",
+    1.081904
+   ]
+  ],
+  "cleanup script deletes cache": [
+   [
+    "/files/scripts/cleanup.py.md",
+    5.235107
+   ]
+  ]
+ },
+ "gather": {
+  "feature|False|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     49,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "feature|True|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     49,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     47,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "bug|False|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     45,
+     "test exercising /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "bug|True|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     45,
+     "test exercising /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "security|False|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.276206,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     55,
+     "security-flagged file in same subsystem: sql-string-building"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     55,
+     "security-flagged file in same subsystem: hardcoded-secret, weak-hash"
+    ]
+   ]
+  },
+  "security|True|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.276206,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     55,
+     "security-flagged file in same subsystem: sql-string-building"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     55,
+     "security-flagged file in same subsystem: hardcoded-secret, weak-hash"
+    ]
+   ]
+  },
+  "refactor|False|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ]
+   ]
+  },
+  "refactor|True|partial refund": {
+   "entries": [
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/refunds.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     104.51384,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ]
+   ]
+  },
+  "feature|False|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     105.598093,
+     "entry point (lexical score 5.6)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.167883,
+     "entry point (lexical score 1.2)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     49,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     40,
+     "dependency of /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "feature|True|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     105.598093,
+     "entry point (lexical score 5.6)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.167883,
+     "entry point (lexical score 1.2)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     49,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     40,
+     "dependency of /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "bug|False|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     105.598093,
+     "entry point (lexical score 5.6)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.167883,
+     "entry point (lexical score 1.2)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     40,
+     "dependency at distance 2 from an entry point"
+    ]
+   ]
+  },
+  "bug|True|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     105.598093,
+     "entry point (lexical score 5.6)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.167883,
+     "entry point (lexical score 1.2)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     40,
+     "dependency at distance 2 from an entry point"
+    ]
+   ]
+  },
+  "security|False|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     111.196186,
+     "entry point (lexical score 11.2)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.635037,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     55,
+     "security-flagged file in same subsystem: sql-string-building"
+    ]
+   ]
+  },
+  "security|True|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     111.196186,
+     "entry point (lexical score 11.2)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     102.296656,
+     "entry point (lexical score 2.3)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.635037,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     55,
+     "security-flagged file in same subsystem: sql-string-building"
+    ]
+   ]
+  },
+  "refactor|False|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     105.598093,
+     "entry point (lexical score 5.6)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.167883,
+     "entry point (lexical score 1.2)"
+    ]
+   ]
+  },
+  "refactor|True|password hashing login": {
+   "entries": [
+    "/files/shop/auth.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/auth.py.md",
+     105.598093,
+     "entry point (lexical score 5.6)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.167883,
+     "entry point (lexical score 1.2)"
+    ]
+   ]
+  },
+  "feature|False|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     104.785455,
+     "entry point (lexical score 4.8)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "feature|True|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     104.785455,
+     "entry point (lexical score 4.8)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     47,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "bug|False|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     104.785455,
+     "entry point (lexical score 4.8)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     45,
+     "test exercising /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "bug|True|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     104.785455,
+     "entry point (lexical score 4.8)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     45,
+     "test exercising /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "security|False|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/api.py.md",
+    "/files/shop/payments/gateway.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     107.656728,
+     "entry point (lexical score 7.7)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.276206,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ]
+   ]
+  },
+  "security|True|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/api.py.md",
+    "/files/shop/payments/gateway.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     107.656728,
+     "entry point (lexical score 7.7)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     101.276206,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ]
+   ]
+  },
+  "refactor|False|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     104.785455,
+     "entry point (lexical score 4.8)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ]
+   ]
+  },
+  "refactor|True|database save_order": {
+   "entries": [
+    "/files/shop/db.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/api.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     104.785455,
+     "entry point (lexical score 4.8)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     101.336388,
+     "entry point (lexical score 1.3)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     100.990273,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/api.py.md",
+     100.911576,
+     "entry point (lexical score 0.9)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ]
+   ]
+  },
+  "feature|False|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     103.908717,
+     "entry point (lexical score 3.9)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     50,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "feature|True|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     103.908717,
+     "entry point (lexical score 3.9)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     50,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     47,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "bug|False|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     103.908717,
+     "entry point (lexical score 3.9)"
+    ]
+   ]
+  },
+  "bug|True|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     103.908717,
+     "entry point (lexical score 3.9)"
+    ]
+   ]
+  },
+  "security|False|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     106.253946,
+     "entry point (lexical score 6.3)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ]
+   ]
+  },
+  "security|True|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     106.253946,
+     "entry point (lexical score 6.3)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     50,
+     "caller at distance 2 (exposure path)"
+    ]
+   ]
+  },
+  "refactor|False|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     103.908717,
+     "entry point (lexical score 3.9)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ]
+   ]
+  },
+  "refactor|True|sql injection in user lookup": {
+   "entries": [
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/db.py.md",
+     103.908717,
+     "entry point (lexical score 3.9)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     60,
+     "blast radius: depends on the change at distance 2"
+    ]
+   ]
+  },
+  "feature|False|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     107.049958,
+     "entry point (lexical score 7.0)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/__init__.py.md",
+     50,
+     "central member of subsystem /subsystems/unlinked-shop.md"
+    ],
+    [
+     "/files/shop/db.py.md",
+     40,
+     "dependency of /files/shop/payments/refunds.py.md"
+    ]
+   ]
+  },
+  "feature|True|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     107.049958,
+     "entry point (lexical score 7.0)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/__init__.py.md",
+     50,
+     "central member of subsystem /subsystems/unlinked-shop.md"
+    ],
+    [
+     "/files/shop/db.py.md",
+     40,
+     "dependency of /files/shop/payments/refunds.py.md"
+    ]
+   ]
+  },
+  "bug|False|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     107.049958,
+     "entry point (lexical score 7.0)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ]
+   ]
+  },
+  "bug|True|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     107.049958,
+     "entry point (lexical score 7.0)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ]
+   ]
+  },
+  "security|False|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     111.279933,
+     "entry point (lexical score 11.3)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "security-flagged dependency"
+    ]
+   ]
+  },
+  "security|True|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     111.279933,
+     "entry point (lexical score 11.3)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     50,
+     "caller at distance 2 (exposure path)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "security-flagged dependency"
+    ]
+   ]
+  },
+  "refactor|False|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     107.049958,
+     "entry point (lexical score 7.0)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ]
+   ]
+  },
+  "refactor|True|payment gateway charge fails with TLS error": {
+   "entries": [
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/__init__.py.md"
+   ],
+   "subs": [
+    "/subsystems/payments-refunds.md",
+    "/subsystems/unlinked-shop.md"
+   ],
+   "items": [
+    [
+     "/files/shop/payments/gateway.py.md",
+     107.049958,
+     "entry point (lexical score 7.0)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     102.519229,
+     "entry point (lexical score 2.5)"
+    ],
+    [
+     "/files/shop/payments/__init__.py.md",
+     101.356541,
+     "entry point (lexical score 1.4)"
+    ],
+    [
+     "/files/shop/api.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     60,
+     "blast radius: depends on the change at distance 2"
+    ]
+   ]
+  },
+  "feature|False|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     109.506919,
+     "entry point (lexical score 9.5)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/db.py.md",
+     104.02643,
+     "entry point (lexical score 4.0)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "feature|True|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     109.506919,
+     "entry point (lexical score 9.5)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/db.py.md",
+     104.02643,
+     "entry point (lexical score 4.0)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     48,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     47,
+     "central member of subsystem /subsystems/api.md"
+    ]
+   ]
+  },
+  "bug|False|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     109.506919,
+     "entry point (lexical score 9.5)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/db.py.md",
+     104.02643,
+     "entry point (lexical score 4.0)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     45,
+     "test exercising /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "bug|True|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     109.506919,
+     "entry point (lexical score 9.5)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/db.py.md",
+     104.02643,
+     "entry point (lexical score 4.0)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     45,
+     "test exercising /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "security|False|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/db.py.md",
+    "/files/shop/payments/gateway.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     113.309687,
+     "entry point (lexical score 13.3)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     106.442288,
+     "entry point (lexical score 6.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ]
+   ]
+  },
+  "security|True|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/db.py.md",
+    "/files/shop/payments/gateway.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     113.309687,
+     "entry point (lexical score 13.3)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     106.442288,
+     "entry point (lexical score 6.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     60,
+     "caller at distance 1 (exposure path)"
+    ]
+   ]
+  },
+  "refactor|False|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     109.506919,
+     "entry point (lexical score 9.5)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/db.py.md",
+     104.02643,
+     "entry point (lexical score 4.0)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ]
+   ]
+  },
+  "refactor|True|Traceback (most recent call last):\n  File \"shop/api.py\", line 12, in handle_refund\n    return refund_order(conn, req[\"order\"])\nKeyError: 'order'": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/payments/refunds.py.md",
+    "/files/shop/payments/gateway.py.md",
+    "/files/shop/db.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md",
+    "/subsystems/payments-refunds.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     109.506919,
+     "entry point (lexical score 9.5)"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     109.372997,
+     "entry point (lexical score 9.4)"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     106.126073,
+     "implements requirement “Partial refunds”"
+    ],
+    [
+     "/files/shop/db.py.md",
+     104.02643,
+     "entry point (lexical score 4.0)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     70,
+     "blast radius: depends on the change at distance 1"
+    ]
+   ]
+  },
+  "feature|False|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     105.231913,
+     "entry point (lexical score 5.2)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     101.081904,
+     "entry point (lexical score 1.1)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     49,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     40,
+     "dependency of /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "feature|True|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     105.231913,
+     "entry point (lexical score 5.2)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     101.081904,
+     "entry point (lexical score 1.1)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     49,
+     "central member of subsystem /subsystems/api.md"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     40,
+     "dependency of /files/shop/api.py.md"
+    ]
+   ]
+  },
+  "bug|False|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     105.231913,
+     "entry point (lexical score 5.2)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     101.081904,
+     "entry point (lexical score 1.1)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     40,
+     "dependency at distance 2 from an entry point"
+    ]
+   ]
+  },
+  "bug|True|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     105.231913,
+     "entry point (lexical score 5.2)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     101.081904,
+     "entry point (lexical score 1.1)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/refunds.py.md",
+     50,
+     "dependency at distance 1 from an entry point"
+    ],
+    [
+     "/files/shop/payments/gateway.py.md",
+     40,
+     "dependency at distance 2 from an entry point"
+    ]
+   ]
+  },
+  "security|False|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     107.324678,
+     "entry point (lexical score 7.3)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     102.163808,
+     "entry point (lexical score 2.2)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     55,
+     "security-flagged file in same subsystem: sql-string-building"
+    ]
+   ]
+  },
+  "security|True|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     107.324678,
+     "entry point (lexical score 7.3)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     102.296656,
+     "entry point (lexical score 2.3)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     102.163808,
+     "entry point (lexical score 2.2)"
+    ],
+    [
+     "/files/shop/db.py.md",
+     55,
+     "security-flagged file in same subsystem: sql-string-building"
+    ]
+   ]
+  },
+  "refactor|False|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     105.231913,
+     "entry point (lexical score 5.2)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     101.081904,
+     "entry point (lexical score 1.1)"
+    ]
+   ]
+  },
+  "refactor|True|HTTP handlers return wrong status for login": {
+   "entries": [
+    "/files/shop/api.py.md",
+    "/files/tests/test_api.py.md",
+    "/files/shop/auth.py.md"
+   ],
+   "subs": [
+    "/subsystems/api.md"
+   ],
+   "items": [
+    [
+     "/files/shop/api.py.md",
+     105.231913,
+     "entry point (lexical score 5.2)"
+    ],
+    [
+     "/files/tests/test_api.py.md",
+     101.640469,
+     "entry point (lexical score 1.6)"
+    ],
+    [
+     "/files/shop/auth.py.md",
+     101.081904,
+     "entry point (lexical score 1.1)"
+    ]
+   ]
+  },
+  "feature|False|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     105.235107,
+     "entry point (lexical score 5.2)"
+    ]
+   ]
+  },
+  "feature|True|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     105.235107,
+     "entry point (lexical score 5.2)"
+    ]
+   ]
+  },
+  "bug|False|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     105.235107,
+     "entry point (lexical score 5.2)"
+    ]
+   ]
+  },
+  "bug|True|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     105.235107,
+     "entry point (lexical score 5.2)"
+    ]
+   ]
+  },
+  "security|False|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     108.376172,
+     "entry point (lexical score 8.4)"
+    ]
+   ]
+  },
+  "security|True|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     108.376172,
+     "entry point (lexical score 8.4)"
+    ]
+   ]
+  },
+  "refactor|False|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     105.235107,
+     "entry point (lexical score 5.2)"
+    ]
+   ]
+  },
+  "refactor|True|cleanup script deletes cache": {
+   "entries": [
+    "/files/scripts/cleanup.py.md"
+   ],
+   "subs": [
+    "/subsystems/unlinked-scripts.md"
+   ],
+   "items": [
+    [
+     "/files/scripts/cleanup.py.md",
+     105.235107,
+     "entry point (lexical score 5.2)"
+    ]
+   ]
+  }
+ }
+}

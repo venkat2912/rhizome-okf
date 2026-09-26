@@ -47,3 +47,42 @@ def test_one_bad_file_does_not_stop_the_scan(tmp_path, monkeypatch):
     assert fm["parser"] == "failed" and "boom" in fm["parse_error"]
     assert _fm(out, "shop/api.py")["parser"] == "ast"
     assert okf.validate(out)["ok"]
+
+
+# ---------------------------------------------------------------- RetrievalConfig.v01() reproduces v0.1
+
+def _golden_bundle(tmp_path):
+    from rhizome.retrieve import Bundle
+    repo = write_repo(str(tmp_path / "shop_repo"))
+    scan(repo, docs="docs/requirements")
+    return Bundle(os.path.join(repo, ".knowledge"))
+
+
+def test_v01_config_reproduces_v01_rankings(tmp_path):
+    import json
+    from rhizome.retrieve import RetrievalConfig, gather
+    with open(os.path.join(os.path.dirname(__file__), "data", "v01_golden.json"), encoding="utf-8") as fh:
+        golden = json.load(fh)
+    b = _golden_bundle(tmp_path)
+    cfg = RetrievalConfig.v01()
+    for q, want in golden["search"].items():
+        got = [[r, round(s, 6)] for r, s in b.search(q, k=50, config=cfg)]
+        assert got == want, q
+    for key, want in golden["gather"].items():
+        cat, tests, q = key.split("|", 2)
+        e, items, subs = gather(b, q, cat, include_tests=(tests == "True"), config=cfg)
+        got = {"entries": e, "subs": subs, "items": [[i.rel, round(i.score, 6), i.reason] for i in items]}
+        assert got == want, key
+
+
+# ---------------------------------------------------------------- #6 include_tests for every category
+
+def test_bug_category_respects_include_tests(tmp_path):
+    from rhizome.retrieve import RetrievalConfig, gather
+    b = _golden_bundle(tmp_path)
+    q = "login handler returns wrong result"
+    def paths(**kw):
+        return {b.concepts[i.rel].fm["title"] for i in gather(b, q, "bug", **kw)[1]}
+    assert "tests/test_api.py" not in paths(include_tests=False)
+    assert "tests/test_api.py" in paths(include_tests=True)
+    assert "tests/test_api.py" in paths(include_tests=False, config=RetrievalConfig.v01())

@@ -9,7 +9,7 @@ import sys
 from . import __version__, okf
 from .graph import build_graph, disconnected_count, leiden, louvain, undirected
 from .parse_python import iter_python_files, safe_parse_file
-from .retrieve import CATEGORIES, Bundle, context_json, context_pack
+from .retrieve import CATEGORIES, Bundle, RetrievalConfig, context_json, context_pack
 from .scanner import scan
 
 
@@ -49,12 +49,23 @@ def _cmd_validate(a):
     return 0 if r["ok"] else 1
 
 
+def retrieval_config(a) -> RetrievalConfig:
+    """Build the retrieval config from `rhizome context` ablation flags."""
+    import dataclasses
+    cfg = RetrievalConfig.v01() if a.v01 else RetrievalConfig()
+    changes = {}
+    if a.legacy_bug_tests:
+        changes["respect_include_tests"] = False
+    return dataclasses.replace(cfg, **changes)
+
+
 def _cmd_context(a):
     b = Bundle(a.bundle)
+    cfg = retrieval_config(a)
     if a.json:
-        print(json.dumps(context_json(b, a.query, a.category, a.tests), indent=2))
+        print(json.dumps(context_json(b, a.query, a.category, a.tests, config=cfg), indent=2))
     else:
-        print(context_pack(b, a.query, a.category, a.budget, a.tests))
+        print(context_pack(b, a.query, a.category, a.budget, a.tests, config=cfg))
     return 0
 
 
@@ -110,6 +121,10 @@ def main(argv=None) -> int:
     sp.add_argument("--budget", type=int, default=16000, help="character budget (default 16000)")
     sp.add_argument("--tests", action="store_true", help="include test files")
     sp.add_argument("--json", action="store_true")
+    g = sp.add_argument_group("ablation", "switch individual v0.2 retrieval changes off")
+    g.add_argument("--v01", action="store_true", help="start from the v0.1 retrieval behaviour")
+    g.add_argument("--legacy-bug-tests", action="store_true",
+                   help="#6 off: keep test files for `bug` even without --tests")
     sp.set_defaults(fn=_cmd_context)
 
     sp = sub.add_parser("stats", help="compare Leiden and Louvain connectivity on the import graph")
