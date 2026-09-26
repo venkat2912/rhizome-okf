@@ -259,11 +259,13 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
         deps = sorted(G.successors(p), key=lambda t: -G[p][t]["weight"])
         b.append("# Depends on\n\n" + ("\n".join(
             f"- {okf.link(t, okf.concept_path_for_file(t))}: uses "
-            + ", ".join(f"`{n}`" for n in G[p][t]["names"][:8]) for t in deps) or "None."))
+            + ", ".join(f"`{n}`" for n in G[p][t]["names"][:8]) + f" (weight {G[p][t]['weight']:.0f})"
+            for t in deps) or "None."))
         users = sorted(G.predecessors(p), key=lambda s: -G[s][p]["weight"])
         b.append("# Used by\n\n" + ("\n".join(
             f"- {okf.link(s, okf.concept_path_for_file(s))}: uses "
-            + ", ".join(f"`{n}`" for n in G[s][p]["names"][:8]) for s in users) or "None."))
+            + ", ".join(f"`{n}`" for n in G[s][p]["names"][:8]) + f" (weight {G[s][p]['weight']:.0f})"
+            for s in users) or "None."))
         if f.external_imports:
             b.append("# External dependencies\n\n" + ", ".join(f"`{e}`" for e in f.external_imports))
         if f.security:

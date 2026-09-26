@@ -62,6 +62,8 @@ def retrieval_config(a) -> RetrievalConfig:
         changes["adaptive_entries"] = False
     if a.allow_demote:
         changes["never_demote"] = False
+    if a.expansion:
+        changes["expansion"] = a.expansion
     if a.legacy_bug_tests:
         changes["respect_include_tests"] = False
     return dataclasses.replace(cfg, **changes)
@@ -138,6 +140,8 @@ def main(argv=None) -> int:
     g.add_argument("--fixed-entries", action="store_true", help="#3 off: always take the top 4 text hits")
     g.add_argument("--allow-demote", action="store_true",
                    help="#4 off: graph-expanded files may outrank strong text matches")
+    g.add_argument("--expansion", choices=("ppr", "walk"),
+                   help="#5: personalized PageRank (default) or the v0.1 distance walk")
     g.add_argument("--legacy-bug-tests", action="store_true",
                    help="#6 off: keep test files for `bug` even without --tests")
     sp.set_defaults(fn=_cmd_context)

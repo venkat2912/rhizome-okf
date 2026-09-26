@@ -258,3 +258,36 @@ def test_strong_text_matches_stay_above_expanded_files(tmp_path):
         for r in strong:
             assert r in order
             assert all(order.index(r) < order.index(e) for e in expanded), (cat, r)
+
+
+# ---------------------------------------------------------------- #5 personalized PageRank expansion
+
+def test_edge_weights_are_published_and_read(tmp_path):
+    b = _golden_bundle(tmp_path)
+    w = b.dep_weights("/files/shop/auth.py.md")
+    assert set(w) == {"/files/shop/db.py.md"} and w["/files/shop/db.py.md"] > 1   # 1 + references to find_user
+
+
+def test_ppr_is_a_distribution_centred_on_the_seeds(tmp_path):
+    b = _golden_bundle(tmp_path)
+    pr = b.ppr(["/files/shop/api.py.md"], "bug")
+    assert abs(sum(pr.values()) - 1.0) < 1e-6
+    assert max(pr, key=pr.get) == "/files/shop/api.py.md"
+
+
+def test_ppr_direction_depends_on_category(tmp_path):
+    b = _golden_bundle(tmp_path)
+    seed = ["/files/shop/auth.py.md"]          # depends on db.py, used by api.py
+    bug, ref = b.ppr(seed, "bug"), b.ppr(seed, "refactor")
+    assert bug["/files/shop/db.py.md"] > bug["/files/shop/api.py.md"]
+    assert ref["/files/shop/api.py.md"] > ref["/files/shop/db.py.md"]
+
+
+def test_gather_uses_ppr_or_walk(tmp_path):
+    from rhizome.retrieve import RetrievalConfig, gather
+    b = _golden_bundle(tmp_path)
+    ppr_items = gather(b, "refund workflow", "bug")[1]
+    walk_items = gather(b, "refund workflow", "bug", config=RetrievalConfig(expansion="walk"))[1]
+    assert any("PPR" in i.reason for i in ppr_items)
+    assert not any("PPR" in i.reason for i in walk_items)
+    assert all(i.score < 90 for i in ppr_items if "PPR" in i.reason)

@@ -42,13 +42,15 @@ class RetrievalConfig:
     adaptive_entries: bool = True
     # #4: strong text matches (>= ENTRY_RATIO of the top score) are never ranked below graph-expanded files.
     never_demote: bool = True
+    # #5: graph expansion by personalized PageRank ("ppr") or v0.1's flat distance walk ("walk").
+    expansion: str = "ppr"
     # #6: v0.1 kept test files for the `bug` category even when include_tests was False.
     respect_include_tests: bool = True
 
     @classmethod
     def v01(cls) -> "RetrievalConfig":
         return cls(bm25f=False, query_analysis=False, adaptive_entries=False, never_demote=False,
-                   respect_include_tests=False)
+                   expansion="walk", respect_include_tests=False)
 
 
 # BM25F (Robertson & Zaragoza, 2009). k1 and b are the textbook defaults, not tuned.
@@ -59,6 +61,18 @@ BM25_K1, BM25_B = 1.2, 0.75
 FIELD_WEIGHTS = {"name": 3.0, "doc": 2.0, "body": 1.0}
 # #3: half the top score. A hit at half the best score matches clearly fewer or rarer query terms.
 ENTRY_RATIO = 0.5
+# #5 personalized PageRank. Restart probability 0.15 is the standard value (Page et al., 1999; Haveliwala,
+# 2002): walks stay near the entry points, about 1 / 0.15 = 6.7 steps on average.
+PPR_RESTART = 0.15
+PPR_ITERATIONS, PPR_TOL = 100, 1e-9
+# Direction-aware transition weights (dependency direction, caller direction). The category's primary
+# direction gets twice the weight of the reverse one; the reverse edge is kept so the other side stays
+# reachable. bug: the cause is usually in code the failing entry point calls; security and refactor: what
+# matters is who calls the code (exposure paths, blast radius); feature: both directions equally.
+DIRECTION = {"bug": (1.0, 0.5), "feature": (1.0, 1.0), "security": (0.5, 1.0), "refactor": (0.5, 1.0)}
+# At most 25 expanded files: a 16,000-character context pack holds about 25 file blocks of ~600 characters.
+MAX_EXPANSION = 25
+EDGE_WEIGHT = re.compile(r"\]\((/[^)\s]+\.md)\).*?\(weight (\d+(?:\.\d+)?)\)\s*$")
 # A name, path or message found in more than three files does not point at a location; ignore it.
 MAX_DEFINERS = 3
 SYMBOL_NAME = re.compile(r"`(?:class |def )?([A-Za-z_][A-Za-z0-9_]*)(?:\(\))?`")
@@ -269,6 +283,61 @@ class Bundle:
         hits = sorted(r for r, text in self.texts().items() if s in text)
         return hits if 0 < len(hits) <= MAX_DEFINERS else []
 
+    # ---- #5 weighted import graph and personalized PageRank
+    def dep_weights(self, rel: str) -> dict[str, float]:
+        """Imported file -> edge weight (1 + name references, as written by the scanner; 1 if absent)."""
+        out = {}
+        for line in self.concepts[rel].sections.get("Depends on", "").splitlines():
+            m = EDGE_WEIGHT.search(line)
+            if m and m.group(1) in self.files:
+                out[m.group(1)] = float(m.group(2))
+        for t in self.deps(rel):
+            out.setdefault(t, 1.0)
+        return out
+
+    def _edges(self):
+        if getattr(self, "_edge_list", None) is None:
+            self._edge_list = [(a, b, w) for a in self.files for b, w in self.dep_weights(a).items()]
+        return self._edge_list
+
+    def ppr(self, seeds: list[str], category: str, keep=None, target_weight=None) -> dict[str, float]:
+        """Personalized PageRank seeded uniformly on ``seeds`` over the import graph.
+
+        Each import edge A -> B (A depends on B, weight w) gives the transitions A -> B with weight
+        w * dep and B -> A with weight w * user, where (dep, user) = DIRECTION[category]; ``target_weight``
+        can further scale a transition by its target. ``keep`` filters nodes (e.g. no test files).
+        """
+        dep_w, user_w = DIRECTION[category]
+        tw = target_weight or (lambda n: 1.0)
+        out: dict[str, list[tuple[str, float]]] = defaultdict(list)
+        for a, b, w in self._edges():
+            if keep and not (keep(a) and keep(b)):
+                continue
+            out[a].append((b, w * dep_w * tw(b)))
+            out[b].append((a, w * user_w * tw(a)))
+        seeds = [s for s in seeds if not keep or keep(s)]
+        if not seeds:
+            return {}
+        pers = {s: 1.0 / len(seeds) for s in seeds}
+        norm = {u: sum(w for _, w in nb) for u, nb in out.items()}
+        r = dict(pers)
+        for _ in range(PPR_ITERATIONS):
+            nxt: dict[str, float] = defaultdict(float)
+            dangling = 0.0
+            for u, mass in r.items():
+                if norm.get(u):
+                    for v, w in out[u]:
+                        nxt[v] += (1 - PPR_RESTART) * mass * w / norm[u]
+                else:
+                    dangling += (1 - PPR_RESTART) * mass
+            for s, p in pers.items():
+                nxt[s] += (PPR_RESTART + dangling) * p
+            delta = sum(abs(nxt[k] - r.get(k, 0.0)) for k in nxt)
+            r = nxt
+            if delta < PPR_TOL:
+                break
+        return dict(r)
+
     # ---- graph helpers
     def deps(self, rel: str) -> list[str]:
         return [t for t in self.concepts[rel].links.get("Depends on", []) if t in self.files]
@@ -390,7 +459,37 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
             break
     entries = entries[:k_entry]
 
-    if category == "feature":
+    if cfg.expansion == "ppr" and entries:
+        # #5: rank neighbours by personalized PageRank from the entry points, times (1 + normalised text score)
+        text = {r: s / top for r, s in hits} if top > 0 else {}
+        keep = (lambda r: not _is_test(bundle.concepts[r])) if drop_tests else None
+        pr = bundle.ppr(entries, category, keep=keep)
+        cand = sorted(((p * (1 + text.get(r, 0.0)), r) for r, p in pr.items() if r not in entries and p > 0),
+                      key=lambda x: (-x[0], x[1]))[:MAX_EXPANSION]
+        if cand:
+            best = cand[0][0]
+            for sc, r in cand:   # expanded files score in (10, 80], below every strong text match (>= 90)
+                add(r, 10 + 70 * sc / best, f"graph neighbour of the entry points (PPR {pr[r]:.3f})")
+        if category == "feature":
+            votes = Counter(bundle.subsystem_of(e) for e in entries if bundle.subsystem_of(e))
+            for sub, _ in votes.most_common(2):
+                members = [t for t in bundle.concepts[sub].links.get("Members", []) if t in bundle.files]
+                for i, m in enumerate(members[:8]):
+                    add(m, 50 - i, f"central member of subsystem {sub}")
+        elif category == "bug":
+            for e in entries:
+                for u in bundle.users(e):
+                    if _is_test(bundle.concepts[u]):
+                        add(u, 45, f"test exercising {e}")
+        elif category == "security":
+            for e in entries:
+                sub = bundle.subsystem_of(e)
+                if sub:
+                    for m in bundle.concepts[sub].links.get("Members", []):
+                        if m in bundle.files and _security_tags(bundle.concepts[m]):
+                            add(m, 55, "security-flagged file in same subsystem: "
+                                + ", ".join(t.split(':', 1)[1] for t in _security_tags(bundle.concepts[m])))
+    elif category == "feature":
         # pick the dominant subsystem among entry points; present it top-down
         votes = Counter(bundle.subsystem_of(e) for e in entries if bundle.subsystem_of(e))
         for sub, _ in votes.most_common(2):
