@@ -56,6 +56,8 @@ def retrieval_config(a) -> RetrievalConfig:
     changes = {}
     if a.no_bm25f:
         changes["bm25f"] = False
+    if a.no_query_analysis:
+        changes["query_analysis"] = False
     if a.legacy_bug_tests:
         changes["respect_include_tests"] = False
     return dataclasses.replace(cfg, **changes)
@@ -127,6 +129,8 @@ def main(argv=None) -> int:
     g = sp.add_argument_group("ablation", "switch individual v0.2 retrieval changes off")
     g.add_argument("--v01", action="store_true", help="start from the v0.1 retrieval behaviour")
     g.add_argument("--no-bm25f", action="store_true", help="#1 off: metadata-only BM25 (v0.1)")
+    g.add_argument("--no-query-analysis", action="store_true",
+                   help="#2 off: ignore tracebacks, paths, module and symbol names in the query")
     g.add_argument("--legacy-bug-tests", action="store_true",
                    help="#6 off: keep test files for `bug` even without --tests")
     sp.set_defaults(fn=_cmd_context)

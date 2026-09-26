@@ -163,3 +163,61 @@ def test_bm25f_without_repo_warns_and_falls_back(tmp_path, caplog):
     with caplog.at_level(logging.WARNING, logger="rhizome"):
         b.search("cache", k=5)
     assert "metadata-only" in caplog.text
+
+
+# ---------------------------------------------------------------- #2 query analysis
+
+TRACEBACK = """Using `QuerySet.bulk_update()` with an F() expression fails in django.db.models.query.
+
+Traceback (most recent call last):
+  File "/home/me/proj/manage.py", line 22, in <module>
+    main()
+  File "/usr/lib/python3.11/site-packages/django/db/models/query.py", line 781, in bulk_update
+    raise ValueError("All bulk_update() objects must have a primary key set.")
+ValueError: All bulk_update() objects must have a primary key set.
+
+See also db/models/expressions.py and C:\\work\\app\\models.py
+"""
+
+
+def test_analyze_traceback():
+    from rhizome.query import analyze
+    qa = analyze(TRACEBACK)
+    assert [(f.path, f.line, f.func) for f in qa.frames] == [
+        ("/home/me/proj/manage.py", 22, "<module>"),
+        ("/usr/lib/python3.11/site-packages/django/db/models/query.py", 781, "bulk_update")]
+    assert qa.paths == ["db/models/expressions.py", "C:/work/app/models.py"]
+    assert "django.db.models.query" in qa.modules
+    assert qa.exceptions == ["ValueError"]
+    assert qa.quoted == ["All bulk_update() objects must have a primary key set."]
+    assert qa.identifiers == ["QuerySet", "bulk_update"]
+
+
+def test_analyze_plain_text_has_no_hints():
+    from rhizome.query import analyze
+    assert analyze("the login page is slow when many users sign in").empty()
+
+
+def test_exact_matches_become_first_entry_points(tmp_path):
+    from rhizome.retrieve import Bundle, RetrievalConfig, gather
+    b, repo = _bundle(tmp_path, BODY_FILES)
+    full = Bundle(b.path, repo=repo)
+    q = ('Traceback (most recent call last):\n  File "/srv/site/app/views.py", line 5, in index\n'
+         '    return get("home")\nLookupError: stale entry evicted twice')
+    entries, items, _ = gather(full, q, "bug")
+    assert full.concepts[entries[0]].fm["title"] == "app/views.py"               # innermost repo frame
+    assert "traceback frame" in items[0].reason
+    assert "app/cache.py" in [full.concepts[e].fm["title"] for e in entries]     # quoted message
+    v01_items = gather(full, q, "bug", config=RetrievalConfig.v01())[1]
+    assert not any("traceback" in i.reason or "quoted" in i.reason for i in v01_items)
+
+
+def test_resolution_rejects_ambiguous_names(tmp_path):
+    from rhizome.retrieve import Bundle
+    files = {f"pkg{i}/__init__.py": "" for i in range(5)}
+    files.update({f"pkg{i}/util.py": "def helper():\n    pass\n" for i in range(5)})
+    b, repo = _bundle(tmp_path, files)
+    assert b.resolve_symbol("helper") == []               # defined in 5 files
+    assert b.resolve_path("util.py") == []                # 5 candidates
+    assert len(b.resolve_path("x/y/pkg3/util.py")) == 1   # absolute path ending in a repository path
+    assert len(b.resolve_module("pkg3.util.helper")) == 1
