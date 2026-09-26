@@ -8,12 +8,16 @@ depends on the task category -> ranked, budgeted context pack.
 """
 from __future__ import annotations
 
+import logging
 import math
+import os
 import re
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass, field
 
 from . import okf
+
+log = logging.getLogger("rhizome")
 
 STOP = set("""a an the and or of to in on for with from by is are be this that it as at into
 when then than via use uses using add new fix bug make should must can will not no all any each
@@ -28,12 +32,24 @@ class RetrievalConfig:
 
     The defaults are the v0.2 behaviour; ``RetrievalConfig.v01()`` reproduces v0.1 rankings exactly.
     """
+    # #1: field-weighted full-text search (BM25F) when source text is available; v0.1 indexed metadata only.
+    bm25f: bool = True
     # #6: v0.1 kept test files for the `bug` category even when include_tests was False.
     respect_include_tests: bool = True
 
     @classmethod
     def v01(cls) -> "RetrievalConfig":
-        return cls(respect_include_tests=False)
+        return cls(bm25f=False, respect_include_tests=False)
+
+
+# BM25F (Robertson & Zaragoza, 2009). k1 and b are the textbook defaults, not tuned.
+BM25_K1, BM25_B = 1.2, 0.75
+# Field weights: an identifier or path match is the most specific evidence (3); prose written about the file
+# (descriptions, docstrings, tags) says what it is for but is looser (2); the full body has the most text and
+# the most incidental matches (1). Chosen from these priorities, not fitted to any benchmark.
+FIELD_WEIGHTS = {"name": 3.0, "doc": 2.0, "body": 1.0}
+SYMBOL_NAME = re.compile(r"`(?:class |def )?([A-Za-z_][A-Za-z0-9_]*)(?:\(\))?`")
+SYMBOL_DOC = re.compile(r"\(L\d+\): (.*)$", re.M)
 
 
 def tokens(text: str) -> list[str]:
@@ -63,8 +79,11 @@ class Concept:
 
 
 class Bundle:
-    def __init__(self, path: str):
+    """A loaded OKF code bundle. ``repo`` (the repository root) enables full-text search over file bodies."""
+
+    def __init__(self, path: str, repo: str | None = None):
         self.path = path
+        self.repo = repo
         self.concepts: dict[str, Concept] = {}
         for rel, text in okf.iter_concepts(path):
             fm, body = okf.split(text)
@@ -73,6 +92,8 @@ class Bundle:
             self.concepts[rel] = Concept(rel, fm, body, secs, links)
         self.files = {r: c for r, c in self.concepts.items() if c.type == "Source File"}
         self._build_index()
+        self._bm25f = None          # built lazily on first full-text search
+        self._warned = False
 
     # ---- lexical index (BM25) over file and requirement concepts
     def _doc_text(self, c: Concept) -> str:
@@ -91,8 +112,55 @@ class Bundle:
         n = len(self.tf) or 1
         self.idf = {t: math.log(1 + (n - d + 0.5) / (d + 0.5)) for t, d in df.items()}
 
+    # ---- #1 field-weighted full-text index (BM25F)
+    def _fields(self, c: Concept) -> dict[str, str]:
+        if c.type == "Requirement":
+            return {"name": str(c.fm.get("title", "")), "doc": str(c.fm.get("description", "")),
+                    "body": c.sections.get("Text", "")}
+        sym = c.sections.get("Symbols", "")
+        name = " ".join([str(c.fm.get("title", ""))] + SYMBOL_NAME.findall(sym))
+        doc = " ".join([str(c.fm.get("description", "")), " ".join(map(str, c.fm.get("tags", []) or []))]
+                       + SYMBOL_DOC.findall(sym))
+        return {"name": name, "doc": doc, "body": self._source(c)}
+
+    def _source(self, c: Concept) -> str:
+        try:
+            with open(os.path.join(self.repo, *str(c.fm.get("title", "")).split("/")),
+                      encoding="utf-8", errors="replace") as fh:
+                return fh.read()
+        except OSError:
+            return ""
+
+    def _build_bm25f(self):
+        field_tf = {r: {f: Counter(tokens(s)) for f, s in self._fields(self.concepts[r]).items()}
+                    for r in self.searchable}
+        avg = {f: (sum(sum(d[f].values()) for d in field_tf.values()) / len(field_tf)) or 1.0 if field_tf else 1.0
+               for f in FIELD_WEIGHTS}
+        post: dict[str, dict[str, float]] = defaultdict(dict)   # term -> {doc: length-normalised weighted tf}
+        for r, fields in field_tf.items():
+            acc: dict[str, float] = defaultdict(float)
+            for f, tf in fields.items():
+                norm = 1 - BM25_B + BM25_B * sum(tf.values()) / avg[f]
+                for term, n in tf.items():
+                    acc[term] += FIELD_WEIGHTS[f] * n / norm
+            for term, v in acc.items():
+                post[term][r] = v
+        n = len(field_tf) or 1
+        idf = {term: math.log(1 + (n - len(d) + 0.5) / (len(d) + 0.5)) for term, d in post.items()}
+        self._bm25f = (post, idf)
+
+    def full_text(self) -> bool:
+        return self.repo is not None
+
     def search(self, query: str, k: int = 5, types: tuple[str, ...] = ("Source File", "Requirement"),
                boost=None, config: "RetrievalConfig | None" = None) -> list[tuple[str, float]]:
+        cfg = config or RetrievalConfig()
+        if cfg.bm25f:
+            if self.full_text():
+                return self._search_bm25f(query, k, types, boost)
+            if not self._warned:
+                log.warning("no repository given: full-text search unavailable, using metadata-only search (v0.1)")
+                self._warned = True
         q = tokens(query)
         scores = {}
         for r in self.searchable:
@@ -108,6 +176,25 @@ class Bundle:
             if s > 0:
                 scores[r] = s
         return sorted(scores.items(), key=lambda x: -x[1])[:k]
+
+    def _search_bm25f(self, query, k, types, boost) -> list[tuple[str, float]]:
+        if self._bm25f is None:
+            self._build_bm25f()
+        post, idf = self._bm25f
+        scores: dict[str, float] = defaultdict(float)
+        for term in tokens(query):          # repeated query terms count again, as in v0.1
+            for r, v in post.get(term, {}).items():
+                scores[r] += idf[term] * v / (BM25_K1 + v)
+        out = {}
+        for r, s in scores.items():
+            c = self.concepts[r]
+            if c.type not in types:
+                continue
+            if boost:
+                s *= boost(c)
+            if s > 0:
+                out[r] = s
+        return sorted(out.items(), key=lambda x: (-x[1], x[0]))[:k]
 
     # ---- graph helpers
     def deps(self, rel: str) -> list[str]:
@@ -174,7 +261,7 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
     if drop_tests:
         base = boost or (lambda c: 1.0)
         boost = lambda c, _b=base: 0.0 if _is_test(c) else _b(c)
-    hits = bundle.search(query, k=k_entry * 2, boost=boost)
+    hits = bundle.search(query, k=k_entry * 2, boost=boost, config=cfg)
     entries: list[str] = []
     for rel, s in hits:
         c = bundle.concepts[rel]

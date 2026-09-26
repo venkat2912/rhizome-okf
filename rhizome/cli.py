@@ -54,13 +54,15 @@ def retrieval_config(a) -> RetrievalConfig:
     import dataclasses
     cfg = RetrievalConfig.v01() if a.v01 else RetrievalConfig()
     changes = {}
+    if a.no_bm25f:
+        changes["bm25f"] = False
     if a.legacy_bug_tests:
         changes["respect_include_tests"] = False
     return dataclasses.replace(cfg, **changes)
 
 
 def _cmd_context(a):
-    b = Bundle(a.bundle)
+    b = Bundle(a.bundle, repo=a.repo)
     cfg = retrieval_config(a)
     if a.json:
         print(json.dumps(context_json(b, a.query, a.category, a.tests, config=cfg), indent=2))
@@ -120,9 +122,11 @@ def main(argv=None) -> int:
     sp.add_argument("--category", choices=CATEGORIES, required=True)
     sp.add_argument("--budget", type=int, default=16000, help="character budget (default 16000)")
     sp.add_argument("--tests", action="store_true", help="include test files")
+    sp.add_argument("--repo", help="repository root: enables full-text search over file bodies")
     sp.add_argument("--json", action="store_true")
     g = sp.add_argument_group("ablation", "switch individual v0.2 retrieval changes off")
     g.add_argument("--v01", action="store_true", help="start from the v0.1 retrieval behaviour")
+    g.add_argument("--no-bm25f", action="store_true", help="#1 off: metadata-only BM25 (v0.1)")
     g.add_argument("--legacy-bug-tests", action="store_true",
                    help="#6 off: keep test files for `bug` even without --tests")
     sp.set_defaults(fn=_cmd_context)

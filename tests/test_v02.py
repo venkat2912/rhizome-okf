@@ -117,3 +117,49 @@ def test_scan_description_uses_cleaned_docstring(tmp_path):
     out = os.path.join(repo, ".knowledge")
     assert _fm(out, "requests/sessions.py")["description"].startswith("This module provides a Session object")
     assert _fm(out, "requests/models.py")["description"] == "Module defining 1 public function (get)."
+
+
+# ---------------------------------------------------------------- #1 field-weighted full-text search
+
+BODY_FILES = {
+    "app/__init__.py": "",
+    "app/cache.py": '"""Caching layer."""\n\ndef get(key):\n    raise LookupError("stale entry evicted twice")\n',
+    "app/views.py": '"""Views."""\nfrom app.cache import get\n\ndef index():\n    return get("home")\n',
+    "app/evicted.py": '"""Eviction policy."""\n\ndef run():\n    pass\n',
+}
+
+
+def _bundle(tmp_path, files, **kw):
+    from rhizome.retrieve import Bundle
+    repo = write_repo(str(tmp_path / "r"), files)
+    scan(repo)
+    return Bundle(os.path.join(repo, ".knowledge"), **kw), repo
+
+
+def _titles(b, hits):
+    return [b.concepts[r].fm["title"] for r, _ in hits]
+
+
+def test_bm25f_finds_text_that_only_appears_in_the_body(tmp_path):
+    from rhizome.retrieve import Bundle, RetrievalConfig
+    b, repo = _bundle(tmp_path, BODY_FILES)
+    assert "app/cache.py" not in _titles(b, b.search("stale entry twice", k=5))     # metadata only
+    full = Bundle(b.path, repo=repo)
+    assert _titles(full, full.search("stale entry twice", k=5))[0] == "app/cache.py"
+    assert "app/cache.py" not in _titles(full, full.search("stale entry twice", k=5, config=RetrievalConfig.v01()))
+
+
+def test_bm25f_name_field_outweighs_body(tmp_path):
+    from rhizome.retrieve import Bundle
+    b, repo = _bundle(tmp_path, BODY_FILES)
+    full = Bundle(b.path, repo=repo)
+    # "evicted" is the file name of app/evicted.py (weight 3) and a body word of app/cache.py (weight 1)
+    assert _titles(full, full.search("evicted", k=5))[0] == "app/evicted.py"
+
+
+def test_bm25f_without_repo_warns_and_falls_back(tmp_path, caplog):
+    import logging
+    b, _ = _bundle(tmp_path, BODY_FILES)
+    with caplog.at_level(logging.WARNING, logger="rhizome"):
+        b.search("cache", k=5)
+    assert "metadata-only" in caplog.text
