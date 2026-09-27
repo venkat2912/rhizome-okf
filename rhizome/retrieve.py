@@ -18,7 +18,6 @@ from collections import Counter, defaultdict, deque
 from dataclasses import dataclass, field
 
 from . import okf
-from .query import QueryAnalysis, analyze
 
 log = logging.getLogger("rhizome")
 
@@ -37,8 +36,6 @@ class RetrievalConfig:
     """
     # #1: field-weighted full-text search (BM25F) when source text is available; v0.1 indexed metadata only.
     bm25f: bool = True
-    # #2: traceback frames, paths, module names, exception names, quoted strings -> exact entry points.
-    query_analysis: bool = True
     # #3: entry points are the text hits scoring at least ENTRY_RATIO of the best one (max 4, min 1);
     # v0.1 always took the top 4.
     adaptive_entries: bool = True
@@ -53,8 +50,8 @@ class RetrievalConfig:
 
     @classmethod
     def v01(cls) -> "RetrievalConfig":
-        return cls(bm25f=False, query_analysis=False, adaptive_entries=False, never_demote=False,
-                   expansion="walk", hub_downweight=False, respect_include_tests=False)
+        return cls(bm25f=False, adaptive_entries=False, never_demote=False, expansion="walk",
+                   hub_downweight=False, respect_include_tests=False)
 
 
 # BM25F (Robertson & Zaragoza, 2009). k1 and b are the textbook defaults, not tuned.
@@ -84,8 +81,6 @@ def hub_weight(fan_in: int) -> float:
 # At most 25 expanded files: a 16,000-character context pack holds about 25 file blocks of ~600 characters.
 MAX_EXPANSION = 25
 EDGE_WEIGHT = re.compile(r"\]\((/[^)\s]+\.md)\).*?\(weight (\d+(?:\.\d+)?)\)\s*$")
-# A name, path or message found in more than three files does not point at a location; ignore it.
-MAX_DEFINERS = 3
 SYMBOL_NAME = re.compile(r"`(?:class |def )?([A-Za-z_][A-Za-z0-9_]*)(?:\(\))?`")
 SYMBOL_DOC = re.compile(r"\(L\d+\): (.*)$", re.M)
 
@@ -249,10 +244,6 @@ class Bundle:
                 self._texts[c.rel] = ""
         return self._texts[c.rel]
 
-    def texts(self) -> dict[str, str]:
-        """Source text of every Source File concept (needs ``repo``)."""
-        return {r: self._source(c) for r, c in self.files.items()} if self.repo else {}
-
     def _body_tf(self, c: Concept) -> Counter:
         if c.type == "Requirement":
             return Counter(tokens(c.sections.get("Text", "")))
@@ -328,54 +319,6 @@ class Bundle:
             if s > 0:
                 out[r] = s
         return sorted(out.items(), key=lambda x: (-x[1], x[0]))[:k]
-
-    # ---- #2 resolving query hints to files
-    def _locators(self):
-        if getattr(self, "_loc", None) is None:
-            by_path, by_base, by_module, by_symbol = {}, defaultdict(list), {}, defaultdict(set)
-            for r, c in self.files.items():
-                path = str(c.fm.get("title", ""))
-                by_path[path] = r
-                by_base[path.rsplit("/", 1)[-1]].append(path)
-                parts = path[:-3].split("/") if path.endswith(".py") else path.split("/")
-                if parts and parts[-1] == "__init__":
-                    parts = parts[:-1]
-                if parts:
-                    by_module.setdefault(".".join(parts), r)
-                    if parts[0] in ("src", "lib") and len(parts) > 1:
-                        by_module.setdefault(".".join(parts[1:]), r)
-                for name in SYMBOL_NAME.findall(c.sections.get("Symbols", "")):
-                    by_symbol[name].add(r)
-            self._loc = (by_path, by_base, by_module, by_symbol)
-        return self._loc
-
-    def resolve_path(self, mention: str) -> list[str]:
-        by_path, by_base, _, _ = self._locators()
-        parts = [p for p in mention.split("/") if p and not p.endswith(":")]
-        for i in range(len(parts)):              # longest repository path that the mention ends with
-            cand = "/".join(parts[i:])
-            if cand in by_path and (i == 0 or len(parts) - i > 1 or len(by_base[parts[-1]]) == 1):
-                return [by_path[cand]]
-        tail = "/".join(parts)                     # a partial path: repository paths that end with it
-        hits = [p for p in by_base.get(parts[-1] if parts else "", []) if p == tail or p.endswith("/" + tail)]
-        return [by_path[p] for p in sorted(hits)] if 0 < len(hits) <= MAX_DEFINERS else []
-
-    def resolve_module(self, dotted: str) -> list[str]:
-        _, _, by_module, _ = self._locators()
-        parts = dotted.split(".")
-        for i in range(len(parts), 1, -1):       # a single bare name is too ambiguous to be a module hint
-            r = by_module.get(".".join(parts[:i]))
-            if r:
-                return [r]
-        return []
-
-    def resolve_symbol(self, name: str) -> list[str]:
-        rels = self._locators()[3].get(name, set())
-        return sorted(rels) if 0 < len(rels) <= MAX_DEFINERS else []
-
-    def resolve_quote(self, s: str) -> list[str]:
-        hits = sorted(r for r, text in self.texts().items() if s in text)
-        return hits if 0 < len(hits) <= MAX_DEFINERS else []
 
     # ---- #5 weighted import graph and personalized PageRank
     def dep_weights(self, rel: str) -> dict[str, float]:
@@ -474,31 +417,6 @@ def _security_tags(c: Concept) -> list[str]:
     return [t for t in (c.fm.get("tags") or []) if str(t).startswith("security:")]
 
 
-def exact_matches(bundle: Bundle, qa: QueryAnalysis) -> list[tuple[str, str]]:
-    """Files named by the query, most specific evidence first: traceback frames (innermost first), file
-    paths, module paths, defined symbols (exceptions, backticked identifiers) and quoted messages."""
-    out: dict[str, str] = {}
-
-    def put(rels, reason):
-        for r in rels:
-            out.setdefault(r, reason)
-
-    for f in reversed(qa.frames):
-        rels = bundle.resolve_path(f.path)
-        put(rels, f"traceback frame {f.path.rsplit('/', 1)[-1]}:{f.line}" + (f" in {f.func}" if f.func else ""))
-        if not rels and f.func and not f.func.startswith("<"):
-            put(bundle.resolve_symbol(f.func), f"defines `{f.func}` from a traceback frame")
-    for p in qa.paths:
-        put(bundle.resolve_path(p), f"file `{p}` named in the report")
-    for m in qa.modules:
-        put(bundle.resolve_module(m), f"module `{m}` named in the report")
-    for name in qa.exceptions + qa.identifiers:
-        put(bundle.resolve_symbol(name), f"defines `{name}` named in the report")
-    for s in qa.quoted:
-        put(bundle.resolve_quote(s), f"contains the quoted text “{s[:60]}”")
-    return list(out.items())
-
-
 def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_tests: bool = False,
            config: RetrievalConfig | None = None):
     """Return (entry points, ranked context items, subsystem concepts) for a task."""
@@ -526,16 +444,8 @@ def gather(bundle: Bundle, query: str, category: str, k_entry: int = 4, include_
     hits = bundle.search(query, k=len(bundle.searchable) if cfg.never_demote else k_entry * 2,
                          boost=boost, config=cfg)
     entries: list[str] = []
-    if cfg.query_analysis:
-        exact = [(r, why) for r, why in exact_matches(bundle, analyze(query))
-                 if not (drop_tests and _is_test(bundle.concepts[r]))]
-        for i, (rel, why) in enumerate(exact[:k_entry]):
-            entries.append(rel)
-            add(rel, 200 - i, why)
     top = hits[0][1] if hits else 0.0
     for rel, s in hits:
-        if len(entries) >= k_entry:
-            break
         # #3: a hit under half the best score shares only part of the query; seeding the walk from it
         # spreads context into unrelated code. Always keep at least one entry point.
         if cfg.adaptive_entries and entries and s < ENTRY_RATIO * top:

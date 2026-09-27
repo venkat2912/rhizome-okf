@@ -33,3 +33,14 @@ weights, tokenisation and `k` values are unchanged. Any crash fix needed during 
   `fusion-rrf-search` row (RRF of File-BM25 and rhizome-search) and a per-file parse-error list. It was
   stopped after 20 of 299 instances to save time; nothing from it is reported. Its rankings for the
   original methods matched the saved top-10 lists exactly on those 20 instances.
+
+## v0.2: change #2 (query analysis) removed
+
+- #2 removed before the v0.2 freeze and before any Loc-Bench run. Reason: BM25F (#1) already weights
+  path and symbol names; #2's weaker hints (module, exception, symbol names) could take entry slots ahead
+  of the best text match and resolved module mentions to package `__init__.py` hubs. Design decision, not
+  based on benchmark results. (A 30-instance SWE-bench Lite regression check had been started on the
+  branch; it was stopped before it produced any results, and none were looked at.)
+- This deviates from `V02_PLAN_PROMPT.md`, which lists #2 and stays unchanged as the record of the
+  original plan. The #2 commit (57cb4f5) remains in history; it was removed by a later commit, not by
+  rewriting history.

@@ -58,8 +58,6 @@ def retrieval_config(a) -> RetrievalConfig:
     changes = {}
     if a.no_bm25f:
         changes["bm25f"] = False
-    if a.no_query_analysis:
-        changes["query_analysis"] = False
     if a.fixed_entries:
         changes["adaptive_entries"] = False
     if a.allow_demote:
@@ -143,8 +141,6 @@ def main(argv=None) -> int:
     g = sp.add_argument_group("ablation", "switch individual v0.2 retrieval changes off")
     g.add_argument("--v01", action="store_true", help="start from the v0.1 retrieval behaviour")
     g.add_argument("--no-bm25f", action="store_true", help="#1 off: metadata-only BM25 (v0.1)")
-    g.add_argument("--no-query-analysis", action="store_true",
-                   help="#2 off: ignore tracebacks, paths, module and symbol names in the query")
     g.add_argument("--fixed-entries", action="store_true", help="#3 off: always take the top 4 text hits")
     g.add_argument("--allow-demote", action="store_true",
                    help="#4 off: graph-expanded files may outrank strong text matches")

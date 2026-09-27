@@ -46,17 +46,14 @@ A requirement document matched by the query contributes its *Implemented by* fil
 
 ### Retrieval in v0.2
 
-1. **Query analysis.** Traceback frames, file paths, dotted module paths, exception names, quoted error
-   messages and backticked identifiers in the task text are resolved against the bundle; exact matches
-   become the first entry points (a hint matching more than three files is ignored).
-2. **Field-weighted full-text search (BM25F).** With `--repo`, search covers path and symbol names
+1. **Field-weighted full-text search (BM25F).** With `--repo`, search covers path and symbol names
    (weight 3), descriptions and docstrings (2) and the full file body (1). Without it, search falls back
    to v0.1 metadata-only BM25 and warns.
-3. **Adaptive entry points.** Text hits scoring at least half the best hit (max 4, min 1).
-4. **Personalized PageRank expansion** from the entry points (restart 0.15) over the weighted import graph,
+2. **Adaptive entry points.** Text hits scoring at least half the best hit (max 4, min 1).
+3. **Personalized PageRank expansion** from the entry points (restart 0.15) over the weighted import graph,
    with the category's direction weighted twice the reverse one and high fan-in hubs damped by
    `1 / log(2 + fan_in)`. Expansion score = PPR × (1 + normalised text score), top 25.
-5. **Never demote.** A strong text match is never ranked below a graph-expanded file.
+4. **Never demote.** A strong text match is never ranked below a graph-expanded file.
 
 Every change can be switched off for ablation; `--v01` reproduces v0.1 rankings exactly:
 
@@ -64,7 +61,6 @@ Every change can be switched off for ablation; `--v01` reproduces v0.1 rankings 
 |---|---|
 | `--v01` | all of the below (v0.1 behaviour) |
 | `--no-bm25f` | full-text BM25F (metadata-only BM25) |
-| `--no-query-analysis` | tracebacks, paths, module and symbol names as entry points |
 | `--fixed-entries` | adaptive entry points (always the top 4 hits) |
 | `--allow-demote` | never-demote rule |
 | `--expansion walk` | personalized PageRank (v0.1 distance walk) |
