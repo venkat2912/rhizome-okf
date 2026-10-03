@@ -11,3 +11,4 @@ paper/*.png
 examples/shop/.knowledge/.rhizome/
 bench/.cache/
 bench/runs/
+bench/analysis/locbench/data/components.csv

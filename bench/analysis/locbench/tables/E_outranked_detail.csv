@@ -1,0 +1,15 @@
+instance_id,gold,ppr_rank,ppr_candidates,files_above_recorded,hubs_above
+Qiskit__qiskit-13052,qiskit/__init__.py,168.0,795,100,33
+UXARRAY__uxarray-1144,uxarray/formatting_html.py,38.0,60,37,5
+home-assistant__core-136739,homeassistant/components/fritzbox/cover.py,30.0,7556,29,17
+matrix-org__synapse-8744,synapse/handlers/receipts.py,140.0,437,100,33
+matrix-org__synapse-8744,synapse/storage/databases/main/receipts.py,133.0,437,100,33
+pandas-dev__pandas-20796,asv_bench/benchmarks/frame_methods.py,103.0,217,100,32
+pandas-dev__pandas-20796,pandas/core/base.py,41.0,217,40,19
+scikit-learn__scikit-learn-10280,sklearn/_config.py,463.0,464,100,33
+scikit-learn__scikit-learn-10280,sklearn/neighbors/classification.py,58.0,464,57,24
+scikit-learn__scikit-learn-16948,sklearn/utils/estimator_checks.py,30.0,566,29,17
+scikit-learn__scikit-learn-23197,sklearn/utils/setup.py,555.0,575,100,39
+scikit-learn__scikit-learn-24076,setup.py,290.0,580,100,43
+scikit-learn__scikit-learn-24076,sklearn/metrics/_pairwise_distances_reduction/__init__.py,101.0,580,100,43
+tardis-sn__tardis-2782,benchmarks/opacities_opacity.py,71.0,152,70,17
