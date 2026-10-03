@@ -98,7 +98,12 @@ weights, tokenisation and `k` values are unchanged. Any crash fix needed during 
   over function chunks gave Acc@10 42.0% against 52.7% for File-BM25 (9 vs 25 discordant tasks, exact McNemar
   p = 0.009) and Recall@10 60.2% against 68.6%; Acc@1 and Acc@5 did not differ. Perfect selection from the same
   top 35 would reach Recall@10 = 88.2%. A second run with `Alibaba-NLP/gte-reranker-modernbert-base` on the same
-  150 tasks was still in progress. Results are in the git-ignored `bench/runs/judge-dev-*`.
+  sample was stopped by the repository owner after 141 of 150 tasks (89 repos), because the reranker direction is
+  not being pursued. Partial result on those 141: Acc@10 48.2% against 51.8% for File-BM25 (13 vs 18 discordant,
+  p = 0.47), Acc@5 41.1% against 36.2% (19 vs 12, p = 0.28), Acc@1 19.1% against 15.6% (12 vs 7, p = 0.36),
+  Recall@10 63.8% against 68.4%; median 31 s per query on this CPU. No difference is significant, so the gate
+  (a clear lift over File-BM25) is not passed by either off-the-shelf model. Results are in the git-ignored
+  `bench/runs/judge-dev-*`.
 - **Built so far on this branch:** the SWE-rebench selection, splits and harness, function-level gold, the
   function map with resolved and name-only call edges, and the judge diagnosis script. The entry-point index,
   judged walk and fly memory of `PLAN.md` are not built. The sealed test split has not been run.
