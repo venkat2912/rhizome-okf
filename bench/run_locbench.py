@@ -97,14 +97,14 @@ def metrics(ranking: list[str], gold: list[str]) -> dict:
 
 # ------------------------------------------------------------------ one instance
 
-def run_instance(inst: dict, variants: list[str]) -> dict:
+def run_instance(inst: dict, variants: list[str], tmp_root: str | None = None) -> dict:
     rec = {"instance_id": inst["instance_id"], "repo": inst["repo"], "base_commit": inst["base_commit"],
            "category": inst["category"], "rhizome_category": CATEGORY[inst["category"]]}
     timings: dict = {}
     t0 = time.perf_counter()
     repo_dir = rs.ensure_repo(inst["repo"])
     rs.ensure_commit(repo_dir, inst["base_commit"])
-    tmp = tempfile.mkdtemp(prefix="rzl_")
+    tmp = tempfile.mkdtemp(prefix="rzl_", dir=tmp_root)
     try:
         snap = os.path.join(tmp, "s")
         os.makedirs(snap)
@@ -112,6 +112,8 @@ def run_instance(inst: dict, variants: list[str]) -> dict:
         mat = rs.materialise(repo_dir, inst["base_commit"], snap)
         timings["materialise_s"] = round(time.perf_counter() - t, 3)
         rec["extract_errors_py"] = [n for n, _ in mat["errors"] if n.endswith(".py")]
+        rec["snapshot"] = "exact-tree"      # materialise() restores export-ignore / export-subst files
+        rec["export_ignored_restored"] = len(mat.get("export_ignored", []))
         gold_all = rs.gold_files(inst["patch"])
         gold = [g for g in gold_all if g in mat["names"]]
         rec.update(gold=gold, gold_added=[g for g in gold_all if g not in mat["names"]], n_gold=len(gold))
@@ -259,6 +261,7 @@ def summarise(out_dir, dataset_n, variants):
     s["parse_errors"] = sorted(pe.values(), key=lambda x: (x["repo"], x["path"]))
     s["extract_errors_py"] = sum(len(r.get("extract_errors_py", [])) for r in recs.values())
     s["candidates_without_concept"] = sum(r.get("candidates_without_concept", 0) for r in ok)
+    s["exact_tree_snapshots"] = sum(1 for r in ok if r.get("snapshot") == "exact-tree")
     with open(os.path.join(out_dir, "summary.json"), "w", encoding="utf-8") as fh:
         json.dump(s, fh, indent=1)
     return s
@@ -337,6 +340,13 @@ def write_report(out_dir, s, variants, proto):
          "- **Metrics**: Acc@k = all gold files in the top k; Recall@k = fraction of gold files in the top k; MRR = "
          "1 / rank of the first gold file. Percent except MRR. Paired exact McNemar tests on Acc@5 and Acc@10.",
          "- **Frozen**: methods, comparisons and parameters were fixed before any Loc-Bench result; one run, no tuning.",
+         f"- **Harness corrections during the run** (details in `bench/CHANGES.md`): `git archive` dropped paths marked "
+         "`export-ignore`, so 61 instances in 10 repositories had incomplete candidate pools (one, "
+         "`scikit-learn__scikit-learn-29130`, also lost its gold file and was wrongly excluded); the 12 "
+         "`prowler-cloud/prowler` instances crashed on the Windows 260-character path limit. The snapshot code was "
+         "fixed and these 73 instances were re-run with fresh snapshots and scans (prowler from a short temporary "
+         f"directory); their new records replace the old ones. Records with exact-tree snapshots: "
+         f"{s.get('exact_tree_snapshots', 0)}. The other 487 instances are unaffected.",
          f"- **Machine**: {proto['machine']}; Python {proto['python']}; started {proto['started']}; "
          f"arguments `{proto['args']}`.", ""]
     L += ["## 2. Results", ""]
@@ -423,6 +433,10 @@ def main(argv=None):
     ap.add_argument("--variants", nargs="+", default=["B"], choices=["A", "B"])
     ap.add_argument("--out", default=os.path.join(HERE, "runs", "locbench-v01"))
     ap.add_argument("--report-only", action="store_true")
+    ap.add_argument("--tmp-root", help="directory for snapshots and bundles (default: the system temp dir); "
+                                       "a short path such as C:\\rzb avoids the Windows 260-character path limit")
+    ap.add_argument("--rerun", help="JSON from bench/find_export_ignored.py: re-run these instances with fresh "
+                                    "snapshots and scans; their new records replace the old ones")
     args = ap.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
     data = load_dataset()
@@ -445,12 +459,26 @@ def main(argv=None):
     jpath = os.path.join(args.out, "per_instance.jsonl")
     if not args.report_only:
         done = {k for k, r in rs.load_records(jpath).items() if r.get("status") in ("ok", "excluded")}
+        if args.rerun:
+            ids = {r["instance_id"] for r in json.load(open(args.rerun, encoding="utf-8"))["affected"]}
+            redone = {k for k, r in rs.load_records(jpath).items() if r.get("snapshot") == "exact-tree"}
+            todo = [x for x in todo if x["instance_id"] in ids]
+            done = redone
+            for x in todo:   # bundles scanned from the incomplete archive snapshot must not be reused
+                if x["instance_id"] in redone:
+                    continue
+                key = f"{x['repo'].replace('/', '__')}__{x['base_commit'][:12]}__{rs.CODE_TAG}"
+                for ext in (".zip", ".json"):
+                    try:
+                        os.remove(os.path.join(rs.BUNDLES, key + ext))
+                    except FileNotFoundError:
+                        pass
         pending = [x for x in todo if x["instance_id"] not in done]
         print(f"{len(todo)} selected, {len(todo) - len(pending)} done, {len(pending)} to run", flush=True)
         for i, inst in enumerate(pending, 1):
             t = time.perf_counter()
             try:
-                rec = run_instance(inst, variants)
+                rec = run_instance(inst, variants, args.tmp_root)
             except BaseException as exc:          # includes RecursionError; KeyboardInterrupt still stops the run
                 if isinstance(exc, KeyboardInterrupt):
                     raise

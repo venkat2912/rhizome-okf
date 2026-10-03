@@ -44,3 +44,34 @@ weights, tokenisation and `k` values are unchanged. Any crash fix needed during 
 - This deviates from `V02_PLAN_PROMPT.md`, which lists #2 and stays unchanged as the record of the
   original plan. The #2 commit (57cb4f5) remains in history; it was removed by a later commit, not by
   rewriting history.
+
+## Harness bug: `git archive` dropped `export-ignore` paths (found during the Loc-Bench run)
+
+- **Bug.** Snapshots were made with `git archive`, which drops paths marked `export-ignore` in the
+  commit's `.gitattributes` (and would rewrite `export-subst` files). Found when
+  `scikit-learn__scikit-learn-29130` (Loc-Bench) was excluded although its gold file
+  `build_tools/update_environments_and_lock_files.py` exists at the base commit: scikit-learn marks
+  `build_tools`, `benchmarks`, `asv_benchmarks`, `maint_tools` and dot-files `export-ignore`.
+- **Fix.** `materialise()` still uses `git archive` for the bulk of the tree, then writes every regular file
+  of the commit that the archive dropped, and every `export-subst` file, straight from the object store
+  (`git cat-file`). Snapshots now equal the commit's tree (checked on the scikit-learn instance: 172 files,
+  67 of them `.py`, restored).
+- **Affected instances** (`bench/find_export_ignored.py`, which checks `.py` files and their parent
+  directories against each base commit's attributes):
+  - Loc-Bench: 61 of 560 instances in 10 repositories; only `scikit-learn__scikit-learn-29130` lost a gold
+    file, the others only lost candidate files. These 61 are re-run with fresh snapshots and scans after the
+    main run; their new records replace the old ones.
+  - SWE-bench Lite v0.1 (committed results): 1 of 300 (`pydata/xarray`), candidates only, no gold file.
+    Those results are left as they are; this note is the correction.
+
+## Windows path limit: prowler (Loc-Bench)
+
+- All 12 `prowler-cloud/prowler` instances failed with `FileNotFoundError`: their longest `.py` path is 228
+  characters, and the bundle document `<temp>\rzl_xxxxxxxx\b\files\<path>.md` under the default temp dir
+  (`C:\Users\VENKAT~1\AppData\Local\Temp`, 36 characters) exceeds Windows' 260-character limit
+  (`LongPathsEnabled` is 0 on this machine). No other repository is affected, and no other instance lost a
+  file during extraction.
+- These 12 instances are re-run with `--tmp-root C:\rzb` (snapshots and bundles in a short directory outside
+  the repository, deleted afterwards). Nothing else changes: same code, methods and parameters.
+- **SWE-bench Lite check finished.** `bench/results/swebench-lite-v0.1/export_ignored.json` lists the one affected
+  instance (`pydata/xarray`; candidate files only, no gold file). The committed Lite numbers are unchanged.

@@ -144,23 +144,66 @@ def ensure_commit(repo_dir: str, commit: str):
         git(repo_dir, "fetch", "--quiet", "origin", commit)
 
 
+def _attr_set(repo_dir: str, commit: str, attr: str, paths: list[str]) -> set[str]:
+    """Paths for which ``attr`` is set in the .gitattributes of ``commit`` (not the working tree)."""
+    if not paths:
+        return set()
+    r = subprocess.run(["git", "-C", repo_dir, "check-attr", f"--source={commit}", "-z", "--stdin", attr],
+                       input=b"\0".join(p.encode() for p in paths), capture_output=True, timeout=1800)
+    if r.returncode != 0:
+        raise RuntimeError(f"git check-attr failed: {r.stderr.decode(errors='replace').strip()}")
+    f = r.stdout.split(b"\0")
+    return {f[i].decode() for i in range(0, len(f) - 2, 3) if f[i + 2] in (b"set", b"true")}
+
+
+def tree_files(repo_dir: str, commit: str) -> list[str]:
+    """Regular files (not symlinks or submodules) in ``commit``."""
+    out = git(repo_dir, "ls-tree", "-r", "-z", commit, binary=True)
+    files = []
+    for entry in out.split(b"\0"):
+        if entry:
+            meta, path = entry.split(b"\t", 1)
+            if meta.split()[0] in (b"100644", b"100755"):
+                files.append(path.decode("utf-8", errors="surrogateescape"))
+    return files
+
+
 def materialise(repo_dir: str, commit: str, dest: str) -> dict:
-    """Extract ``git archive`` of ``commit`` into ``dest``. Returns member info and extraction errors."""
+    """Write the tree of ``commit`` into ``dest``. Returns member info and extraction errors.
+
+    ``git archive`` fetches and writes the bulk of the tree, but it drops paths marked ``export-ignore``
+    and rewrites ``export-subst`` files. Those are written afterwards straight from the object store, so
+    the snapshot matches the commit exactly (bug found during the Loc-Bench run; see bench/CHANGES.md).
+    """
     data = git(repo_dir, "archive", "--format=tar", commit, binary=True)
     names, errors = set(), []
+
+    def write(name: str, blob: bytes | None = None, src=None):
+        target = os.path.join(dest, *name.split("/"))
+        try:
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            with open(target, "wb") as out:
+                if src is not None:
+                    shutil.copyfileobj(src, out)
+                else:
+                    out.write(blob)
+            names.add(name)
+        except OSError as exc:
+            errors.append((name, str(exc)))
+
     with tarfile.open(fileobj=io.BytesIO(data)) as tf:
         for m in tf:
             if not m.isfile():
                 continue  # directories are created on demand; symlinks are skipped (Windows)
-            names.add(m.name)
-            target = os.path.join(dest, *m.name.split("/"))
-            try:
-                os.makedirs(os.path.dirname(target), exist_ok=True)
-                with tf.extractfile(m) as src, open(target, "wb") as out:
-                    shutil.copyfileobj(src, out)
-            except OSError as exc:
-                errors.append((m.name, str(exc)))
-    return {"names": names, "errors": errors, "archive_bytes": len(data)}
+            with tf.extractfile(m) as src:
+                write(m.name, src=src)
+    all_files = tree_files(repo_dir, commit)
+    ignored = [p for p in all_files if p not in names]
+    subst = sorted(_attr_set(repo_dir, commit, "export-subst", [p for p in all_files if p in names]))
+    for p in ignored + subst:
+        write(p, blob=git(repo_dir, "cat-file", "blob", f"{commit}:{p}", binary=True))
+    return {"names": names, "errors": errors, "archive_bytes": len(data),
+            "export_ignored": ignored, "export_subst": subst}
 
 
 # ------------------------------------------------------------------ bundles (cached by repo, commit)
