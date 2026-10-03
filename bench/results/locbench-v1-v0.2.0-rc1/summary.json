@@ -1,0 +1,2096 @@
+{
+ "dataset_instances": 560,
+ "attempted": 560,
+ "evaluated": 560,
+ "excluded": [],
+ "errors": [],
+ "gold_files": {
+  "1": 468,
+  "2": 40,
+  "3": 52
+ },
+ "variants": {
+  "B": {
+   "all": {
+    "n": 560,
+    "random": {
+     "acc@5": 2.857142857142857,
+     "acc@10": 6.607142857142858,
+     "recall@5": 4.163690476190476,
+     "recall@10": 8.327380952380953,
+     "mrr": 0.04901909688642702
+    },
+    "file-bm25": {
+     "acc@5": 61.25000000000001,
+     "acc@10": 71.07142857142857,
+     "recall@5": 65.07440476190477,
+     "recall@10": 74.6279761904762,
+     "mrr": 0.5336630593794383
+    },
+    "bm25-graph": {
+     "acc@5": 58.03571428571429,
+     "acc@10": 63.035714285714285,
+     "recall@5": 61.976190476190474,
+     "recall@10": 66.22321428571429,
+     "mrr": 0.5205299382456304
+    },
+    "rhizome-search [v0.1]": {
+     "acc@5": 51.964285714285715,
+     "acc@10": 64.10714285714286,
+     "recall@5": 56.58333333333333,
+     "recall@10": 68.63095238095238,
+     "mrr": 0.4818932199813806
+    },
+    "rhizome-ctx-cat [v0.1]": {
+     "acc@5": 48.214285714285715,
+     "acc@10": 56.25,
+     "recall@5": 52.541666666666664,
+     "recall@10": 60.238095238095234,
+     "mrr": 0.4574657022680372
+    },
+    "rhizome-ctx-bug [v0.1]": {
+     "acc@5": 47.67857142857143,
+     "acc@10": 55.17857142857143,
+     "recall@5": 51.916666666666664,
+     "recall@10": 59.1577380952381,
+     "mrr": 0.4543533802484428
+    },
+    "fusion-rrf [v0.1]": {
+     "acc@5": 57.85714285714286,
+     "acc@10": 71.42857142857143,
+     "recall@5": 62.49404761904761,
+     "recall@10": 75.00297619047619,
+     "mrr": 0.5402391020540113
+    },
+    "fusion-rrf-search [v0.1]": {
+     "acc@5": 62.5,
+     "acc@10": 73.57142857142858,
+     "recall@5": 66.67261904761905,
+     "recall@10": 77.51190476190476,
+     "mrr": 0.5600111299070143
+    },
+    "rhizome-search [v0.2]": {
+     "acc@5": 63.035714285714285,
+     "acc@10": 73.21428571428571,
+     "recall@5": 66.90476190476191,
+     "recall@10": 76.86904761904762,
+     "mrr": 0.5523858091632303
+    },
+    "rhizome-ctx-cat [v0.2]": {
+     "acc@5": 63.035714285714285,
+     "acc@10": 71.60714285714286,
+     "recall@5": 66.83928571428571,
+     "recall@10": 75.33928571428571,
+     "mrr": 0.5440269204538485
+    },
+    "rhizome-ctx-bug [v0.2]": {
+     "acc@5": 63.035714285714285,
+     "acc@10": 71.78571428571429,
+     "recall@5": 66.75,
+     "recall@10": 75.46428571428572,
+     "mrr": 0.5502477532351691
+    },
+    "fusion-rrf [v0.2]": {
+     "acc@5": 62.5,
+     "acc@10": 71.78571428571429,
+     "recall@5": 66.13690476190476,
+     "recall@10": 75.61011904761905,
+     "mrr": 0.5424906991428552
+    },
+    "fusion-rrf-search [v0.2]": {
+     "acc@5": 62.32142857142857,
+     "acc@10": 72.67857142857143,
+     "recall@5": 65.98214285714286,
+     "recall@10": 76.11011904761904,
+     "mrr": 0.5443558056517104
+    }
+   },
+   "paired": {
+    "rhizome-search [v0.1] vs file-bm25": {
+     "acc@5": {
+      "a_only": 44,
+      "b_only": 96,
+      "p": 1.3143213951094477e-05
+     },
+     "acc@10": {
+      "a_only": 47,
+      "b_only": 86,
+      "p": 0.0009131976345915793
+     }
+    },
+    "rhizome-ctx-cat [v0.1] vs file-bm25": {
+     "acc@5": {
+      "a_only": 39,
+      "b_only": 112,
+      "p": 2.271450283600249e-09
+     },
+     "acc@10": {
+      "a_only": 34,
+      "b_only": 117,
+      "p": 7.202458887347566e-12
+     }
+    },
+    "rhizome-ctx-bug [v0.1] vs file-bm25": {
+     "acc@5": {
+      "a_only": 41,
+      "b_only": 117,
+      "p": 1.160472929137338e-09
+     },
+     "acc@10": {
+      "a_only": 35,
+      "b_only": 124,
+      "p": 7.159593494194069e-13
+     }
+    },
+    "fusion-rrf [v0.1] vs file-bm25": {
+     "acc@5": {
+      "a_only": 38,
+      "b_only": 57,
+      "p": 0.06421280662713101
+     },
+     "acc@10": {
+      "a_only": 25,
+      "b_only": 23,
+      "p": 0.8854334972865132
+     }
+    },
+    "fusion-rrf-search [v0.1] vs file-bm25": {
+     "acc@5": {
+      "a_only": 51,
+      "b_only": 44,
+      "p": 0.5383940262921683
+     },
+     "acc@10": {
+      "a_only": 38,
+      "b_only": 24,
+      "p": 0.09795444051950737
+     }
+    },
+    "rhizome-search [v0.2] vs file-bm25": {
+     "acc@5": {
+      "a_only": 22,
+      "b_only": 12,
+      "p": 0.12144948495551944
+     },
+     "acc@10": {
+      "a_only": 17,
+      "b_only": 5,
+      "p": 0.01690053939819336
+     }
+    },
+    "rhizome-ctx-cat [v0.2] vs file-bm25": {
+     "acc@5": {
+      "a_only": 22,
+      "b_only": 12,
+      "p": 0.12144948495551944
+     },
+     "acc@10": {
+      "a_only": 15,
+      "b_only": 12,
+      "p": 0.7011080384254456
+     }
+    },
+    "rhizome-ctx-bug [v0.2] vs file-bm25": {
+     "acc@5": {
+      "a_only": 22,
+      "b_only": 12,
+      "p": 0.12144948495551944
+     },
+     "acc@10": {
+      "a_only": 15,
+      "b_only": 11,
+      "p": 0.557197093963623
+     }
+    },
+    "fusion-rrf [v0.2] vs file-bm25": {
+     "acc@5": {
+      "a_only": 13,
+      "b_only": 6,
+      "p": 0.1670684814453125
+     },
+     "acc@10": {
+      "a_only": 10,
+      "b_only": 6,
+      "p": 0.454498291015625
+     }
+    },
+    "fusion-rrf-search [v0.2] vs file-bm25": {
+     "acc@5": {
+      "a_only": 10,
+      "b_only": 4,
+      "p": 0.1795654296875
+     },
+     "acc@10": {
+      "a_only": 11,
+      "b_only": 2,
+      "p": 0.0224609375
+     }
+    },
+    "bm25-graph vs file-bm25": {
+     "acc@5": {
+      "a_only": 4,
+      "b_only": 22,
+      "p": 0.0005335211753845215
+     },
+     "acc@10": {
+      "a_only": 12,
+      "b_only": 57,
+      "p": 3.7422494875036195e-08
+     }
+    },
+    "fusion-rrf [v0.1] vs fusion-rrf-search [v0.1]": {
+     "acc@5": {
+      "a_only": 32,
+      "b_only": 58,
+      "p": 0.008045928133225098
+     },
+     "acc@10": {
+      "a_only": 24,
+      "b_only": 36,
+      "p": 0.1550019040032606
+     }
+    },
+    "rhizome-ctx-cat [v0.1] vs rhizome-ctx-bug [v0.1]": {
+     "acc@5": {
+      "a_only": 8,
+      "b_only": 5,
+      "p": 0.5810546875
+     },
+     "acc@10": {
+      "a_only": 16,
+      "b_only": 10,
+      "p": 0.32693958282470703
+     }
+    },
+    "fusion-rrf [v0.2] vs fusion-rrf-search [v0.2]": {
+     "acc@5": {
+      "a_only": 3,
+      "b_only": 2,
+      "p": 1.0
+     },
+     "acc@10": {
+      "a_only": 0,
+      "b_only": 5,
+      "p": 0.0625
+     }
+    },
+    "rhizome-ctx-cat [v0.2] vs rhizome-ctx-bug [v0.2]": {
+     "acc@5": {
+      "a_only": 0,
+      "b_only": 0,
+      "p": 1.0
+     },
+     "acc@10": {
+      "a_only": 0,
+      "b_only": 1,
+      "p": 1.0
+     }
+    },
+    "rhizome-search [v0.2] vs rhizome-search [v0.1]": {
+     "acc@5": {
+      "a_only": 97,
+      "b_only": 35,
+      "p": 6.358408612418259e-08
+     },
+     "acc@10": {
+      "a_only": 87,
+      "b_only": 36,
+      "p": 4.848718134555304e-06
+     }
+    },
+    "rhizome-ctx-cat [v0.2] vs rhizome-ctx-cat [v0.1]": {
+     "acc@5": {
+      "a_only": 117,
+      "b_only": 34,
+      "p": 7.202458887347566e-12
+     },
+     "acc@10": {
+      "a_only": 118,
+      "b_only": 32,
+      "p": 8.839070431755034e-13
+     }
+    },
+    "rhizome-ctx-bug [v0.2] vs rhizome-ctx-bug [v0.1]": {
+     "acc@5": {
+      "a_only": 122,
+      "b_only": 36,
+      "p": 3.881658344399416e-12
+     },
+     "acc@10": {
+      "a_only": 125,
+      "b_only": 32,
+      "p": 3.459546749074521e-14
+     }
+    },
+    "fusion-rrf [v0.2] vs fusion-rrf [v0.1]": {
+     "acc@5": {
+      "a_only": 62,
+      "b_only": 36,
+      "p": 0.011174544214771171
+     },
+     "acc@10": {
+      "a_only": 27,
+      "b_only": 25,
+      "p": 0.8898839652765371
+     }
+    },
+    "fusion-rrf-search [v0.2] vs fusion-rrf-search [v0.1]": {
+     "acc@5": {
+      "a_only": 44,
+      "b_only": 45,
+      "p": 1.0
+     },
+     "acc@10": {
+      "a_only": 26,
+      "b_only": 31,
+      "p": 0.5966417603730826
+     }
+    }
+   },
+   "by_category": {
+    "Bug Report": {
+     "n": 242,
+     "random": {
+      "acc@5": 2.479338842975207,
+      "acc@10": 4.132231404958678,
+      "recall@5": 2.479338842975207,
+      "recall@10": 4.132231404958678,
+      "mrr": 0.02376370251722246
+     },
+     "file-bm25": {
+      "acc@5": 66.52892561983471,
+      "acc@10": 74.79338842975206,
+      "recall@5": 66.52892561983471,
+      "recall@10": 74.79338842975206,
+      "mrr": 0.4919133883028188
+     },
+     "bm25-graph": {
+      "acc@5": 62.396694214876035,
+      "acc@10": 66.11570247933885,
+      "recall@5": 62.396694214876035,
+      "recall@10": 66.11570247933885,
+      "mrr": 0.4781161157997059
+     },
+     "rhizome-search [v0.1]": {
+      "acc@5": 59.50413223140496,
+      "acc@10": 71.900826446281,
+      "recall@5": 59.50413223140496,
+      "recall@10": 71.900826446281,
+      "mrr": 0.46445854680436693
+     },
+     "rhizome-ctx-cat [v0.1]": {
+      "acc@5": 57.02479338842975,
+      "acc@10": 62.396694214876035,
+      "recall@5": 57.02479338842975,
+      "recall@10": 62.396694214876035,
+      "mrr": 0.4484102485540684
+     },
+     "rhizome-ctx-bug [v0.1]": {
+      "acc@5": 57.02479338842975,
+      "acc@10": 62.396694214876035,
+      "recall@5": 57.02479338842975,
+      "recall@10": 62.396694214876035,
+      "mrr": 0.4484102485540684
+     },
+     "fusion-rrf [v0.1]": {
+      "acc@5": 65.28925619834712,
+      "acc@10": 74.79338842975206,
+      "recall@5": 65.28925619834712,
+      "recall@10": 74.79338842975206,
+      "mrr": 0.5299794315661976
+     },
+     "fusion-rrf-search [v0.1]": {
+      "acc@5": 69.83471074380165,
+      "acc@10": 80.99173553719008,
+      "recall@5": 69.83471074380165,
+      "recall@10": 80.99173553719008,
+      "mrr": 0.5459759782323909
+     },
+     "rhizome-search [v0.2]": {
+      "acc@5": 68.18181818181817,
+      "acc@10": 78.51239669421489,
+      "recall@5": 68.18181818181817,
+      "recall@10": 78.51239669421489,
+      "mrr": 0.5336738308299963
+     },
+     "rhizome-ctx-cat [v0.2]": {
+      "acc@5": 67.76859504132231,
+      "acc@10": 76.44628099173553,
+      "recall@5": 67.76859504132231,
+      "recall@10": 76.44628099173553,
+      "mrr": 0.5305842844205655
+     },
+     "rhizome-ctx-bug [v0.2]": {
+      "acc@5": 67.76859504132231,
+      "acc@10": 76.44628099173553,
+      "recall@5": 67.76859504132231,
+      "recall@10": 76.44628099173553,
+      "mrr": 0.5305842844205655
+     },
+     "fusion-rrf [v0.2]": {
+      "acc@5": 66.52892561983471,
+      "acc@10": 76.85950413223141,
+      "recall@5": 66.52892561983471,
+      "recall@10": 76.85950413223141,
+      "mrr": 0.5070463622619349
+     },
+     "fusion-rrf-search [v0.2]": {
+      "acc@5": 66.52892561983471,
+      "acc@10": 77.27272727272727,
+      "recall@5": 66.52892561983471,
+      "recall@10": 77.27272727272727,
+      "mrr": 0.5082384148317525
+     }
+    },
+    "Feature Request": {
+     "n": 150,
+     "random": {
+      "acc@5": 2.0,
+      "acc@10": 3.3333333333333335,
+      "recall@5": 2.0,
+      "recall@10": 3.3333333333333335,
+      "mrr": 0.02387517678488855
+     },
+     "file-bm25": {
+      "acc@5": 65.33333333333333,
+      "acc@10": 72.66666666666667,
+      "recall@5": 68.12222222222223,
+      "recall@10": 75.47777777777777,
+      "mrr": 0.5676921721759074
+     },
+     "bm25-graph": {
+      "acc@5": 62.66666666666667,
+      "acc@10": 64.66666666666666,
+      "recall@5": 65.12222222222222,
+      "recall@10": 67.38888888888889,
+      "mrr": 0.5550381330887436
+     },
+     "rhizome-search [v0.1]": {
+      "acc@5": 46.0,
+      "acc@10": 56.666666666666664,
+      "recall@5": 51.733333333333334,
+      "recall@10": 62.86666666666666,
+      "mrr": 0.47917195094958287
+     },
+     "rhizome-ctx-cat [v0.1]": {
+      "acc@5": 44.666666666666664,
+      "acc@10": 52.0,
+      "recall@5": 49.73333333333333,
+      "recall@10": 56.78888888888889,
+      "mrr": 0.4672725041483599
+     },
+     "rhizome-ctx-bug [v0.1]": {
+      "acc@5": 43.333333333333336,
+      "acc@10": 49.333333333333336,
+      "recall@5": 47.9,
+      "recall@10": 53.922222222222224,
+      "mrr": 0.4467332843999884
+     },
+     "fusion-rrf [v0.1]": {
+      "acc@5": 58.666666666666664,
+      "acc@10": 73.33333333333333,
+      "recall@5": 63.36666666666666,
+      "recall@10": 76.44444444444444,
+      "mrr": 0.5471404409783299
+     },
+     "fusion-rrf-search [v0.1]": {
+      "acc@5": 57.99999999999999,
+      "acc@10": 70.0,
+      "recall@5": 63.7,
+      "recall@10": 74.5,
+      "mrr": 0.5564348812980505
+     },
+     "rhizome-search [v0.2]": {
+      "acc@5": 66.0,
+      "acc@10": 75.33333333333333,
+      "recall@5": 69.34444444444445,
+      "recall@10": 78.14444444444445,
+      "mrr": 0.5698315071925121
+     },
+     "rhizome-ctx-cat [v0.2]": {
+      "acc@5": 66.0,
+      "acc@10": 75.33333333333333,
+      "recall@5": 69.07777777777777,
+      "recall@10": 77.74444444444444,
+      "mrr": 0.5666652670324772
+     },
+     "rhizome-ctx-bug [v0.2]": {
+      "acc@5": 66.0,
+      "acc@10": 75.33333333333333,
+      "recall@5": 69.07777777777777,
+      "recall@10": 77.87777777777778,
+      "mrr": 0.5669857817681384
+     },
+     "fusion-rrf [v0.2]": {
+      "acc@5": 66.0,
+      "acc@10": 74.0,
+      "recall@5": 68.62222222222223,
+      "recall@10": 76.8111111111111,
+      "mrr": 0.570318612889162
+     },
+     "fusion-rrf-search [v0.2]": {
+      "acc@5": 66.0,
+      "acc@10": 74.0,
+      "recall@5": 68.62222222222223,
+      "recall@10": 76.8111111111111,
+      "mrr": 0.5691370888426811
+     }
+    },
+    "Performance Issue": {
+     "n": 139,
+     "random": {
+      "acc@5": 3.597122302158273,
+      "acc@10": 10.071942446043165,
+      "recall@5": 7.374100719424461,
+      "recall@10": 16.235011990407674,
+      "mrr": 0.10119522415638828
+     },
+     "file-bm25": {
+      "acc@5": 46.76258992805755,
+      "acc@10": 61.15107913669065,
+      "recall@5": 57.6378896882494,
+      "recall@10": 71.61870503597122,
+      "mrr": 0.5405829415092223
+     },
+     "bm25-graph": {
+      "acc@5": 44.60431654676259,
+      "acc@10": 54.67625899280576,
+      "recall@5": 55.94724220623502,
+      "recall@10": 62.9136690647482,
+      "mrr": 0.5258369402439134
+     },
+     "rhizome-search [v0.1]": {
+      "acc@5": 45.32374100719424,
+      "acc@10": 58.27338129496403,
+      "recall@5": 56.46282973621103,
+      "recall@10": 68.7410071942446,
+      "mrr": 0.5236420039377112
+     },
+     "rhizome-ctx-cat [v0.1]": {
+      "acc@5": 36.69064748201439,
+      "acc@10": 48.92086330935252,
+      "recall@5": 47.673860911270985,
+      "recall@10": 58.69304556354916,
+      "mrr": 0.4797443604479257
+     },
+     "rhizome-ctx-bug [v0.1]": {
+      "acc@5": 36.69064748201439,
+      "acc@10": 48.92086330935252,
+      "recall@5": 47.673860911270985,
+      "recall@10": 58.69304556354916,
+      "mrr": 0.4797443604479257
+     },
+     "fusion-rrf [v0.1]": {
+      "acc@5": 43.884892086330936,
+      "acc@10": 62.589928057553955,
+      "recall@5": 56.330935251798564,
+      "recall@10": 72.80575539568346,
+      "mrr": 0.5596453117410456
+     },
+     "fusion-rrf-search [v0.1]": {
+      "acc@5": 53.956834532374096,
+      "acc@10": 62.589928057553955,
+      "recall@5": 63.812949640287776,
+      "recall@10": 73.14148681055156,
+      "mrr": 0.5908001546080942
+     },
+     "rhizome-search [v0.2]": {
+      "acc@5": 49.64028776978417,
+      "acc@10": 60.431654676258994,
+      "recall@5": 60.09592326139088,
+      "recall@10": 71.29496402877697,
+      "mrr": 0.5463984545257508
+     },
+     "rhizome-ctx-cat [v0.2]": {
+      "acc@5": 49.64028776978417,
+      "acc@10": 58.27338129496403,
+      "recall@5": 60.09592326139088,
+      "recall@10": 69.52038369304557,
+      "mrr": 0.5449579749071376
+     },
+     "rhizome-ctx-bug [v0.2]": {
+      "acc@5": 49.64028776978417,
+      "acc@10": 58.27338129496403,
+      "recall@5": 60.09592326139088,
+      "recall@10": 69.52038369304557,
+      "mrr": 0.5449579749071376
+     },
+     "fusion-rrf [v0.2]": {
+      "acc@5": 49.64028776978417,
+      "acc@10": 59.71223021582733,
+      "recall@5": 60.2757793764988,
+      "recall@10": 70.89928057553956,
+      "mrr": 0.5538899008307057
+     },
+     "fusion-rrf-search [v0.2]": {
+      "acc@5": 50.35971223021583,
+      "acc@10": 61.87050359712231,
+      "recall@5": 60.75539568345324,
+      "recall@10": 71.83453237410072,
+      "mrr": 0.5532982285634808
+     }
+    },
+    "Security Vulnerability": {
+     "n": 29,
+     "random": {
+      "acc@5": 6.896551724137931,
+      "acc@10": 27.586206896551722,
+      "recall@5": 14.022988505747126,
+      "recall@10": 31.264367816091955,
+      "mrr": 0.1397401921296566
+     },
+     "file-bm25": {
+      "acc@5": 65.51724137931035,
+      "acc@10": 79.3103448275862,
+      "recall@5": 72.816091954023,
+      "recall@10": 83.27586206896551,
+      "mrr": 0.6728765030012159
+     },
+     "bm25-graph": {
+      "acc@5": 62.06896551724138,
+      "acc@10": 68.96551724137932,
+      "recall@5": 71.09195402298852,
+      "recall@10": 76.95402298850574,
+      "mrr": 0.6705383012692646
+     },
+     "rhizome-search [v0.1]": {
+      "acc@5": 51.724137931034484,
+      "acc@10": 65.51724137931035,
+      "recall@5": 57.873563218390814,
+      "recall@10": 70.63218390804597,
+      "mrr": 0.4413518507978291
+     },
+     "rhizome-ctx-cat [v0.1]": {
+      "acc@5": 48.275862068965516,
+      "acc@10": 62.06896551724138,
+      "recall@5": 52.98850574712644,
+      "recall@10": 67.47126436781609,
+      "mrr": 0.3755231515689865
+     },
+     "rhizome-ctx-bug [v0.1]": {
+      "acc@5": 44.827586206896555,
+      "acc@10": 55.172413793103445,
+      "recall@5": 50.40229885057471,
+      "recall@10": 61.4367816091954,
+      "mrr": 0.4216604836821897
+     },
+     "fusion-rrf [v0.1]": {
+      "acc@5": 58.620689655172406,
+      "acc@10": 75.86206896551724,
+      "recall@5": 64.19540229885058,
+      "recall@10": 79.82758620689656,
+      "mrr": 0.4971417321541958
+     },
+     "fusion-rrf-search [v0.1]": {
+      "acc@5": 65.51724137931035,
+      "acc@10": 82.75862068965517,
+      "recall@5": 69.36781609195403,
+      "recall@10": 85.0,
+      "mrr": 0.548054907946784
+     },
+     "rhizome-search [v0.2]": {
+      "acc@5": 68.96551724137932,
+      "acc@10": 79.3103448275862,
+      "recall@5": 76.26436781609196,
+      "recall@10": 83.27586206896551,
+      "mrr": 0.6469956831928864
+     },
+     "rhizome-ctx-cat [v0.2]": {
+      "acc@5": 72.41379310344827,
+      "acc@10": 75.86206896551724,
+      "recall@5": 79.82758620689656,
+      "recall@10": 81.55172413793103,
+      "mrr": 0.53464586404878
+     },
+     "rhizome-ctx-bug [v0.2]": {
+      "acc@5": 72.41379310344827,
+      "acc@10": 79.3103448275862,
+      "recall@5": 78.10344827586206,
+      "recall@10": 83.27586206896551,
+      "mrr": 0.653114455331204
+     },
+     "fusion-rrf [v0.2]": {
+      "acc@5": 72.41379310344827,
+      "acc@10": 75.86206896551724,
+      "recall@5": 78.10344827586206,
+      "recall@10": 81.55172413793103,
+      "mrr": 0.6396925415092506
+     },
+     "fusion-rrf-search [v0.2]": {
+      "acc@5": 65.51724137931035,
+      "acc@10": 79.3103448275862,
+      "recall@5": 72.816091954023,
+      "recall@10": 83.27586206896551,
+      "mrr": 0.6747081958257845
+     }
+    }
+   },
+   "by_gold": {
+    "1": {
+     "n": 468,
+     "random": {
+      "acc@5": 3.418803418803419,
+      "acc@10": 6.41025641025641,
+      "recall@5": 3.418803418803419,
+      "recall@10": 6.41025641025641,
+      "mrr": 0.03231387271106271
+     },
+     "file-bm25": {
+      "acc@5": 68.16239316239316,
+      "acc@10": 76.49572649572649,
+      "recall@5": 68.16239316239316,
+      "recall@10": 76.49572649572649,
+      "mrr": 0.5219842032932271
+     },
+     "bm25-graph": {
+      "acc@5": 65.17094017094017,
+      "acc@10": 67.94871794871796,
+      "recall@5": 65.17094017094017,
+      "recall@10": 67.94871794871796,
+      "mrr": 0.509903387299753
+     },
+     "rhizome-search [v0.1]": {
+      "acc@5": 58.76068376068376,
+      "acc@10": 70.72649572649573,
+      "recall@5": 58.76068376068376,
+      "recall@10": 70.72649572649573,
+      "mrr": 0.4629243825766569
+     },
+     "rhizome-ctx-cat [v0.1]": {
+      "acc@5": 54.91452991452992,
+      "acc@10": 61.32478632478633,
+      "recall@5": 54.91452991452992,
+      "recall@10": 61.32478632478633,
+      "mrr": 0.43879408244610585
+     },
+     "rhizome-ctx-bug [v0.1]": {
+      "acc@5": 54.059829059829056,
+      "acc@10": 60.04273504273504,
+      "recall@5": 54.059829059829056,
+      "recall@10": 60.04273504273504,
+      "mrr": 0.4375357819392822
+     },
+     "fusion-rrf [v0.1]": {
+      "acc@5": 65.17094017094017,
+      "acc@10": 76.92307692307693,
+      "recall@5": 65.17094017094017,
+      "recall@10": 76.92307692307693,
+      "mrr": 0.5279517827963488
+     },
+     "fusion-rrf-search [v0.1]": {
+      "acc@5": 69.65811965811966,
+      "acc@10": 79.91452991452992,
+      "recall@5": 69.65811965811966,
+      "recall@10": 79.91452991452992,
+      "mrr": 0.5481999417614886
+     },
+     "rhizome-search [v0.2]": {
+      "acc@5": 70.08547008547008,
+      "acc@10": 79.05982905982906,
+      "recall@5": 70.08547008547008,
+      "recall@10": 79.05982905982906,
+      "mrr": 0.548715418574955
+     },
+     "rhizome-ctx-cat [v0.2]": {
+      "acc@5": 69.87179487179486,
+      "acc@10": 77.77777777777779,
+      "recall@5": 69.87179487179486,
+      "recall@10": 77.77777777777779,
+      "mrr": 0.5431555904610458
+     },
+     "rhizome-ctx-bug [v0.2]": {
+      "acc@5": 69.87179487179486,
+      "acc@10": 77.77777777777779,
+      "recall@5": 69.87179487179486,
+      "recall@10": 77.77777777777779,
+      "mrr": 0.5467513418642184
+     },
+     "fusion-rrf [v0.2]": {
+      "acc@5": 69.01709401709401,
+      "acc@10": 77.77777777777779,
+      "recall@5": 69.01709401709401,
+      "recall@10": 77.77777777777779,
+      "mrr": 0.5324939714785761
+     },
+     "fusion-rrf-search [v0.2]": {
+      "acc@5": 69.01709401709401,
+      "acc@10": 78.2051282051282,
+      "recall@5": 69.01709401709401,
+      "recall@10": 78.2051282051282,
+      "mrr": 0.5350684189886207
+     }
+    },
+    "2+": {
+     "n": 92,
+     "random": {
+      "acc@5": 0.0,
+      "acc@10": 7.608695652173914,
+      "recall@5": 7.952898550724638,
+      "recall@10": 18.079710144927535,
+      "mrr": 0.13399784595241068
+     },
+     "file-bm25": {
+      "acc@5": 26.08695652173913,
+      "acc@10": 43.47826086956522,
+      "recall@5": 49.36594202898551,
+      "recall@10": 65.12681159420289,
+      "mrr": 0.5930728925136425
+     },
+     "bm25-graph": {
+      "acc@5": 21.73913043478261,
+      "acc@10": 38.04347826086957,
+      "recall@5": 45.724637681159415,
+      "recall@10": 57.44565217391304,
+      "mrr": 0.5745867408833546
+     },
+     "rhizome-search [v0.1]": {
+      "acc@5": 17.391304347826086,
+      "acc@10": 30.434782608695656,
+      "recall@5": 45.507246376811594,
+      "recall@10": 57.971014492753625,
+      "mrr": 0.5783868711271488
+     },
+     "rhizome-ctx-cat [v0.1]": {
+      "acc@5": 14.130434782608695,
+      "acc@10": 30.434782608695656,
+      "recall@5": 40.471014492753625,
+      "recall@10": 54.710144927536234,
+      "mrr": 0.5524474204926443
+     },
+     "rhizome-ctx-bug [v0.1]": {
+      "acc@5": 15.217391304347828,
+      "acc@10": 30.434782608695656,
+      "recall@5": 41.01449275362319,
+      "recall@10": 54.65579710144928,
+      "mrr": 0.5399037716472165
+     },
+     "fusion-rrf [v0.1]": {
+      "acc@5": 20.652173913043477,
+      "acc@10": 43.47826086956522,
+      "recall@5": 48.8768115942029,
+      "recall@10": 65.23550724637681,
+      "mrr": 0.6027441608864681
+     },
+     "fusion-rrf-search [v0.1]": {
+      "acc@5": 26.08695652173913,
+      "acc@10": 41.30434782608695,
+      "recall@5": 51.48550724637681,
+      "recall@10": 65.28985507246377,
+      "mrr": 0.6200941304733838
+     },
+     "rhizome-search [v0.2]": {
+      "acc@5": 27.173913043478258,
+      "acc@10": 43.47826086956522,
+      "recall@5": 50.724637681159415,
+      "recall@10": 65.72463768115942,
+      "mrr": 0.5710569265035873
+     },
+     "rhizome-ctx-cat [v0.2]": {
+      "acc@5": 28.26086956521739,
+      "acc@10": 40.21739130434783,
+      "recall@5": 51.41304347826087,
+      "recall@10": 62.93478260869565,
+      "mrr": 0.5484593382433234
+     },
+     "rhizome-ctx-bug [v0.2]": {
+      "acc@5": 28.26086956521739,
+      "acc@10": 41.30434782608695,
+      "recall@5": 50.8695652173913,
+      "recall@10": 63.69565217391304,
+      "mrr": 0.5680338458613093
+     },
+     "fusion-rrf [v0.2]": {
+      "acc@5": 29.347826086956523,
+      "acc@10": 41.30434782608695,
+      "recall@5": 51.48550724637681,
+      "recall@10": 64.58333333333333,
+      "mrr": 0.5933436181307095
+     },
+     "fusion-rrf-search [v0.2]": {
+      "acc@5": 28.26086956521739,
+      "acc@10": 44.565217391304344,
+      "recall@5": 50.54347826086957,
+      "recall@10": 65.45289855072464,
+      "mrr": 0.591600337807428
+     }
+    }
+   },
+   "recovered_2plus": {
+    "bm25-graph": {
+     "recovered": 15,
+     "pushed_out": 32,
+     "gold_files": 263
+    },
+    "fusion-rrf [v0.1]": {
+     "recovered": 16,
+     "pushed_out": 13,
+     "gold_files": 263
+    },
+    "fusion-rrf [v0.2]": {
+     "recovered": 2,
+     "pushed_out": 3,
+     "gold_files": 263
+    },
+    "rhizome-ctx-cat [v0.1]": {
+     "recovered": 24,
+     "pushed_out": 46,
+     "gold_files": 263
+    },
+    "rhizome-ctx-cat [v0.2]": {
+     "recovered": 7,
+     "pushed_out": 12,
+     "gold_files": 263
+    }
+   },
+   "mean_candidates": 602.1767857142858,
+   "instances_with_gold_outside_candidates": 0,
+   "query_s": {
+    "file-bm25": 0.06658303571428573,
+    "bm25-graph": 0.0003039285714285714,
+    "rhizome-search [v0.1]": 0.044817142857142854,
+    "rhizome-ctx-cat [v0.1]": 0.04436767857142857,
+    "rhizome-ctx-bug [v0.1]": 0.04491982142857143,
+    "rhizome-search [v0.2]": 0.23160375000000002,
+    "rhizome-ctx-cat [v0.2]": 0.2091380357142857,
+    "rhizome-ctx-bug [v0.2]": 0.19685375
+   }
+  }
+ },
+ "cost": {
+  "first_scans": 507,
+  "scan_mean_s": 19.795349112426035,
+  "scan_median_s": 10.397,
+  "scan_max_s": 177.707,
+  "materialise_mean_s": 9.733358928571429,
+  "bundle_load_mean_s": 0.3223392857142857,
+  "bm25_tokenise_mean_s": 1.7891642857142858,
+  "instance_mean_s": 32.4435,
+  "llm_calls": 0,
+  "llm_tokens": 0
+ },
+ "parse_errors": [
+  {
+   "repo": "AzureAD/microsoft-authentication-library-for-python",
+   "path": "msal/exceptions.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+FEFF (line 1)",
+   "instances": 2
+  },
+  {
+   "repo": "AzureAD/microsoft-authentication-library-for-python",
+   "path": "msal/mex.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+FEFF (line 1)",
+   "instances": 2
+  },
+  {
+   "repo": "AzureAD/microsoft-authentication-library-for-python",
+   "path": "msal/token_cache.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+FEFF (line 1)",
+   "instances": 2
+  },
+  {
+   "repo": "AzureAD/microsoft-authentication-library-for-python",
+   "path": "setup.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+FEFF (line 1)",
+   "instances": 2
+  },
+  {
+   "repo": "Bears-R-Us/arkouda",
+   "path": "tests/deprecated/groupby_compare_strategies.py",
+   "parser": "tree-sitter",
+   "error": "expected an indented block after class definition on line 41 (line 43)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/compound-statement-without-trailing-newline.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/crlf-line-endings.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/mixed-spaces-tabs.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 2)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/multiple-newlines.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 5)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/python2-grammar-crlf.py",
+   "parser": "tree-sitter",
+   "error": "leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers (line 31)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/python2-grammar.py",
+   "parser": "tree-sitter",
+   "error": "leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers (line 31)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/python3.8_grammar.py",
+   "parser": "tree-sitter",
+   "error": "expected an indented block after function definition on line 315 (line 317)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/simple-statements-without-trailing-newline.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/examples/trailing-whitespace.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "ShishirPatil/gorilla",
+   "path": "eval/eval-scripts/codebleu/parser/tree-sitter-python/test/highlight/pattern_matching.py",
+   "parser": "tree-sitter",
+   "error": "only single target (not tuple) can be annotated (line 48)",
+   "instances": 1
+  },
+  {
+   "repo": "ccxt/ccxt",
+   "path": "examples/py/kucoin-withdraw-chain.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+00A0 (line 16)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/hooks/post_gen_project.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 27)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/cli.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 5)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/helpers.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 2)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/logic/action.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 2)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/logic/auth.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 5)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/logic/schema.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/logic/validators.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/plugin.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/tests/logic/test_action.py",
+   "parser": "tree-sitter",
+   "error": "expected '(' (line 10)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/tests/logic/test_auth.py",
+   "parser": "tree-sitter",
+   "error": "expected '(' (line 12)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/tests/logic/test_validators.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 7)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/tests/test_helpers.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 3)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/tests/test_plugin.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 50)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/tests/test_views.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 5)",
+   "instances": 1
+  },
+  {
+   "repo": "ckan/ckan",
+   "path": "contrib/cookiecutter/ckan_extension/{{cookiecutter.project}}/ckanext/{{cookiecutter.project_shortname}}/views.py",
+   "parser": "tree-sitter",
+   "error": "cannot assign to set display here. Maybe you meant '==' instead of '='? (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "cython/cython",
+   "path": "Doc/s5/ep2008/stupidlowercase.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 2)",
+   "instances": 1
+  },
+  {
+   "repo": "cython/cython",
+   "path": "tests/errors/e_cdef_in_py.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "cython/cython",
+   "path": "tests/errors/e_int_literals_py2.py",
+   "parser": "tree-sitter",
+   "error": "invalid decimal literal (line 5)",
+   "instances": 1
+  },
+  {
+   "repo": "cython/cython",
+   "path": "tests/errors/e_int_literals_py3.py",
+   "parser": "tree-sitter",
+   "error": "invalid decimal literal (line 5)",
+   "instances": 1
+  },
+  {
+   "repo": "cython/cython",
+   "path": "tests/errors/e_tuple_args_T692.py",
+   "parser": "tree-sitter",
+   "error": "Function parameters cannot be parenthesized (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "django/django",
+   "path": "django/contrib/admin/widgets.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 151)",
+   "instances": 1
+  },
+  {
+   "repo": "django/django",
+   "path": "tests/test_runner_apps/tagged/tests_syntax_error.py",
+   "parser": "tree-sitter",
+   "error": "invalid decimal literal (line 11)",
+   "instances": 32
+  },
+  {
+   "repo": "home-assistant/core",
+   "path": "homeassistant/components/homematicip_cloud.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 104)",
+   "instances": 1
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_missing_tokenization_test/cookiecutter-template-{{cookiecutter.modelname}}/test_tokenization_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 20)",
+   "instances": 15
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_example_script/{{cookiecutter.directory_name}}/run_{{cookiecutter.example_shortcut}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 21)",
+   "instances": 15
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/__init__.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 19)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/configuration_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 23)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/modeling_flax_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 17)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/modeling_tf_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 17)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/modeling_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 17)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/test_modeling_flax_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 16)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/test_modeling_tf_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 16)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/test_modeling_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 18)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/to_replace_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 30)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/tokenization_fast_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 17)",
+   "instances": 5
+  },
+  {
+   "repo": "huggingface/transformers",
+   "path": "templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/tokenization_{{cookiecutter.lowercase_modelname}}.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 17)",
+   "instances": 5
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/01/dbmirror.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 28)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/01/dumps/jsondump.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 73)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/01/index.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 89)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/01/olpc/make.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/01/scod_stats/get_scan_records.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 45)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/01/scod_stats/make_report.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 32)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/04/add_language.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 28)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/04/add_oclc.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 70)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/04/check_scribe_vol.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 38)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/05/Abraham_ibn_Daud.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 21)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/07/auto.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 27)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/07/tarindex.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 10)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/07/tarsplit.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 17)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/07/thumbnail.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 43)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/09/link_scan_records.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 37)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/09/link_volumes.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 51)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/10/couchload.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 29)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/10/dbstats.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 40)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/11/fetch.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 69)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/12/find_dark.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 11)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/12/load.py",
+   "parser": "tree-sitter",
+   "error": "(unicode error) 'unicodeescape' codec can't decode bytes in position 0-1: malformed \\N character escape (line 129)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2009/12/updatestats.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 16)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/01/report_errors.py",
+   "parser": "tree-sitter",
+   "error": "Lambda expression parameters cannot be parenthesized (line 43)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/02/fix_records.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 18)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/03/makedump.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 9)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/03/olload.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 52)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/04/add_to_editions.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 71)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/04/changes_dump.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 45)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/04/fix_dups.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 24)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/04/reindex.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 124)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/04/update_docs.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 43)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/05/load_print_disabled.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 52)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/07/jsontest.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 18)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/07/mark-templates.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 27)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/08/gen_cover_mapping.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 25)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/08/infobase_couchdb_replay.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 26)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/10/analytics/crunch_logs.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 125)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/10/analytics/make_plot.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 49)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/10/lendable_books.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 59)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2010/12/compare_subject_works.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 54)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/02/loan_status.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 33)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/03/get_titles.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 8)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/03/oldump.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 110)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/03/titles_from_couch.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 35)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/04/reindex_transactions.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 62)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/04/smashwords.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 64)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/04/smashwords_load.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 39)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/04/solr_author_merge.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 44)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/04/test_olcompress.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 28)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/08/expire_accounts.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 11)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/08/inspect-memcache.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 16)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/08/memcache-size.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 38)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/08/oldoc.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 28)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/09/generate_deworks.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 187)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/12/detect-bad-author-merge.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 45)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2011/12/solr_update.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 63)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2012/01/undo-author-merge.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 31)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2012/dump-ia-items.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 42)",
+   "instances": 1
+  },
+  {
+   "repo": "internetarchive/openlibrary",
+   "path": "scripts/2013/find-indexed-works.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 38)",
+   "instances": 1
+  },
+  {
+   "repo": "kedro-org/kedro",
+   "path": "features/steps/test_starter/{{ cookiecutter.repo_name }}/docs/source/conf.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 20)",
+   "instances": 2
+  },
+  {
+   "repo": "kedro-org/kedro",
+   "path": "kedro/templates/project/{{ cookiecutter.repo_name }}/docs/source/conf.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 24)",
+   "instances": 2
+  },
+  {
+   "repo": "nautobot/nautobot",
+   "path": "nautobot/extras/tests/git_data/02-invalid-files/jobs/__init__.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 1)",
+   "instances": 2
+  },
+  {
+   "repo": "nautobot/nautobot",
+   "path": "nautobot/extras/tests/git_data/02-invalid-files/jobs/syntaxerror.py",
+   "parser": "tree-sitter",
+   "error": "'(' was never closed (line 1)",
+   "instances": 2
+  },
+  {
+   "repo": "numba/numba",
+   "path": "docs/source/extending/template.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 6)",
+   "instances": 1
+  },
+  {
+   "repo": "numpy/numpy",
+   "path": "numpy/linalg/lapack_lite/make_lite.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 84)",
+   "instances": 1
+  },
+  {
+   "repo": "oppia/oppia",
+   "path": "scripts/linters/test_files/invalid_merge_conflict.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 23)",
+   "instances": 1
+  },
+  {
+   "repo": "oppia/oppia",
+   "path": "scripts/linters/test_files/invalid_tabs.py",
+   "parser": "tree-sitter",
+   "error": "inconsistent use of tabs and spaces in indentation (line 39)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "examples/proxy.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 19)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "examples/sni/client.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 16)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "examples/sni/server.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 32)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "leakcheck/context-info-callback.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 61)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "leakcheck/context-passphrase-callback.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 23)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "leakcheck/context-verify-callback.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 61)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "leakcheck/crypto.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 173)",
+   "instances": 1
+  },
+  {
+   "repo": "pyca/pyopenssl",
+   "path": "leakcheck/thread-crash.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 21)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "doc/data/messages/s/syntax-error/bad.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax. Perhaps you forgot a comma? (line 3)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/functional/s/syntax/syntax_error.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/functional/s/syntax/syntax_error_jython.py",
+   "parser": "tree-sitter",
+   "error": "expected '(' (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/functional/t/tokenize_error.py",
+   "parser": "tree-sitter",
+   "error": "unexpected EOF while parsing (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/functional/t/tokenize_error_jython.py",
+   "parser": "tree-sitter",
+   "error": "unexpected EOF while parsing (line 7)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/functional/t/tokenize_error_py312.py",
+   "parser": "tree-sitter",
+   "error": "unexpected EOF while parsing (line 4)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/functional/u/unknown_encoding_jython.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+FEFF (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/input/func_w0122_py_30.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'exec'. Did you mean exec(...)? (line 5)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/regrtest_data/bad_package/__init__.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 2)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/regrtest_data/descriptor_crash.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 20)",
+   "instances": 1
+  },
+  {
+   "repo": "pylint-dev/pylint",
+   "path": "tests/regrtest_data/syntax_error.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/bad_coding2.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+FEFF (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/badsyntax_3131.py",
+   "parser": "tree-sitter",
+   "error": "invalid character '\u20ac' (U+20AC) (line 2)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/badsyntax_future3.py",
+   "parser": "tree-sitter",
+   "error": "future feature rested_snopes is not defined (line 3)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/badsyntax_future8.py",
+   "parser": "tree-sitter",
+   "error": "future feature * is not defined (line 3)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/badsyntax_future9.py",
+   "parser": "tree-sitter",
+   "error": "not a chance (line 3)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/test_lib2to3/data/bom.py",
+   "parser": "tree-sitter",
+   "error": "invalid non-printable character U+FEFF (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/test_lib2to3/data/crlf.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 1)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/test_lib2to3/data/different_encoding.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 3)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/test_lib2to3/data/false_encoding.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 2)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Lib/test/test_lib2to3/data/py2_test_grammar.py",
+   "parser": "tree-sitter",
+   "error": "leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers (line 31)",
+   "instances": 1
+  },
+  {
+   "repo": "python/cpython",
+   "path": "Tools/c-analyzer/c_parser/parser/_delim.py",
+   "parser": "tree-sitter",
+   "error": "f-string: valid expression required before '}' (line 23)",
+   "instances": 1
+  },
+  {
+   "repo": "ray-project/ray",
+   "path": "python/ray/serve/tests/test_config_files/syntax_error.py",
+   "parser": "tree-sitter",
+   "error": "'(' was never closed (line 2)",
+   "instances": 13
+  },
+  {
+   "repo": "scikit-learn/scikit-learn",
+   "path": "doc/tutorial/machine_learning_map/parse_path.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 164)",
+   "instances": 1
+  },
+  {
+   "repo": "scikit-learn/scikit-learn",
+   "path": "doc/tutorial/machine_learning_map/pyparsing.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 151)",
+   "instances": 1
+  },
+  {
+   "repo": "scikit-learn/scikit-learn",
+   "path": "doc/tutorial/machine_learning_map/svg2imagemap.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 73)",
+   "instances": 1
+  },
+  {
+   "repo": "scipy/scipy",
+   "path": "doc/source/conf.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 62)",
+   "instances": 1
+  },
+  {
+   "repo": "scipy/scipy",
+   "path": "doc/source/tutorial/examples/newton_krylov_preconditioning.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 75)",
+   "instances": 1
+  },
+  {
+   "repo": "scipy/scipy",
+   "path": "tools/osx/build.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 25)",
+   "instances": 1
+  },
+  {
+   "repo": "scipy/scipy",
+   "path": "tools/osx/install_and_test.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 16)",
+   "instances": 1
+  },
+  {
+   "repo": "scipy/scipy",
+   "path": "tools/win32/build_scripts/pavement.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 244)",
+   "instances": 1
+  },
+  {
+   "repo": "scipy/scipy",
+   "path": "tools/win32/detect_cpu_extensions_wine.py",
+   "parser": "tree-sitter",
+   "error": "Missing parentheses in call to 'print'. Did you mean print(...)? (line 71)",
+   "instances": 1
+  },
+  {
+   "repo": "streamlit/streamlit",
+   "path": "e2e_playwright/compilation_error_dialog.py",
+   "parser": "tree-sitter",
+   "error": "invalid syntax (line 20)",
+   "instances": 1
+  }
+ ],
+ "extract_errors_py": 0,
+ "candidates_without_concept": 0,
+ "exact_tree_snapshots": 73
+}

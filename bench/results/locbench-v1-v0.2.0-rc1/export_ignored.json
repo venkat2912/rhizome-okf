@@ -1,0 +1,495 @@
+{
+ "instances": 560,
+ "affected": [
+  {
+   "instance_id": "modin-project__modin-6836",
+   "repo": "modin-project/modin",
+   "py_files": 428,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-12019",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 864,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "scikit-learn__scikit-learn-29130",
+   "repo": "scikit-learn/scikit-learn",
+   "py_files": 944,
+   "export_ignored_py": 67,
+   "export_subst_py": 0,
+   "gold_affected": [
+    "build_tools/update_environments_and_lock_files.py"
+   ]
+  },
+  {
+   "instance_id": "Bears-R-Us__arkouda-1969",
+   "repo": "Bears-R-Us/arkouda",
+   "py_files": 149,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "numpy__numpy-10615",
+   "repo": "numpy/numpy",
+   "py_files": 566,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-29944",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1432,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "numba__numba-9757",
+   "repo": "numba/numba",
+   "py_files": 782,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-21401",
+   "repo": "pandas-dev/pandas",
+   "py_files": 781,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-3404",
+   "repo": "modin-project/modin",
+   "py_files": 327,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-35029",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1204,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "Project-MONAI__MONAI-8123",
+   "repo": "Project-MONAI/MONAI",
+   "py_files": 1199,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-22762",
+   "repo": "pandas-dev/pandas",
+   "py_files": 735,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-18330",
+   "repo": "pandas-dev/pandas",
+   "py_files": 584,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-19074",
+   "repo": "pandas-dev/pandas",
+   "py_files": 619,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "rapidsai__dask-cuda-98",
+   "repo": "rapidsai/dask-cuda",
+   "py_files": 17,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-3438",
+   "repo": "modin-project/modin",
+   "py_files": 313,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-4391",
+   "repo": "modin-project/modin",
+   "py_files": 377,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-20796",
+   "repo": "pandas-dev/pandas",
+   "py_files": 781,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "scikit-learn__scikit-learn-30327",
+   "repo": "scikit-learn/scikit-learn",
+   "py_files": 934,
+   "export_ignored_py": 72,
+   "export_subst_py": 0,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "scikit-learn__scikit-learn-30128",
+   "repo": "scikit-learn/scikit-learn",
+   "py_files": 934,
+   "export_ignored_py": 72,
+   "export_subst_py": 0,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "scikit-learn__scikit-learn-28678",
+   "repo": "scikit-learn/scikit-learn",
+   "py_files": 934,
+   "export_ignored_py": 69,
+   "export_subst_py": 0,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-16369",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1320,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-16328",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1317,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-16145",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1309,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-16117",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1330,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-15909",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1292,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-15468",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1245,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-14693",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1324,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-14608",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1185,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-14259",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1179,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-13756",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1164,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-13367",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1301,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-13366",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1323,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-13259",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 1322,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-12410",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 928,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "PrefectHQ__prefect-12045",
+   "repo": "PrefectHQ/prefect",
+   "py_files": 864,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60407",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-59900",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1495,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "secdev__scapy-4586",
+   "repo": "secdev/scapy",
+   "py_files": 378,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-7189",
+   "repo": "modin-project/modin",
+   "py_files": 443,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-7059",
+   "repo": "modin-project/modin",
+   "py_files": 444,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-7052",
+   "repo": "modin-project/modin",
+   "py_files": 444,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-6995",
+   "repo": "modin-project/modin",
+   "py_files": 440,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-6980",
+   "repo": "modin-project/modin",
+   "py_files": 432,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-6951",
+   "repo": "modin-project/modin",
+   "py_files": 432,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-6912",
+   "repo": "modin-project/modin",
+   "py_files": 429,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60577",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60543",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60526",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60518",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60512",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60461",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60457",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60415",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60398",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60310",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60277",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60247",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "pandas-dev__pandas-60187",
+   "repo": "pandas-dev/pandas",
+   "py_files": 1498,
+   "export_ignored_py": 92,
+   "export_subst_py": 1,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "scikit-learn__scikit-learn-30241",
+   "repo": "scikit-learn/scikit-learn",
+   "py_files": 933,
+   "export_ignored_py": 71,
+   "export_subst_py": 0,
+   "gold_affected": []
+  },
+  {
+   "instance_id": "modin-project__modin-7400",
+   "repo": "modin-project/modin",
+   "py_files": 401,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "instances": 300,
+ "affected": [
+  {
+   "instance_id": "pydata__xarray-3364",
+   "repo": "pydata/xarray",
+   "py_files": 139,
+   "export_ignored_py": 0,
+   "export_subst_py": 1,
+   "gold_affected": []
+  }
+ ]
+}
