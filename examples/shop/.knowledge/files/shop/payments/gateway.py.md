@@ -4,7 +4,7 @@ title: shop/payments/gateway.py
 description: Talks to the external payment provider.
 resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/payments/gateway.py
 tags: [python, 'subsystem:payments-refunds', 'security:tls-verify-disabled']
-timestamp: '2026-09-26T22:41:30+00:00'
+timestamp: '2026-10-03T17:13:18+00:00'
 language: python
 content_hash: sha256:6e0e0bb7effa6391
 subsystem: payments-refunds
@@ -27,6 +27,12 @@ Part of [shop/payments · refunds.py](/subsystems/payments-refunds.md).
 
 - `def charge()` (L4)
 - `def refund()` (L7)
+
+# Functions
+
+- `charge` (L4-L5)
+- `refund` (L7-L8)
+  - called by: [shop/payments/refunds.py::refund_order](/files/shop/payments/refunds.py.md)
 
 # Depends on
 

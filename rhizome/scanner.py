@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 
 from . import okf
 from .retrieve import build_index, load_index, write_index
+from .calls import call_stats, function_id, resolve_calls
 from .graph import Community, build_graph, hierarchy, membership, pagerank, undirected
 from .parse_python import FileInfo, area_tags, cached_parse_file, iter_python_files
 from .summarize import LLMSummarizer, heuristic_community_summary, heuristic_file_summary
@@ -208,6 +209,15 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
         _write_parse_cache(out, cache)       # only current files are kept
     t_parse = time.time()
     G = build_graph(files, reexports=resolve_reexports)
+    # v0.3 function map: call edges between functions, each resolved or name-only
+    calls, calls_weak = resolve_calls(files)
+    called_by: dict[str, list[str]] = defaultdict(list)
+    for src, dsts in calls.items():
+        for d in dsts:
+            called_by[d].append(src)
+
+    def _flink(fid: str) -> str:
+        return okf.link(fid, okf.concept_path_for_file(fid.split("::", 1)[0]))
     comms = hierarchy(G, max_size=max_size, seed=seed, previous=state.get("communities"))
     t_graph = time.time()
     member_of = membership(comms)
@@ -289,6 +299,18 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
                            + (" …" if len(s.methods) > 25 else ""))
         if sym:
             b.append("# Symbols\n\n" + "\n".join(sym))
+        if f.functions:
+            fl = []
+            for fn in f.functions:
+                fid = function_id(p, fn.name)
+                fl.append(f"- `{fn.name}` (L{fn.line}-L{fn.end_line})" + (f": {fn.doc}" if fn.doc else ""))
+                if calls.get(fid):
+                    fl.append("  - calls: " + ", ".join(_flink(d) for d in calls[fid]))
+                if called_by.get(fid):
+                    fl.append("  - called by: " + ", ".join(_flink(s) for s in sorted(called_by[fid])))
+                if calls_weak.get(fid):
+                    fl.append("  - name-only calls: " + ", ".join(f"`{n}`" for n in calls_weak[fid]))
+            b.append("# Functions\n\n" + "\n".join(fl))
         deps = sorted(G.successors(p), key=lambda t: -G[p][t]["weight"])
         b.append("# Depends on\n\n" + ("\n".join(
             f"- {okf.link(t, okf.concept_path_for_file(t))}: uses "
@@ -544,6 +566,7 @@ def scan(repo: str, out: str | None = None, docs: str | None = None, llm: bool =
         "documents": len(rendered) + 1, "changed_documents": len(result.changed),
         "llm_calls": llm_calls, "requirements": len(reqs),
         "security_findings": sum(1 for f in files.values() for s in f.security if s.severity != "info"),
+        **call_stats(files, calls, calls_weak),
         "seconds_parse": round(t_parse - t0, 3), "seconds_graph": round(t_graph - t_parse, 3),
         "seconds_total": round(t_end - t0, 3),
     }

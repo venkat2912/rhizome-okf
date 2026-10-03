@@ -4,7 +4,7 @@ title: shop/auth.py
 description: Password hashing and session tokens.
 resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/auth.py
 tags: [python, 'subsystem:api', 'area:auth', 'security:hardcoded-secret', 'security:weak-hash']
-timestamp: '2026-09-26T22:41:30+00:00'
+timestamp: '2026-10-03T17:13:18+00:00'
 language: python
 content_hash: sha256:fcd9a5eb8f1562e4
 subsystem: api
@@ -27,6 +27,14 @@ Part of [shop/api.py cluster](/subsystems/api.md).
 
 - `def hash_password()` (L7)
 - `def login()` (L10)
+
+# Functions
+
+- `hash_password` (L7-L8)
+  - called by: [shop/auth.py::login](/files/shop/auth.py.md)
+- `login` (L10-L12)
+  - calls: [shop/db.py::find_user](/files/shop/db.py.md), [shop/auth.py::hash_password](/files/shop/auth.py.md)
+  - called by: [shop/api.py::handle_login](/files/shop/api.py.md)
 
 # Depends on
 

@@ -34,6 +34,16 @@ class Symbol:
 
 
 @dataclass
+class FunctionInfo:
+    """A top-level function or a method (v0.3 function map). Nested functions belong to their parent."""
+    name: str            # qualified within the file: "func" or "Class.method"
+    line: int            # first line (the first decorator, if any)
+    end_line: int
+    doc: str = ""
+    calls: list[str] = field(default_factory=list)   # call targets as written (dotted), first occurrence order
+
+
+@dataclass
 class ImportRef:
     module: str          # absolute dotted module (after relative resolution)
     names: list[str]     # imported names ("*" allowed); empty for "import a.b"
@@ -68,6 +78,8 @@ class FileInfo:
     parser: str = "ast"              # "ast" | "tree-sitter" | "failed"
     doc_full: str = ""               # whole module docstring (descriptions are cleaned from it)
     assigns: dict = field(default_factory=dict)   # top-level `X = sub.X`: name -> absolute dotted source
+    functions: list[FunctionInfo] = field(default_factory=list)   # v0.3 function map
+    alias_map: dict = field(default_factory=dict)  # local name -> absolute dotted import target
 
 
 def iter_python_files(root: str, exclude: list[str] | None = None):
@@ -379,7 +391,34 @@ def parse_file(root: str, rel: str, fallback: bool = True) -> FileInfo:
     v.run(tree)
     info.name_refs = v.refs
     info.security = v.findings
+    info.alias_map = alias_map
+    info.functions = collect_functions(tree)
     return info
+
+
+def collect_functions(tree: ast.AST) -> list[FunctionInfo]:
+    """Functions and methods with their line spans and the calls they make (iterative; no recursion)."""
+    out = []
+    stack = [("", node) for node in reversed(getattr(tree, "body", []))]
+    while stack:
+        prefix, node = stack.pop()
+        if isinstance(node, ast.ClassDef):
+            stack.extend((prefix + node.name + ".", child) for child in reversed(node.body))
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            calls, seen = [], set()
+            inner = list(reversed(node.body))
+            while inner:
+                n = inner.pop()
+                if isinstance(n, ast.Call):
+                    name = _dotted(n.func)
+                    if name and name not in seen:
+                        seen.add(name)
+                        calls.append(name)
+                inner.extend(reversed(list(ast.iter_child_nodes(n))))
+            first = min([node.lineno] + [d.lineno for d in node.decorator_list])
+            out.append(FunctionInfo(prefix + node.name, first, node.end_lineno or node.lineno,
+                                    _first_line(ast.get_docstring(node)), calls))
+    return sorted(out, key=lambda f: f.line)
 
 
 def failed_file(root: str, rel: str, exc: BaseException) -> FileInfo:
@@ -407,7 +446,7 @@ def safe_parse_file(root: str, rel: str, fallback: bool = True) -> FileInfo:
 # ------------------------------------------------------------------ #11 parse cache
 
 # Bump when parse output changes, so caches written by older code are ignored.
-PARSE_VERSION = "0.2.0-1"
+PARSE_VERSION = "0.3.0-1"
 
 
 def file_info_to_dict(f: FileInfo) -> dict:
@@ -422,6 +461,7 @@ def file_info_from_dict(d: dict) -> FileInfo:
     d["symbols"] = [Symbol(**s) for s in d["symbols"]]
     d["imports"] = [ImportRef(**i) for i in d["imports"]]
     d["security"] = [SecurityFinding(**s) for s in d["security"]]
+    d["functions"] = [FunctionInfo(**f) for f in d.get("functions", [])]
     d["name_refs"] = Counter(d["name_refs"])
     return FileInfo(**d)
 

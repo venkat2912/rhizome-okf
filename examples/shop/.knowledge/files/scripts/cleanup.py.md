@@ -4,7 +4,7 @@ title: scripts/cleanup.py
 description: Module defining 1 public function (run).
 resource: https://github.com/venkat2912/Rizhome/blob/HEAD/scripts/cleanup.py
 tags: [python, 'subsystem:unlinked-scripts', 'security:shell-exec']
-timestamp: '2026-09-26T22:41:30+00:00'
+timestamp: '2026-10-03T17:13:18+00:00'
 language: python
 content_hash: sha256:4e7f76e9a7dcf77a
 subsystem: unlinked-scripts
@@ -26,6 +26,10 @@ Part of [Unlinked files in scripts](/subsystems/unlinked-scripts.md).
 # Symbols
 
 - `def run()` (L3)
+
+# Functions
+
+- `run` (L3-L4)
 
 # Depends on
 

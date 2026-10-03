@@ -4,7 +4,7 @@ title: shop/db.py
 description: Database access helpers.
 resource: https://github.com/venkat2912/Rizhome/blob/HEAD/shop/db.py
 tags: [python, 'subsystem:api', 'security:sql-string-building']
-timestamp: '2026-09-26T22:41:30+00:00'
+timestamp: '2026-10-03T17:13:18+00:00'
 language: python
 content_hash: sha256:630727b132f3e17b
 subsystem: api
@@ -28,6 +28,15 @@ Part of [shop/api.py cluster](/subsystems/api.md).
 - `def connect()` (L4)
 - `def find_user()` (L7)
 - `def save_order()` (L10)
+
+# Functions
+
+- `connect` (L4-L5)
+  - name-only calls: `connect`
+- `find_user` (L7-L8)
+  - called by: [shop/auth.py::login](/files/shop/auth.py.md)
+- `save_order` (L10-L11)
+  - called by: [shop/api.py::handle_order](/files/shop/api.py.md), [shop/payments/refunds.py::refund_order](/files/shop/payments/refunds.py.md)
 
 # Depends on
 
