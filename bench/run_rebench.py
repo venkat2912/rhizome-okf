@@ -50,6 +50,7 @@ FKS = (5, 10, 20)
 TOP_SAVED = 100
 BOOT, SEED = 10_000, 0
 PROTOCOL_VERSION = 1
+TMP_ROOT = os.path.join(rs.CACHE, "tmp")     # snapshots go on the project drive, not the system temp dir
 
 
 def bm25_generic(query_tokens, docs: dict[str, Counter]) -> list[str]:
@@ -90,12 +91,13 @@ def run_task(task: dict, statement: str, tmp_root: str | None) -> dict:
     t0 = time.perf_counter()
     repo_dir = rs.ensure_repo(task["repo"])
     rs.ensure_commit(repo_dir, task["base_commit"])
-    tmp = tempfile.mkdtemp(prefix="rzr_", dir=tmp_root)
+    os.makedirs(tmp_root or TMP_ROOT, exist_ok=True)
+    tmp = tempfile.mkdtemp(prefix="rzr_", dir=tmp_root or TMP_ROOT)
     try:
         snap = os.path.join(tmp, "s")
         os.makedirs(snap)
         t = time.perf_counter()
-        mat = rs.materialise(repo_dir, task["base_commit"], snap)
+        mat = rs.materialise(repo_dir, task["base_commit"], snap, only_py=True)
         timings["materialise_s"] = round(time.perf_counter() - t, 3)
         rec["extract_errors_py"] = [n for n, _ in mat["errors"] if n.endswith(".py")]
         missing = [g for g in task["gold"] if g not in mat["names"]]

@@ -69,10 +69,11 @@ def run_task(task, statement, judge, tmp_root=None):
     rec = {"instance_id": task["instance_id"], "repo": task["repo"], "gold": task["gold"], "n_gold": len(task["gold"])}
     repo_dir = rs.ensure_repo(task["repo"])
     rs.ensure_commit(repo_dir, task["base_commit"])
-    tmp = tempfile.mkdtemp(prefix="rzj_", dir=tmp_root)
+    os.makedirs(tmp_root or rb.TMP_ROOT, exist_ok=True)
+    tmp = tempfile.mkdtemp(prefix="rzj_", dir=tmp_root or rb.TMP_ROOT)
     try:
         t0 = time.perf_counter()
-        rs.materialise(repo_dir, task["base_commit"], tmp)
+        rs.materialise(repo_dir, task["base_commit"], tmp, only_py=True)
         cands = [p for p in iter_python_files(tmp) if not is_test(p)]
         texts, toks = {}, {}
         for p in cands:

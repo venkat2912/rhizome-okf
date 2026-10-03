@@ -167,18 +167,22 @@ def tree_files(repo_dir: str, commit: str) -> list[str]:
     return files
 
 
-def materialise(repo_dir: str, commit: str, dest: str) -> dict:
+def materialise(repo_dir: str, commit: str, dest: str, only_py: bool = False) -> dict:
     """Write the tree of ``commit`` into ``dest``. Returns member info and extraction errors.
 
     ``git archive`` fetches and writes the bulk of the tree, but it drops paths marked ``export-ignore``
     and rewrites ``export-subst`` files. Those are written afterwards straight from the object store, so
     the snapshot matches the commit exactly (bug found during the Loc-Bench run; see bench/CHANGES.md).
+
+    ``only_py`` writes only the ``.py`` files. Every method reads nothing else, and on blobless clones it
+    avoids downloading a repository's data files (one snapshot was 770 MB of them).
     """
     # the archive is streamed to a temporary file, not held in memory: some repositories carry hundreds of MB
     # of data files, and holding the tar plus a BytesIO copy ran the machine out of memory
     fd, tar_path = tempfile.mkstemp(prefix="rza_", suffix=".tar", dir=os.path.dirname(os.path.abspath(dest)))
     with os.fdopen(fd, "wb") as fh:
-        r = subprocess.run(["git", "-C", repo_dir, "archive", "--format=tar", commit], stdout=fh,
+        r = subprocess.run(["git", "-C", repo_dir, "archive", "--format=tar", commit]
+                           + (["--", ":(glob)**/*.py"] if only_py else []), stdout=fh,
                            stderr=subprocess.PIPE, timeout=3600)
     if r.returncode != 0:
         os.remove(tar_path)
@@ -208,7 +212,7 @@ def materialise(repo_dir: str, commit: str, dest: str) -> dict:
                     write(m.name, src=src)
     finally:
         os.remove(tar_path)
-    all_files = tree_files(repo_dir, commit)
+    all_files = [p for p in tree_files(repo_dir, commit) if not only_py or p.endswith(".py")]
     ignored = [p for p in all_files if p not in names]
     subst = sorted(_attr_set(repo_dir, commit, "export-subst", [p for p in all_files if p in names]))
     for p in ignored + subst:

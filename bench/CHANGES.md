@@ -84,3 +84,21 @@ weights, tokenisation and `k` values are unchanged. Any crash fix needed during 
 - The selection rule now also requires at least **50 non-test `.py` files** in the snapshot at `base_commit`
   (`MIN_FILES` in `bench/rebench_select.py`). Both splits were re-selected with the same seed. This was decided
   before any result on the real dev split existed; the smoke run used the discarded selection and is not a result.
+
+## v0.3 status when work paused (4 October 2026)
+
+- **Harness.** `materialise(only_py=True)` writes only `.py` files (one snapshot carried 770 MB of data files and
+  stalled a run); the SWE-rebench harness and the judge script use it and keep snapshots under
+  `bench/.cache/tmp` instead of the system temp directory. The archive is streamed to a file, not held in memory.
+- **Dev baselines not finished.** The full dev baseline run (`bench/run_rebench.py --split dev`) was stopped by
+  the tool's background time limit after 163 of 934 tasks and was not restarted; there is no dev baseline
+  report yet.
+- **Phase 2 gate (does a local reranker lift File-BM25?): not passed with the small model.** On a seeded sample
+  of 150 dev tasks (94 repos), re-ranking File-BM25's top 35 files with `cross-encoder/ms-marco-MiniLM-L-6-v2`
+  over function chunks gave Acc@10 42.0% against 52.7% for File-BM25 (9 vs 25 discordant tasks, exact McNemar
+  p = 0.009) and Recall@10 60.2% against 68.6%; Acc@1 and Acc@5 did not differ. Perfect selection from the same
+  top 35 would reach Recall@10 = 88.2%. A second run with `Alibaba-NLP/gte-reranker-modernbert-base` on the same
+  150 tasks was still in progress. Results are in the git-ignored `bench/runs/judge-dev-*`.
+- **Built so far on this branch:** the SWE-rebench selection, splits and harness, function-level gold, the
+  function map with resolved and name-only call edges, and the judge diagnosis script. The entry-point index,
+  judged walk and fly memory of `PLAN.md` are not built. The sealed test split has not been run.
