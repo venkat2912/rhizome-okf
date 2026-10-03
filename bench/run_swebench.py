@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import io
 import json
 import math
 import os
@@ -175,7 +174,16 @@ def materialise(repo_dir: str, commit: str, dest: str) -> dict:
     and rewrites ``export-subst`` files. Those are written afterwards straight from the object store, so
     the snapshot matches the commit exactly (bug found during the Loc-Bench run; see bench/CHANGES.md).
     """
-    data = git(repo_dir, "archive", "--format=tar", commit, binary=True)
+    # the archive is streamed to a temporary file, not held in memory: some repositories carry hundreds of MB
+    # of data files, and holding the tar plus a BytesIO copy ran the machine out of memory
+    fd, tar_path = tempfile.mkstemp(prefix="rza_", suffix=".tar", dir=os.path.dirname(os.path.abspath(dest)))
+    with os.fdopen(fd, "wb") as fh:
+        r = subprocess.run(["git", "-C", repo_dir, "archive", "--format=tar", commit], stdout=fh,
+                           stderr=subprocess.PIPE, timeout=3600)
+    if r.returncode != 0:
+        os.remove(tar_path)
+        raise RuntimeError(f"git archive failed: {r.stderr.decode(errors='replace').strip()}")
+    archive_bytes = os.path.getsize(tar_path)
     names, errors = set(), []
 
     def write(name: str, blob: bytes | None = None, src=None):
@@ -191,18 +199,21 @@ def materialise(repo_dir: str, commit: str, dest: str) -> dict:
         except OSError as exc:
             errors.append((name, str(exc)))
 
-    with tarfile.open(fileobj=io.BytesIO(data)) as tf:
-        for m in tf:
-            if not m.isfile():
-                continue  # directories are created on demand; symlinks are skipped (Windows)
-            with tf.extractfile(m) as src:
-                write(m.name, src=src)
+    try:
+        with tarfile.open(tar_path) as tf:
+            for m in tf:
+                if not m.isfile():
+                    continue  # directories are created on demand; symlinks are skipped (Windows)
+                with tf.extractfile(m) as src:
+                    write(m.name, src=src)
+    finally:
+        os.remove(tar_path)
     all_files = tree_files(repo_dir, commit)
     ignored = [p for p in all_files if p not in names]
     subst = sorted(_attr_set(repo_dir, commit, "export-subst", [p for p in all_files if p in names]))
     for p in ignored + subst:
         write(p, blob=git(repo_dir, "cat-file", "blob", f"{commit}:{p}", binary=True))
-    return {"names": names, "errors": errors, "archive_bytes": len(data),
+    return {"names": names, "errors": errors, "archive_bytes": archive_bytes,
             "export_ignored": ignored, "export_subst": subst}
 
 
@@ -647,7 +658,7 @@ def exploratory_summary(out_dir: str, ok: list[dict], variants: list[str]) -> di
 
 
 def fmt(x, d=2):
-    return "–" if x is None or (isinstance(x, float) and math.isnan(x)) else f"{x:.{d}f}"
+    return "â€“" if x is None or (isinstance(x, float) and math.isnan(x)) else f"{x:.{d}f}"
 
 
 def results_table(a: dict) -> str:
@@ -777,7 +788,7 @@ def write_report(out_dir: str, s: dict, variants: list[str], proto: dict):
     L += ["## 1. Protocol", "",
           f"- **Dataset**: `princeton-nlp/SWE-bench_Lite`, split `test` ({s['dataset_instances']} instances); "
           f"{s['attempted']} attempted, {s['evaluated']} evaluated, {s['excluded']} excluded, {s['errors']} crashed.",
-          "- **Gold**: `.py` files named in `diff --git a/… b/…` lines of the gold `patch` that exist at `base_commit`. "
+          "- **Gold**: `.py` files named in `diff --git a/â€¦ b/â€¦` lines of the gold `patch` that exist at `base_commit`. "
           f"{s['instances_with_some_gold_added']} evaluated instances also add a new `.py` file; the added file is not scored "
           "(no method can rank a file that does not exist). Instances whose gold files are all absent are excluded.",
           "- **Snapshot**: `git archive --format=tar <base_commit>` of a full-history clone, extracted with Python `tarfile`.",
@@ -919,7 +930,7 @@ def write_report(out_dir: str, s: dict, variants: list[str], proto: dict):
                 L += ["| Repository | Path | Error | Snapshots |", "|---|---|---|---:|"]
                 L += [f"| {f['repo']} | `{f['path']}` | {f['error'].replace('|', '/')} | {f['snapshots']} |" for f in fs]
             L.append("")
-    L += ["", "## 3. Published results (different setups — not directly comparable)", "",
+    L += ["", "## 3. Published results (different setups â€” not directly comparable)", "",
           "Source: Z. Chen et al., *LocAgent: Graph-Guided LLM Agents for Code Localization*, ACL 2025, arXiv:2503.09089. "
           "File-level localisation on SWE-bench Lite, Acc@k as defined above. Copied from the paper, not measured here.", "",
           "| Method | Acc@1 | Acc@3 | Acc@5 |", "|---|---:|---:|---:|"]
