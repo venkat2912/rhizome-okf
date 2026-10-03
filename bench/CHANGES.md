@@ -75,3 +75,12 @@ weights, tokenisation and `k` values are unchanged. Any crash fix needed during 
   the repository, deleted afterwards). Nothing else changes: same code, methods and parameters.
 - **SWE-bench Lite check finished.** `bench/results/swebench-lite-v0.1/export_ignored.json` lists the one affected
   instance (`pydata/xarray`; candidate files only, no gold file). The committed Lite numbers are unchanged.
+
+## v0.3 benchmark: minimum repository size added to the SWE-rebench selection
+
+- A 40-task smoke test on the first dev selection (36 repos, seeded sample) showed that the repositories were
+  too small for file-level scores to mean anything: median 31 candidate files, and on single-file tasks a
+  random ranking would reach Acc@10 = 52% overall (89% in repos under 20 files) against 75% for File-BM25.
+- The selection rule now also requires at least **50 non-test `.py` files** in the snapshot at `base_commit`
+  (`MIN_FILES` in `bench/rebench_select.py`). Both splits were re-selected with the same seed. This was decided
+  before any result on the real dev split existed; the smoke run used the discarded selection and is not a result.
